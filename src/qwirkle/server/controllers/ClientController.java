@@ -7,9 +7,14 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+
+// junit
+import static org.junit.Assert.*;
 
 // shared
 import qwirkle.shared.Protocol;
+import qwirkle.shared.ProtocolParser;
 
 // server
 import qwirkle.server.QwirkleServer;
@@ -20,35 +25,54 @@ import qwirkle.server.QwirkleServer;
  */
 public class ClientController extends Thread {
 
+    private QwirkleServer server;
+
     private BufferedReader in;
     private BufferedWriter out;
 
     private int playerId;
 
 
-    public ClientController(QwirkleServer server, Socket _socket, int _playerId) throws IOException {
-        this.playerId = _playerId;
+    public ClientController(QwirkleServer _server, Socket _socket, int _playerId) throws IOException {
+        playerId = _playerId;
+        server = _server;
 
-        in = new BufferedReader(new InputStreamReader(_socket.getInputStream()));
-        out = new BufferedWriter(new OutputStreamWriter(_socket.getOutputStream()));
+        // create in- and output stream readers
+        in = new BufferedReader(
+                new InputStreamReader(
+                        _socket.getInputStream()));
+
+        out = new BufferedWriter(
+                new OutputStreamWriter(
+                        _socket.getOutputStream()));
     }
 
     /**
-     * Do this when successfully connected to server
+     * A seperate thread handles all the messages to and from a client
      */
-    public void handleConnect() {
-
+    public void run() {
+        try {
+            handleMessages();
+        } catch (IOException e) {
+            // TODO: use CLI output
+            System.out.println(e);
+        }
     }
 
-    public void handleMessage(String msg, ClientController client) {
+    /**
+     * Listen to all incoming messages from client and parse them
+     * @throws IOException
+     */
+    public void handleMessages() throws IOException {
 
-        // the protocol states we should split the incoming string
-        String[] input = msg.split(" ");
+        // split incoming message string to find message type
+        ArrayList incomingData = ProtocolParser.parse(in.readLine());
 
-        switch (input[0]) {
+        switch ((String) incomingData.get(0)) {
 
             case Protocol.Client.HALLO:
-                // do something with HALLO
+                assertNotNull(incomingData.get(1));
+                handleHandshake((String) incomingData.get(1));
                 break;
 
             case Protocol.Client.QUIT:
@@ -105,10 +129,23 @@ public class ClientController extends Thread {
         return playerId;
     }
 
-    /**
-     * Handles a disconnect of the client
-     */
-    public void handleDisconnect() {
+    public void handleQuit() {
+
+    }
+
+    public void handleHandshake(String handshakeData) {
+
+    }
+
+    public void handleChat() {
+
+    }
+
+    public void handleLeaderboard() {
+
+    }
+
+    public void handleError() {
 
     }
 
