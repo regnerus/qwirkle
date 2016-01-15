@@ -9,6 +9,8 @@ import java.util.Scanner;
  */
 public class ProtocolParser {
 
+
+    // TODO: uniqueify
     public static ArrayList parse(String data) {
         ArrayList<Object> parsed = new ArrayList<>();
 
