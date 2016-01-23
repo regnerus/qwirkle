@@ -15,22 +15,37 @@ import qwirkle.server.controllers.ClientController;
  */
 public class QwirkleServer {
 
-    // port to run server on
-    private static int port;
-    private static String host;
+    private static int port;    // port
+    private static String host; // hostname
 
     private ArrayList<ClientController> clients;
 
+    /**
+     * Start new game server on default port
+     */
+    public QwirkleServer() {
+        port = 1337; // use leed port :P
+        start();
+    }
+
+    /**
+     * Start new game server on chosen port
+     * @param _port
+     */
+
     public QwirkleServer(int _port) {
         port = _port;
+        start();
     }
 
     /**
      * Starts the game server on selected port
      */
+
+    //@ ensures clients != null;
     public void start() {
 
-        this.clients = new ArrayList<>();
+        clients = new ArrayList<ClientController>();
 
         // use try catch around setting up server, port may be in use!
         try {
@@ -49,7 +64,7 @@ public class QwirkleServer {
             }
         }
         catch (IOException e) {
-            // TODO: use CLI output
+            // TODO: use CLI controller
             System.out.println(e);
         }
     }

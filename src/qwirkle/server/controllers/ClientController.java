@@ -54,7 +54,7 @@ public class ClientController extends Thread {
         try {
             handleMessages();
         } catch (IOException e) {
-            // TODO: use CLI output
+            // TODO: use CLI controller
             System.out.println(e);
         }
     }
