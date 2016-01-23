@@ -18,6 +18,7 @@ import qwirkle.game.Game;
 import qwirkle.player.Player;
 
 // shared
+import qwirkle.shared.CliController;
 import qwirkle.shared.Protocol;
 import qwirkle.shared.ProtocolParser;
 
@@ -62,8 +63,7 @@ public class ClientController extends Thread {
         try {
             handleMessages();
         } catch (IOException e) {
-            // TODO: use CLI controller
-            System.out.println(e);
+            CliController.logServerError(e);
         }
     }
 
@@ -224,8 +224,9 @@ public class ClientController extends Thread {
             out.flush();
         }
         catch (IOException e) {
+            CliController.logServerError(e);
+
             // disconnect client since data can be corrupted from now on
-            // TODO: log error
             disconnect();
         }
     }

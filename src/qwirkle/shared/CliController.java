@@ -9,6 +9,9 @@ import qwirkle.game.Position;
  */
 public class CliController {
 
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ERROR_COLOR = "\u001B[31m";
+
     public void logSimple(String message) {
         System.out.println(message);
     }
@@ -22,8 +25,9 @@ public class CliController {
         }
     }
 
-    public void logServerError() {
-
+    public static void logServerError(Exception e) {
+        // print this message in red
+        System.out.println(ERROR_COLOR + e.getMessage() + ANSI_RESET);
     }
 
     public void logClientError() {
