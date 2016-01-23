@@ -1,9 +1,13 @@
 package qwirkle;
 
+// game
 import qwirkle.game.Bag;
 import qwirkle.game.Board;
 import qwirkle.game.Position;
 import qwirkle.game.Stone;
+
+// shared
+import qwirkle.shared.CliController;
 
 import java.util.Map;
 
@@ -22,13 +26,13 @@ public class Qwirkle {
         Stone stone3 = new Stone(Stone.Color.BLUE, Stone.Shape.SQUARE);
         Stone stone4 = new Stone(Stone.Color.PURPLE, Stone.Shape.DIAMOND);
 
+        CliController cli = new CliController();
         Board board = new Board();
         Bag bag = new Bag();
 
-        System.out.println(bag.bagSize());
-        System.out.println(bag.getStone());
-        System.out.println(bag.bagSize());
-
+        cli.logSimple(Integer.toString(bag.bagSize()));
+        cli.logSimple(bag.getStone().toString());
+        cli.logSimple(Integer.toString(bag.bagSize()));
 
         board.placeStone(stone1, 5, -1);
         board.placeStone(stone2, 0, 0);
@@ -37,11 +41,7 @@ public class Qwirkle {
 
         Map<Position, Stone> map = board.getBoard();
 
-        for(int y = board.getBoundsY().getMin(); y <= board.getBoundsY().getMax(); y++) {
-            for (int x = board.getBoundsX().getMin(); x <= board.getBoundsX().getMax(); x++) {
-                System.out.print(board.getStone(new Position(x, y)).toString() + " ");
-            }
-            System.out.println();
-        }
+        // log to cli
+        cli.logBoard(board);
     }
 }
