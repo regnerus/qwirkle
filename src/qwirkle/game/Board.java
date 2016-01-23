@@ -1,8 +1,7 @@
 package qwirkle.game;
 
-import java.awt.*;
-import java.util.*;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by chris on 15/01/16.
@@ -10,106 +9,69 @@ import java.util.List;
 public class Board {
 
 
-    Map<Point, Stone> board;
-
-    private enum Direction {
-        UP, DOWN, LEFT, RIGHT
-    }
+    Map<Position, Stone> board;
 
     public Board () {
         this.board = new HashMap<>();
     }
 
-    public Map<Point, Stone> getBoard () {
+    public Map<Position, Stone> getBoard () {
         return this.board;
+    }
+
+    private Bounds boundsX = new Bounds();
+    private Bounds boundsY = new Bounds();
+
+    private void calculateBoardSize (Position position) {
+        int x = position.getX();
+        int y = position.getY();
+
+        if(x < boundsX.getMin()) {
+            boundsX.setMin(x);
+        }
+        else if(x > boundsX.getMax()) {
+            boundsX.setMax(x);
+        }
+
+        if(y < boundsY.getMin()) {
+            boundsY.setMin(y);
+        }
+        else if(y > boundsY.getMax()) {
+            boundsY.setMax(y);
+        }
+    }
+
+    public Bounds getBoundsX () {
+        return boundsX;
+    }
+
+    public Bounds getBoundsY () {
+        return boundsY;
     }
 
     public void placeStone(Stone stone) {
         //TODO: Validate stone position with validateAdjacentPoint
 
+        this.calculateBoardSize(stone.getLocation());
         board.put(stone.getLocation(), stone);
     }
 
-    public Stone getStone(Point location) {
-        return board.get(location);
+    public void placeStone(Stone stone, int x, int y) {
+        stone.setLocation(x, y);
+        this.placeStone(stone);
     }
 
-    public List<Stone> getConnectedRow(Stone currentStone, Direction direction) {
-        int offsetX = 0;
-        int offsetY = 0;
+    public Stone getStone(Position location) {
 
-        List<Stone> row = new ArrayList<>();
+        Stone stone = this.board.get(location);
 
-        Stone connectedStone = currentStone;
-        Point initialLocation = currentStone.getLocation();
-
-        while(connectedStone.getShape() != NULL) {
-            switch (direction) {
-                case UP:
-                    offsetX--;
-                    break;
-                case DOWN:
-                    offsetX++;
-                    break;
-                case LEFT:
-                    offsetY--;
-                    break;
-                case RIGHT:
-                    offsetY++;
-                    break;
-            }
-
-            connectedStone = getStone(new Point(initialLocation.x + offsetX, initialLocation.y + offsetY));
-            row.add(connectedStone);
+        if (stone == null) {
+            return new Stone(Stone.Color.NULL, Stone.Shape.NULL);
+        }
+        else {
+            return stone;
         }
     }
-
-    public boolean validateConnectedRow(List<Stone> row) {
-        Set<Stone.Shape> shapes = new HashSet<>();
-        Set<Stone.Color> colors = new HashSet<>();
-        Stone previousStone = null;
-
-        boolean isUniqueShape = true;
-        boolean isUniqueColor = true;
-        boolean isSameShape = true;
-        boolean isSameColor = true;
-
-        for (Stone stone : row) {
-            //Checks if the shape of all stones in the row is unique
-            if(!shapes.contains(stone.getShape())) {
-                shapes.add(stone.getShape());
-            }
-            else {
-                isUniqueShape = false;
-            }
-
-            //Checks if the color of all stones in the row is unique
-            if(!colors.contains(stone.getColor())) {
-                colors.add(stone.getColor());
-            }
-            else {
-                isUniqueColor = false;
-            }
-
-            //Checks if the shape of all stones in the row is the same
-            if(previousStone != null && previousStone.getShape() != stone.getShape()) {
-                isSameShape = false;
-            }
-
-            //Checks if the color of all stones in the row is the same
-            if(previousStone != null && previousStone.getShape() != stone.getShape()) {
-                isSameShape = false;
-            }
-
-            previousStone = stone;
-        }
-
-        //Returns true if the row has a combination of unique shapes with the same color OR a unique color with the same shapes.
-        return (isUniqueShape && isSameColor) || (isUniqueColor && isSameShape);
-
-    }
-
-
 
 
 //    private boolean validateAdjacentPoint(Stone currentStone, int directionX, int directionY) {
