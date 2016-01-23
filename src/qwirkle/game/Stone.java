@@ -1,18 +1,49 @@
 package qwirkle.game;
 
-import java.awt.geom.Point2D;
+import java.awt.*;
 
 /**
  * Created by chris on 15/01/16.
  */
 public class Stone {
-    Point2D point;
+    Point location;
+    Shape shape;
+    Color color;
 
-    public void setPoint (int x, int y) {
-        this.point = new Point2D.Double(x, y);
+    public Piece(Color color, Shape shape) {
+        this.color = color;
+        this.shape = shape;
     }
 
-    public Point2D getPoint () {
-        return point;
+    public enum Shape {
+        HEART, STAR, SQUARE, CIRCLE, CROSS, DIAMOND, NULL
+    }
+
+    public enum Color {
+        RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE
+    }
+
+    public void setLocation (int x, int y) {
+        this.location = new Point(x, y);
+    }
+
+    public void setShape (Shape shape) {
+        this.shape = shape;
+    }
+
+    public void setColor (Color color) {
+        this.color = color;
+    }
+
+    public Point getLocation () {
+        return location;
+    }
+
+    public Shape getShape () {
+        return shape;
+    }
+
+    public Color getColor () {
+        return color;
     }
 }
