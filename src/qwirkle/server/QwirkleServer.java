@@ -6,9 +6,13 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.UUID;
 
 // controllers
 import qwirkle.server.controllers.ClientController;
+
+// shared
+import qwirkle.shared.Protocol;
 
 /**
  * The Qwirkle Server
@@ -24,7 +28,7 @@ public class QwirkleServer {
      * Start new game server on default port
      */
     public QwirkleServer() {
-        port = 1337; // use leed port :P
+        port = Protocol.Server.Settings.DEFAULT_PORT; // use leed port :P
         start();
     }
 
@@ -57,10 +61,9 @@ public class QwirkleServer {
                 Socket socket = serverSock.accept();
 
                 ClientController client = new ClientController(this, socket, 0);
-                handleClientConnection(client);
 
-                // start the client (new thread)
-                client.start();
+                // handle the new client connection
+                handleClientConnection(client);
             }
         }
         catch (IOException e) {
@@ -69,15 +72,48 @@ public class QwirkleServer {
         }
     }
 
+    /**
+     * Handle a connecting client
+     * @param client
+     */
     public void handleClientConnection(ClientController client) {
         this.clients.add(client);
+
+        // start the client (in a new thread)
+        client.start();
     }
 
     /**
-     * The Main Qwirkle server
-     * @param args <port>
+     * Handle a disconnecting client
+     * @param client
      */
-    public static void main(String[] args) {
+    public void handleClientDisconnect(ClientController client) {
+        // remove from clients list
+        if (clients.contains(client))
+            clients.remove(client);
 
+        // TODO: send message to other players in same game and end game
+    }
+
+    public void handleGameMove() {
+
+    }
+
+    public void handleGameEnded() {
+
+    }
+
+    public void handleGameTurn() {
+
+    }
+
+    public void stopServer() {
+        try {
+            // TODO: gracefully close connected clients
+        }
+        catch (Exception e) {
+            // TODO: log error and make it an IOException
+        }
+        System.exit(0);
     }
 }
