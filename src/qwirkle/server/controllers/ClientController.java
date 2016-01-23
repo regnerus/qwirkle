@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 // game
 import qwirkle.game.Game;
-import qwirkle.game.Player;
+import qwirkle.player.Player;
 
 // shared
 import qwirkle.shared.Protocol;
