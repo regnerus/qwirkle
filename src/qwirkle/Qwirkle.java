@@ -37,15 +37,11 @@ public class Qwirkle {
 
         Map<Position, Stone> map = board.getBoard();
 
-        for(int y = board.getBoundsY().getMin(); y <= board.getBoundsY().getMax(); y++)
-        {
-            for (int x = board.getBoundsX().getMin(); x <= board.getBoundsX().getMax(); x++)
-            {
-
+        for(int y = board.getBoundsY().getMin(); y <= board.getBoundsY().getMax(); y++) {
+            for (int x = board.getBoundsX().getMin(); x <= board.getBoundsX().getMax(); x++) {
                 System.out.print(board.getStone(new Position(x, y)).toString() + " ");
             }
             System.out.println();
         }
-
     }
 }
