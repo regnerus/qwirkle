@@ -44,7 +44,7 @@ public class Bag {
 
     public Stone switchStone (Stone stone) {
         int index = random.nextInt(bag.size());
-        Stone stone = bag.get(index);
+        stone = bag.get(index);
 
         this.bag.add(stone);
 
