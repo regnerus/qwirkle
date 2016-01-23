@@ -20,12 +20,16 @@ public class Stone {
         this.isPlaced = false;
     }
 
+    //Note: Important that NULL is the last value otherwise it will be used to generate random stones.
     public enum Shape {
-        HEART, STAR, SQUARE, CIRCLE, CROSS, DIAMOND, NULL;
+        HEART, STAR, SQUARE, CIRCLE, CROSS, DIAMOND,
+        NULL;
     }
 
+    //Note: Important that NULL is the last value otherwise it will be used to generate random stones.
     public enum Color {
-        RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, NULL;
+        RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE,
+        NULL;
     }
 
     private static final Map<Shape, String> shapeMap = new HashMap<Shape, String>() {{
@@ -33,19 +37,19 @@ public class Stone {
         put(Shape.STAR, "\u2737");
         put(Shape.SQUARE, "\u25A0");
         put(Shape.CIRCLE, "\u25CF");
-        put(Shape.CROSS, "\u274C");
+        put(Shape.CROSS, "\u002B");
         put(Shape.DIAMOND, "\u25C6");
         put(Shape.NULL, "\u25A1");
     }};
 
     private static final Map<Color, String> colorMap = new HashMap<Color, String>() {{
         put(Color.RED, "\u001B[31m");
-        put(Color.ORANGE, "\u001B[1;33m");
+        put(Color.ORANGE, "\u001B[33m");
         put(Color.YELLOW, "\u001B[33m");
         put(Color.GREEN, "\u001B[32m");
         put(Color.BLUE, "\u001B[34m");
         put(Color.PURPLE, "\u001B[35m");
-        put(Color.NULL, "\u001B[30m");
+        put(Color.NULL, "\u001B[37m");
     }};
 
 
@@ -64,6 +68,14 @@ public class Stone {
     public void setColor (Color color) {
         this.color = color;
     }
+
+//    public Shape getRandomShape () {
+//        return Shape.values()[random.nextInt(Shape.values().length - 1)];
+//    }
+//
+//    public Color getRandomColor () {
+//        return Color.values()[random.nextInt(Color.values().length - 1)];
+//    }
 
     public Position getLocation () {
         return location;
