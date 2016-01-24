@@ -55,8 +55,13 @@ public class Board extends Move {
     public void placeStone(Stone stone) {
         // TODO: Validate stone position with validateAdjacentPoint
 
-        this.calculateBoardSize(stone.getLocation());
-        board.put(stone.getLocation(), stone);
+        if(this.validMove(stone)) {
+            this.calculateBoardSize(stone.getLocation());
+            board.put(stone.getLocation(), stone);
+        }
+        else {
+            //TODO: Invalid Move
+        }
     }
 
     public void placeStone(Stone stone, int x, int y) {
@@ -130,13 +135,17 @@ public class Board extends Move {
         List<Stone> row = this.getRow(stone);
         List<Stone> column = this.getColumn(stone);
 
-        if(row.size() > 1 && column.size() > 1) {
+        if(this.board.size() < 1) {
+            return true;
+        }
+
+        if(row.size() >= 1 && column.size() >= 1) {
             return validateList(row, stone) && validateList(column, stone);
         }
-        else if (row.size() > 1) {
+        else if (row.size() >= 1) {
             return validateList(row, stone);
         }
-        else if (column.size() > 1) {
+        else if (column.size() >= 1) {
             return validateList(column, stone);
         }
         else {
