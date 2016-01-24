@@ -69,14 +69,6 @@ public class Stone {
         this.color = color;
     }
 
-//    public Shape getRandomShape () {
-//        return Shape.values()[random.nextInt(Shape.values().length - 1)];
-//    }
-//
-//    public Color getRandomColor () {
-//        return Color.values()[random.nextInt(Color.values().length - 1)];
-//    }
-
     public Position getLocation () {
         return location;
     }
