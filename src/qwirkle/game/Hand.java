@@ -7,7 +7,8 @@ import java.util.List;
  * Created by Bouke on 24/01/16.
  */
 public class Hand {
-    List<Stone> stones;
+
+    ArrayList<Stone> stones;
 
     public Hand (Bag bag) {
         this.stones = new ArrayList<>();
@@ -17,7 +18,7 @@ public class Hand {
         }
     }
 
-    public List<Stone> getHand () {
+    public ArrayList<Stone> getStones () {
         return stones;
     }
 

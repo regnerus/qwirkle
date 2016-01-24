@@ -12,7 +12,7 @@ public interface Player {
 
     public boolean isHuman();
 
-    public void receiveStone(Stone stone);
+    public void getStone(Stone stone);
 
     public void playStone(Stone stone);
 

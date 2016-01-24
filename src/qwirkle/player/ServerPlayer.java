@@ -16,22 +16,30 @@ public abstract class ServerPlayer implements Player {
     private Hand hand;
     private Game game;
     private ClientController client;
+    private String username;
 
     /**
      * The ServerPlayer is used to keep track of players on the server side
+     * @param client
+     * @param username
      */
-    public ServerPlayer(ClientController client) {
+    public ServerPlayer(ClientController client, String username) {
         this.client = client;
+        this.username = username;
     }
 
     /**
      * Let player receive a stone in their hand
      * @param stone stone to receive
      */
-    public void receiveStone(Stone stone) {
+    public void getStone(Stone stone) {
         hand.addStone(stone);
     }
 
+    /**
+     * Lay a stone on the board
+     * @param stone
+     */
     public void playStone(Stone stone) {
         // TODO: select stone from hand
         // TODO: select position to place stone
@@ -39,6 +47,10 @@ public abstract class ServerPlayer implements Player {
         game.getBoard().placeStone(stone);
     }
 
+    /**
+     * Trade stone with random stone from game's bag
+     * @param stone
+     */
     public void tradeStone(Stone stone) {
         // TODO: select stone from hand
         hand.removeStone(stone);
@@ -74,6 +86,10 @@ public abstract class ServerPlayer implements Player {
      * Leave game currently in
      */
     public void leaveGame() {
+        // TODO: add score to leaderboard when game was finished
+        if (game.isFinished())
+
+
         this.game = null;
     }
 
@@ -83,5 +99,13 @@ public abstract class ServerPlayer implements Player {
      */
     public ClientController getClient() {
         return client;
+    }
+
+    /**
+     * Get player's username
+     * @return
+     */
+    public String getUsername() {
+        return username;
     }
 }

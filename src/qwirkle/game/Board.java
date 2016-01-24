@@ -1,7 +1,9 @@
 package qwirkle.game;
 
+// apache
 import org.apache.commons.collections4.ListUtils;
 
+// game
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,10 +14,16 @@ import java.util.Map;
  * Created by chris on 15/01/16.
  */
 public class Board extends Move {
-    Map<Position, Stone> board;
+
+    private Map<Position, Stone> board;
+    private Map<Position, Move> possibleMoves;
 
     public Board () {
+        this.possibleMoves = new HashMap<Position, Move>();
         this.board = new HashMap<>();
+
+        Move firstMove = new Move(new Position(0, 0));
+        possibleMoves.put(init.getPosition(), init);
     }
 
     public Map<Position, Stone> getBoard () {

@@ -12,6 +12,8 @@ public class ComputerPlayer extends ClientPlayer {
 
     /**
      * Constructor of computerPlayer
+     * A computer player is a player that is not controlled by a human
+     * but has an AI to determine the next moves in order to win the game.
      * @param name
      */
     public ComputerPlayer(String name) {

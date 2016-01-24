@@ -20,6 +20,8 @@ public class Game {
     private Bag bag;
     private Board board;
 
+    private boolean finished = false;
+
     /**
      * Start a new game with players and a new bag
      */
@@ -69,5 +71,9 @@ public class Game {
         for (int i = 0; i < players.size(); i++) {
             players.get(i).getClient().emit(message);
         }
+    }
+
+    public boolean isFinished() {
+        return finished;
     }
 }

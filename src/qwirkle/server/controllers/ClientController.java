@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 // game
 import qwirkle.game.Game;
-import qwirkle.player.Player;
+import qwirkle.player.ServerPlayer;
 
 // shared
 import qwirkle.shared.CliController;
@@ -33,27 +33,25 @@ public class ClientController extends Thread {
 
     private QwirkleServer server;
 
-    private Game game;
-    private Player player;
+    private ServerPlayer player;
 
     private BufferedReader in;
     private BufferedWriter out;
 
     private UUID clientId;
 
-
-    public ClientController(QwirkleServer _server, Socket _socket, int _playerId) throws IOException {
-        server = _server;
+    public ClientController(QwirkleServer server, Socket socket) throws IOException {
+        this.server = server;
         clientId = UUID.randomUUID();
 
         // create in- and output stream readers
         in = new BufferedReader(
                 new InputStreamReader(
-                        _socket.getInputStream()));
+                        socket.getInputStream()));
 
         out = new BufferedWriter(
                 new OutputStreamWriter(
-                        _socket.getOutputStream()));
+                        socket.getOutputStream()));
     }
 
     /**
@@ -145,40 +143,35 @@ public class ClientController extends Thread {
      */
     //@ pure
     public Game getGame() {
-        return this.game;
+        return this.getPlayer().getGame();
     }
 
     /**
      * Join a game
-     * @param game game to accept
+     * @param gameId Id of game to join
      */
-    public void setGame(Game game) {
-        this.game = game;
-        // TODO: send game joined message to other clients in game
+    public void joinGame(String gameId) {
+        // TODO: create a new ServerPlayer for this client and let it join the game
+
+
     }
 
     /**
      * Get player that is playing with this connection
      * @return Player player
      */
-    public Player getPlayer() {
+    public ServerPlayer getPlayer() {
         return this.player;
-    }
-
-    /**
-     * Set player playing with this client
-     * @param player the game player
-     */
-    public void setPlayer(Player player) {
-        this.player = player;
     }
 
     /**
      * Handle client quitting from game
      */
-    //@ ensures game != null;
+    //@ ensures player != null;
     public void handleQuit() {
-        assertNotNull(this.game);
+        assertNotNull(player);
+        player.leaveGame();
+        // TODO: delete player
     }
 
     public void handleHandshake(String handshakeData) {
@@ -190,7 +183,7 @@ public class ClientController extends Thread {
      * @param message the message to send to all other clients in current game
      */
     public void handleChat(String message) {
-        game.emitToAllPlayers(message);
+        getPlayer().getGame().emitToAllPlayers(message);
     }
 
     /**
@@ -199,7 +192,7 @@ public class ClientController extends Thread {
      * @param targetPlayerId the UUID of the target client to send the message to
      */
     public void handleChat(String message, String targetPlayerId) {
-        game.emitToPlayer(UUID.fromString(targetPlayerId), message);
+        getPlayer().getGame().emitToPlayer(UUID.fromString(targetPlayerId), message);
     }
 
     /**
