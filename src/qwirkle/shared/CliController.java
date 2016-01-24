@@ -30,7 +30,8 @@ public class CliController {
         System.out.println(ERROR_COLOR + e.getMessage() + ANSI_RESET);
     }
 
-    public void logClientError() {
-
+    public static void logClientError(Exception e) {
+        // print this message in red
+        System.out.println(ERROR_COLOR + e.getMessage() + ANSI_RESET);
     }
 }
