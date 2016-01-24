@@ -1,8 +1,7 @@
 package qwirkle.player;
 
 // game
-import qwirkle.game.Board;
-import qwirkle.game.PossibleMove;
+import qwirkle.game.*;
 
 /**
  * Created by Bouke on 23/01/16.
@@ -19,12 +18,9 @@ public class ComputerPlayer extends Player {
         return false;
     }
 
-    public PossibleMove[] calculateNextMove(Board board) {
-        PossibleMove[] move = new PossibleMove[1];
+    public Move[] calculateNextMove(Board board) {
+        Move[] move = new Move[1];
 
-        for (Stone stone: hand) {
-
-        }
 
         return move;
     }

@@ -34,8 +34,16 @@ public class Bag {
         this.bag.remove(index);
     }
 
+    public int randomStone () {
+        return random.nextInt(bag.size());
+    }
+
     public Stone getStone () {
-        int index = random.nextInt(bag.size());
+        if(this.bagSize() < 1) {
+            //TODO: Add exception;
+        }
+
+        int index = this.randomStone();
         Stone stone = bag.get(index);
         removeStone(index);
 
@@ -43,11 +51,8 @@ public class Bag {
     }
 
     public Stone switchStone (Stone stone) {
-        int index = random.nextInt(bag.size());
-        stone = bag.get(index);
-
         this.bag.add(stone);
 
-        return stone;
+        return getStone();
     }
 }

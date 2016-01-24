@@ -1,5 +1,8 @@
 package qwirkle.game;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.awt.*;
 
 /**
@@ -46,7 +49,9 @@ public class Position {
 
     @Override
     public int hashCode() {
-        return position.hashCode();
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+                append(position).
+                toHashCode();
     }
 
     @Override
@@ -54,9 +59,14 @@ public class Position {
         if(obj==null || !(obj instanceof Position))
             return false;
 
-        Position p=(Position) obj;
+        if (obj == this)
+            return true;
 
-        return p.position.equals(position);
+        Position p = (Position) obj;
+
+        return new EqualsBuilder().
+                append(position, p.position).
+                isEquals();
     }
 
     @Override

@@ -1,28 +1,17 @@
 package qwirkle.game;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Bouke on 23/01/16.
+ * Created by chris on 15/01/16.
  */
-public class PossibleMove {
-
-    private enum Direction {
+public class Move {
+    public enum Direction {
         UP, DOWN, LEFT, RIGHT
     }
 
-    public boolean isUniqueShape(List<Stone> row, Stone stone) {
-        for (Stone s : row) {
-            if (s.getShape() != stone.getShape()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean isMatchingShape(List<Stone> row, Stone stone) {
-        for (Stone s : row) {
+    public boolean isUniqueShape(List<Stone> list, Stone stone) {
+        for (Stone s : list) {
             if (s.getShape() == stone.getShape()) {
                 return false;
             }
@@ -30,17 +19,17 @@ public class PossibleMove {
         return true;
     }
 
-    public boolean isUniqueColor(List<Stone> row, Stone stone) {
-        for (Stone s : row) {
-            if (s.getColor() != stone.getColor()) {
+    public boolean isMatchingShape(List<Stone> list, Stone stone) {
+        for (Stone s : list) {
+            if (s.getShape() != stone.getShape()) {
                 return false;
             }
         }
         return true;
     }
 
-    public boolean isMatchingColor(List<Stone> row, Stone stone) {
-        for (Stone s : row) {
+    public boolean isUniqueColor(List<Stone> list, Stone stone) {
+        for (Stone s : list) {
             if (s.getColor() == stone.getColor()) {
                 return false;
             }
@@ -48,36 +37,13 @@ public class PossibleMove {
         return true;
     }
 
-    public List<Stone> getConnectedRow(Stone currentStone, Direction direction) {
-        int offsetX = 0;
-        int offsetY = 0;
-
-        List<Stone> row = new ArrayList<>();
-
-        Stone connectedStone = currentStone;
-        Position initialLocation = currentStone.getLocation();
-
-        while(connectedStone.getShape() != Stone.Shape.NULL) {
-            switch (direction) {
-                case UP:
-                    offsetX--;
-                    break;
-                case DOWN:
-                    offsetX++;
-                    break;
-                case LEFT:
-                    offsetY--;
-                    break;
-                case RIGHT:
-                    offsetY++;
-                    break;
+    public boolean isMatchingColor(List<Stone> list, Stone stone) {
+        for (Stone s : list) {
+            if (s.getColor() != stone.getColor()) {
+                return false;
             }
-
-//            connectedStone = Board.getStone(new Position(initialLocation.getX() + offsetX, initialLocation.getY() + offsetY));
-            row.add(connectedStone);
         }
-
-        return row;
+        return true;
     }
 
 //    public boolean validateConnectedRow(List<Stone> row) {

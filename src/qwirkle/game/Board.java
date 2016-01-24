@@ -1,14 +1,17 @@
 package qwirkle.game;
 
+import org.apache.commons.collections4.ListUtils;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 
 /**
  * Created by chris on 15/01/16.
  */
-public class Board {
-
-
+public class Board extends Move {
     Map<Position, Stone> board;
 
     public Board () {
@@ -50,7 +53,7 @@ public class Board {
     }
 
     public void placeStone(Stone stone) {
-        //TODO: Validate stone position with validateAdjacentPoint
+        // TODO: Validate stone position with validateAdjacentPoint
 
         this.calculateBoardSize(stone.getLocation());
         board.put(stone.getLocation(), stone);
@@ -73,17 +76,73 @@ public class Board {
         }
     }
 
+    public List<Stone> getDirection (Stone stone, Direction direction) {
+        Position location = stone.getLocation();
+        List<Stone> list = new ArrayList<>();
 
-//    private boolean validateAdjacentPoint(Stone currentStone, int directionX, int directionY) {
-//        Point2D currentPosition = currentStone.getPoint();
-//        Point2D adjacentPoint = new Point2D.Double(currentPosition.getX() - directionX, currentPosition.getY() - directionY);
-//        Stone adjacentStone = this.getStone(adjacentPoint);
-//
-//        //TODO: Add validation for allowed situations.
-//    }
+        Stone currentStone = stone;
+        while (currentStone != null) {
+            switch (direction) {
+                case UP:
+                    location = location.above();
+                    break;
+                case DOWN:
+                    location = location.below();
+                    break;
+                case LEFT:
+                    location = location.left();
+                    break;
+                case RIGHT:
+                    location = location.right();
+                    break;
+            }
 
+            if(stone != currentStone) {
+                list.add(currentStone);
+            }
 
+            currentStone = this.board.get(location);
+        }
 
+        return list;
+    }
+
+    public List<Stone> getRow (Stone stone) {
+        return ListUtils.union(this.getDirection(stone, Direction.LEFT), this.getDirection(stone, Direction.RIGHT));
+    }
+
+    public List<Stone> getColumn (Stone stone) {
+        return ListUtils.union(this.getDirection(stone, Direction.UP), this.getDirection(stone, Direction.DOWN));
+    }
+
+    public boolean validateList (List<Stone> list, Stone stone) {
+        if (this.isUniqueShape(list, stone) && this.isMatchingColor(list, stone)) {
+            return true;
+        } else if (this.isMatchingShape(list, stone) && this.isUniqueColor(list, stone)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean validMove (Stone stone) {
+        List<Stone> row = this.getRow(stone);
+        List<Stone> column = this.getColumn(stone);
+
+        if(row.size() > 1 && column.size() > 1) {
+            return validateList(row, stone) && validateList(column, stone);
+        }
+        else if (row.size() > 1) {
+            return validateList(row, stone);
+        }
+        else if (column.size() > 1) {
+            return validateList(column, stone);
+        }
+        else {
+            return false;
+        }
+    }
 }
 
 
