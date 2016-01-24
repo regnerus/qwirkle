@@ -325,6 +325,9 @@ public class Protocol {
 
         public static final String DECLINEINVITE = "DECLINEINVITE";
 
+
+        public static final String ACCEPTINVITE = "ACCEPTINVITE";
+
         public static class Settings {
 
             /**
