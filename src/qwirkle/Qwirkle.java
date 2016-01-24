@@ -39,7 +39,7 @@ public class Qwirkle {
         board.placeStone(stone5, 0, 4);
         board.placeStone(stone6, 2, 5);
         board.placeStone(stone7, 0, 6);
-
+        
         cli.logSimple(board.toString());
         cli.logBold("Bag " + bag.bagSize());
         cli.logBold("Hand " + hand.toString());
