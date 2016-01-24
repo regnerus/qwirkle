@@ -1,12 +1,15 @@
 package qwirkle.shared;
 
+// game
 /**
  * Handles generic CLI output across server and clients
  */
 public class CliController {
 
-    final static String ANSI_CLS = "\u001b[2J";
-    final static String ANSI_HOME = "\u001b[H";
+    public static final String ANSI_CLS = "\u001b[2J";
+    public static final String ANSI_HOME = "\u001b[H";
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ERROR_COLOR = "\u001B[31m";
 
     public CliController() {
 
@@ -37,15 +40,12 @@ public class CliController {
     }
 
     public void logSimple(String message) {
-
+        System.out.println(message);
     }
 
-    public void logBoard() {
-
-    }
-
-    public void logServerError() {
-
+    public static void logServerError(Exception e) {
+        // print this message in red
+        System.out.println(ERROR_COLOR + e.getMessage() + ANSI_RESET);
     }
 
     public void logClientError() {

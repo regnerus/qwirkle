@@ -12,6 +12,7 @@ import java.util.UUID;
 import qwirkle.server.controllers.ClientController;
 
 // shared
+import qwirkle.shared.CliController;
 import qwirkle.shared.Protocol;
 
 /**
@@ -67,8 +68,7 @@ public class QwirkleServer {
             }
         }
         catch (IOException e) {
-            // TODO: use CLI controller
-            System.out.println(e);
+            CliController.logServerError(e);
         }
     }
 
@@ -112,7 +112,7 @@ public class QwirkleServer {
             // TODO: gracefully close connected clients
         }
         catch (Exception e) {
-            // TODO: log error and make it an IOException
+            CliController.logServerError(e);
         }
         System.exit(0);
     }

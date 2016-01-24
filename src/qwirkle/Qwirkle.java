@@ -1,9 +1,12 @@
 package qwirkle;
 
-import qwirkle.game.*;
+import qwirkle.game.Bag;
+import qwirkle.game.Board;
+import qwirkle.game.Hand;
+import qwirkle.game.Stone;
 import qwirkle.shared.CliController;
 
-import java.util.Map;
+// shared
 
 /**
  * The Qwirkle Main
@@ -14,6 +17,8 @@ public class Qwirkle {
 
     public static void main(String[] args) {
         // TODO: implement gameplay
+
+        CliController cli = new CliController();
 
         Board board = new Board();
         Bag bag = new Bag();
@@ -35,24 +40,8 @@ public class Qwirkle {
         board.placeStone(stone6, 2, 5);
         board.placeStone(stone7, 0, 6);
 
-        System.out.println("ValidMove: " + board.validMove(stone1));
-
-        Map<Position, Stone> map = board.getBoard();
-
-//        for(int y = board.getBoundsY().getMin(); y <= board.getBoundsY().getMax(); y++) {
-//            for (int x = board.getBoundsX().getMin(); x <= board.getBoundsX().getMax(); x++) {
-//                System.out.print(board.getStone(new Position(x, y)).toString() + " ");
-//            }
-//            System.out.println();
-//        }
-        System.out.println(board.toString());
-        System.out.println("\u001B[1mBag " + bag.bagSize());
-        System.out.println("Hand " + hand.toString());
-
-        CliController cli = new CliController();
-
-        cli.printScreen("Hello World!");
-
-        cli.printScreen("Hello World2!");
+        cli.logSimple(board.toString());
+        cli.logSimple("\u001B[1mBag " + bag.bagSize());
+        cli.logSimple("Hand " + hand.toString());
     }
 }
