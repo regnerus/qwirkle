@@ -1,28 +1,51 @@
 package qwirkle.shared;
 
 // game
-import qwirkle.game.Board;
-import qwirkle.game.Position;
-
 /**
  * Handles generic CLI output across server and clients
  */
 public class CliController {
 
+    public static final String ANSI_CLS = "\u001b[2J";
+    public static final String ANSI_HOME = "\u001b[H";
     public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BOLD = "\u001B[1m";
     public static final String ERROR_COLOR = "\u001B[31m";
 
-    public void logSimple(String message) {
+    public CliController() {
+
+    }
+
+    public static void clearScreen() {
+        try {
+            final String os = System.getProperty("os.name");
+
+            if (os.contains("Windows")) {
+                Runtime.getRuntime().exec("cls");
+            }
+            else {
+                Runtime.getRuntime().exec("clear");
+            }
+        }
+        catch (final Exception e)
+        {
+            //TODO: Handle Exceptions
+        }
+    }
+
+    public void printScreen(String message) {
+        this.clearScreen();
+        System.out.print(ANSI_CLS + ANSI_HOME);
+        System.out.flush();
         System.out.println(message);
     }
 
-    public void logBoard(Board board) {
-        for(int y = board.getBoundsY().getMin(); y <= board.getBoundsY().getMax(); y++) {
-            for (int x = board.getBoundsX().getMin(); x <= board.getBoundsX().getMax(); x++) {
-                System.out.print(board.getStone(new Position(x, y)).toString() + " ");
-            }
-            System.out.println();
-        }
+    public void logSimple(String message) {
+        System.out.println(message + ANSI_RESET);
+    }
+
+    public void logBold(String message) {
+        System.out.println(ANSI_BOLD + message + ANSI_RESET);
     }
 
     public static void logServerError(Exception e) {
