@@ -1,9 +1,7 @@
 package qwirkle.player;
 
 // game
-import qwirkle.game.Board;
 import qwirkle.game.Game;
-import qwirkle.game.Move;
 
 /**
  * Created by Bouke on 23/01/16.
@@ -12,8 +10,8 @@ public class HumanPlayer extends ClientPlayer {
 
     private String name;
 
-    public HumanPlayer(String name) {
-        super(name);
+    public HumanPlayer(Game game, String name) {
+        super(game, name);
     }
 
     public String getName() {

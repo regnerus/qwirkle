@@ -11,6 +11,7 @@ public class CliController {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BOLD = "\u001B[1m";
     public static final String ERROR_COLOR = "\u001B[31m";
+    public static final String RETURN = "\n\r";
 
     public CliController() {
 

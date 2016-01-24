@@ -2,6 +2,7 @@ package qwirkle.game;
 
 // apache
 import org.apache.commons.collections4.ListUtils;
+import qwirkle.shared.CliController;
 
 // java
 import java.util.*;
@@ -286,10 +287,11 @@ public class Board extends Move {
     public String toString() {
         String s = "";
         for(int y = this.getBoundsY().getMin(); y <= this.getBoundsY().getMax(); y++) {
+            s = s + "1 ";
             for (int x = this.getBoundsX().getMin(); x <= this.getBoundsX().getMax(); x++) {
                 s = s + this.getStone(new Position(x, y)).toString() + " ";
             }
-            s = s + "\n";
+            s = s + CliController.RETURN;
         }
 
         return s;

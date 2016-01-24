@@ -16,8 +16,8 @@ public class ComputerPlayer extends ClientPlayer {
      * but has an AI to determine the next moves in order to win the game.
      * @param name
      */
-    public ComputerPlayer(String name) {
-        super(name);
+    public ComputerPlayer(Game game, String name) {
+        super(game, name);
     }
 
     /**
