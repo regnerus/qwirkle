@@ -56,11 +56,11 @@ public class QwirkleServer {
             ServerSocket serverSock = new ServerSocket(port);
             host = InetAddress.getLocalHost().getHostAddress();
 
-            while(true) {
+            while (true) {
                 // start accepting socket connections
                 Socket socket = serverSock.accept();
 
-                ClientController client = new ClientController(this, socket, 0);
+                ClientController client = new ClientController(this, socket);
 
                 // handle the new client connection
                 handleClientConnection(client);

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 // game
-import qwirkle.player.HumanPlayer;
+import qwirkle.player.ServerPlayer;
 
 /**
  * Main game class
@@ -15,10 +15,20 @@ public class Game {
     public static final int MAX_HANDSIZE = 6;
     public static final int TILES_OF_EACH = 3; //As defined in the game rules.
 
-    private ArrayList<HumanPlayer> humanPlayers;
+    private ArrayList<ServerPlayer> players;
 
+    private Bag bag;
+    private Board board;
+
+    private boolean finished = false;
+
+    /**
+     * Start a new game with players and a new bag
+     */
     public Game() {
-        humanPlayers = new ArrayList();
+        players = new ArrayList();
+        bag = new Bag();
+        board = new Board();
     }
 
     public void startGame() {
@@ -33,15 +43,23 @@ public class Game {
 
     }
 
+    public Bag getBag() {
+        return bag;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
     /**
      * Emit chat message to specific human player
      * @param clientId UUID of the target client
      * @param message message to send to client
      */
     public void emitToPlayer(UUID clientId, String message) {
-        for (int i = 0; i < humanPlayers.size(); i++) {
-            if (humanPlayers.get(i).getClient().getClientId() == clientId)
-                humanPlayers.get(i).getClient().emit(message);
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getClient().getClientId() == clientId)
+                players.get(i).getClient().emit(message);
         }
     }
 
@@ -50,8 +68,12 @@ public class Game {
      * @param message
      */
     public void emitToAllPlayers(String message) {
-        for (int i = 0; i < humanPlayers.size(); i++) {
-            humanPlayers.get(i).getClient().emit(message);
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).getClient().emit(message);
         }
+    }
+
+    public boolean isFinished() {
+        return finished;
     }
 }
