@@ -6,7 +6,7 @@ import qwirkle.game.*;
 /**
  * Created by Bouke on 23/01/16.
  */
-public class ComputerPlayer extends Player {
+public class ComputerPlayer extends ClientPlayer {
 
     private int thinkTime;
 

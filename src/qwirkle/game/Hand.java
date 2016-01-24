@@ -7,26 +7,42 @@ import java.util.List;
  * Created by Bouke on 24/01/16.
  */
 public class Hand {
-    List<Stone> hand;
+    List<Stone> stones;
 
     public Hand (Bag bag) {
-        this.hand = new ArrayList<>();
+        this.stones = new ArrayList<>();
 
         for (int i = 0; i < Game.MAX_HANDSIZE; i++) {
-            this.hand.add(bag.getStone());
+            this.stones.add(bag.getStone());
         }
     }
 
     public List<Stone> getHand () {
-        return hand;
+        return stones;
+    }
+
+    /**
+     * Add a stone to this hand
+     * @param stone stone to add
+     */
+    public void addStone(Stone stone) {
+        stones.add(stone);
+    }
+
+    /**
+     * Remove stone from this hand
+     * @param stone stone to remove
+     */
+    public void removeStone(Stone stone) {
+        stones.remove(stone);
     }
 
     @Override
     public String toString() {
         String s = "";
 
-        for (int i = 0; i < this.hand.size(); i++) {
-            s = s + this.hand.get(i).toString() + " ";
+        for (int i = 0; i < this.stones.size(); i++) {
+            s = s + this.stones.get(i).toString() + " ";
         }
 
         return s;

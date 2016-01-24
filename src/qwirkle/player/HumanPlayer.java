@@ -1,23 +1,35 @@
 package qwirkle.player;
 
-import qwirkle.server.controllers.ClientController;
+// game
+import qwirkle.game.Board;
+import qwirkle.game.Game;
+import qwirkle.game.Move;
 
 /**
  * Created by Bouke on 23/01/16.
  */
-public class HumanPlayer extends Player {
+public class HumanPlayer extends ClientPlayer {
 
-    private ClientController client;
+    private String name;
 
     public HumanPlayer(String name) {
         super(name);
     }
 
+    public String getName() {
+        return name;
+    }
+
+//    public Move nextMove(Board board) {
+//
+//    }
+//
+//    public Move firstMove(Board board) {
+//
+//    }
+
     public boolean isHuman() {
         return true;
     }
 
-    public ClientController getClient() {
-        return client;
-    }
 }

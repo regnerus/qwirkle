@@ -52,7 +52,6 @@ public class Bag {
 
     public Stone switchStone (Stone stone) {
         this.bag.add(stone);
-
         return getStone();
     }
 }

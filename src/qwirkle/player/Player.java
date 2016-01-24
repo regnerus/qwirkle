@@ -1,42 +1,30 @@
 package qwirkle.player;
 
-// server
-import qwirkle.server.controllers.ClientController;
+// game
+import qwirkle.game.*;
 
 /**
- * Created by Bouke on 23/01/16.
+ * Created by Chris on 23/01/16.
  */
-public abstract class Player {
+public interface Player {
 
-    public static final int MAX_HAND = 6;
+    public String getName();
 
-    private ClientController client;
-    private String name;
+    public boolean isHuman();
 
-    /**
-     * Create a new local player
-     * @param name
-     */
-    public Player(String name) {
-        this.name = name;
-    }
+    public void receiveStone(Stone stone);
 
-    /**
-     * Create a new networked player
-     * @param name
-     * @param client
-     */
-    public Player(String name, ClientController client) {
+    public void playStone(Stone stone);
 
-    }
+    public void tradeStone(Stone stone);
 
-    public abstract boolean isHuman();
+    public Move nextMove(Board board);
 
-    /**
-     * Get the player name
-     * @return
-     */
-    public String getName() {
-        return name;
-    }
+    public Move firstMove(Board board);
+
+    public Hand getHand();
+
+    public void joinGame(Game game);
+
+    public void leaveGame();
 }
