@@ -57,6 +57,14 @@ public class Stone {
         return this.isPlaced;
     }
 
+    public void setPlaced(Boolean placed) {
+        this.isPlaced = placed;
+    }
+
+    public void setPlaced() {
+        this.setPlaced(true);
+    }
+
     public void setLocation (int x, int y) {
         this.location = new Position(x, y);
     }

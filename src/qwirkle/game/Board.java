@@ -2,10 +2,8 @@ package qwirkle.game;
 
 import org.apache.commons.collections4.ListUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -53,20 +51,78 @@ public class Board extends Move {
     }
 
     public void placeStone(Stone stone) {
-        // TODO: Validate stone position with validateAdjacentPoint
-
-        if(this.validMove(stone)) {
+//        // TODO: Validate stone position with validateAdjacentPoint
+//
+//        if(this.validMove(stone)) {
             this.calculateBoardSize(stone.getLocation());
             board.put(stone.getLocation(), stone);
-        }
-        else {
-            //TODO: Invalid Move
-        }
+//        }
+//        else {
+////            //TODO: Invalid Move
+//        }
     }
 
     public void placeStone(Stone stone, int x, int y) {
         stone.setLocation(x, y);
         this.placeStone(stone);
+    }
+
+    public void removeStone(Stone stone) {
+        this.board.remove(stone.getLocation());
+        stone.setPlaced(false);
+    }
+
+    public int placeStones(List<Stone> stones) {
+        List<List<Stone>> connectedColumns = new ArrayList<>();
+        List<List<Stone>> connectedRows = new ArrayList<>();
+
+        List<List<Stone>> connectedAll;
+        List<Stone> placedStones = new ArrayList<>();
+        int points = 0;
+
+        for(Stone stone : stones) {
+            if(this.validMove(stone)) {
+                placedStones.add(stone);
+                stone.setPlaced();
+                placeStone(stone);
+            }
+            else {
+                for(Stone s : placedStones) {
+                    this.removeStone(s);
+                }
+
+                return -1;
+            }
+        }
+
+        for(Stone stone : stones) {
+            if(this.getColumn(stone).size() > 1) {
+                if(connectedColumns.size() < 1) {
+                    connectedColumns.add(this.getColumn(stone));
+                }
+                else {
+                    connectedColumns.addAll(connectedColumns.stream().filter(list -> !list.equals(this.getColumn(stone))).map(list -> this.getColumn(stone)).collect(Collectors.toList()));
+
+                }
+            }
+
+            if(this.getRow(stone).size() > 1) {
+                if(connectedRows.size() < 1) {
+                    connectedRows.add(this.getRow(stone));
+                }
+                else {
+                    connectedRows.addAll(connectedRows.stream().filter(list -> !list.equals(this.getRow(stone))).map(list -> this.getRow(stone)).collect(Collectors.toList()));
+                }
+            }
+        }
+
+        connectedAll = ListUtils.union(connectedColumns, connectedRows);
+
+        for(List<Stone> stonesList : connectedAll) {
+            points = points + stonesList.size();
+        }
+
+        return points;
     }
 
     public Stone getStone(Position location) {
@@ -109,15 +165,41 @@ public class Board extends Move {
             currentStone = this.board.get(location);
         }
 
+        if(direction == Direction.LEFT || direction == Direction.UP) {
+            Collections.reverse(list);
+        }
+
         return list;
     }
 
+    public List<Stone> getRow (Stone stone, boolean includeSelf) {
+        List<Stone> left = this.getDirection(stone, Direction.LEFT);
+        List<Stone> right = this.getDirection(stone, Direction.RIGHT);
+
+        if(includeSelf) {
+            left.add(stone);
+        }
+
+        return ListUtils.union(left, right);
+    }
+
+    public List<Stone> getColumn (Stone stone, boolean includeSelf) {
+        List<Stone> up = this.getDirection(stone, Direction.UP);
+        List<Stone> down = this.getDirection(stone, Direction.DOWN);
+
+        if(includeSelf) {
+            up.add(stone);
+        }
+
+        return ListUtils.union(up, down);
+    }
+
     public List<Stone> getRow (Stone stone) {
-        return ListUtils.union(this.getDirection(stone, Direction.LEFT), this.getDirection(stone, Direction.RIGHT));
+        return this.getRow(stone, true);
     }
 
     public List<Stone> getColumn (Stone stone) {
-        return ListUtils.union(this.getDirection(stone, Direction.UP), this.getDirection(stone, Direction.DOWN));
+        return this.getColumn(stone, true);
     }
 
     public boolean validateList (List<Stone> list, Stone stone) {
@@ -132,15 +214,17 @@ public class Board extends Move {
     }
 
     public boolean validMove (Stone stone) {
-        List<Stone> row = this.getRow(stone);
-        List<Stone> column = this.getColumn(stone);
+        List<Stone> row = this.getRow(stone, false);
+        List<Stone> column = this.getColumn(stone, false);
 
         if(this.board.size() < 1) {
             return true;
         }
 
+
+
         if(row.size() >= 1 && column.size() >= 1) {
-            return validateList(row, stone) && validateList(column, stone);
+            return validateList(row, stone) || validateList(column, stone);
         }
         else if (row.size() >= 1) {
             return validateList(row, stone);

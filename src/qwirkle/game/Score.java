@@ -29,6 +29,6 @@ public class Score{
     }
 
     public Points getPlayer(Player player) {
-        return this.players.get(player)
+        return this.players.get(player);
     }
 }
