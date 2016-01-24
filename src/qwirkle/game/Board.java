@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  */
 public class Board extends Move {
 
-    private Mapg<Position, Stone> board;
+    private Map<Position, Stone> board;
     private Map<Position, Stone> possibleMoves;
 
     public Board () {
