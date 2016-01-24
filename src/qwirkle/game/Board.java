@@ -61,8 +61,6 @@ public class Board extends Move {
     }
 
     public boolean placeStone(Stone stone) {
-        // TODO: Validate stone position with validateAdjacentPoint
-
         if (this.validMove(stone)) {
             this.calculateBoardSize(stone.getLocation());
             board.put(stone.getLocation(), stone);
@@ -286,9 +284,46 @@ public class Board extends Move {
     @Override
     public String toString() {
         String s = "";
-        for(int y = this.getBoundsY().getMin(); y <= this.getBoundsY().getMax(); y++) {
-            s = s + "1 ";
-            for (int x = this.getBoundsX().getMin(); x <= this.getBoundsX().getMax(); x++) {
+
+        char sectionX = 'A', sectionY = 'A';
+        int numberX = 0, numberY = 0;
+
+        s = s + "    ";
+        for (int x = this.getBoundsX().getMin() - 1; x <= this.getBoundsX().getMax() + 1; x++) {
+            if(numberX % 10 == 0) {
+                s = s + sectionX + " ";
+                sectionX++;
+            }
+            else {
+                s = s + "  ";
+            }
+            numberX++;
+        }
+
+        s = s + CliController.RETURN;
+
+        numberX = 0;
+
+        s = s + "    ";
+        for (int x = this.getBoundsX().getMin() - 1; x <= this.getBoundsX().getMax() + 1; x++) {
+            s = s + numberX % 10 + " ";
+            numberX++;
+        }
+
+        s = s + CliController.RETURN;
+
+        for(int y = this.getBoundsY().getMin() - 1; y <= this.getBoundsY().getMax() + 1; y++) {
+            if(numberY % 10 == 0) {
+                s = s + sectionY + " ";
+                sectionY++;
+            }
+            else {
+                s = s + "  ";
+            }
+            s = s + numberY % 10 + " ";
+            numberY++;
+            for (int x = this.getBoundsX().getMin() - 1; x <= this.getBoundsX().getMax() + 1; x++) {
+
                 s = s + this.getStone(new Position(x, y)).toString() + " ";
             }
             s = s + CliController.RETURN;

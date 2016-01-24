@@ -50,32 +50,67 @@ public class Game {
         Stone stone1 = new Stone(Stone.Color.RED, Stone.Shape.STAR);
         Stone stone2 = new Stone(Stone.Color.GREEN, Stone.Shape.STAR);
         Stone stone3 = new Stone(Stone.Color.BLUE, Stone.Shape.STAR);
-        Stone stone4 = new Stone(Stone.Color.GREEN, Stone.Shape.SQUARE);
-        Stone stone5 = new Stone(Stone.Color.GREEN, Stone.Shape.CIRCLE);
-        Stone stone6 = new Stone(Stone.Color.GREEN, Stone.Shape.HEART);
+        Stone stone4 = new Stone(Stone.Color.YELLOW, Stone.Shape.STAR);
+        Stone stone5 = new Stone(Stone.Color.PURPLE, Stone.Shape.STAR);
+        Stone stone6 = new Stone(Stone.Color.ORANGE, Stone.Shape.STAR);
+
+        Stone stone7 = new Stone(Stone.Color.GREEN, Stone.Shape.SQUARE);
+        Stone stone8 = new Stone(Stone.Color.GREEN, Stone.Shape.CIRCLE);
+        Stone stone9 = new Stone(Stone.Color.GREEN, Stone.Shape.HEART);
+
+        Stone stone10 = new Stone(Stone.Color.RED, Stone.Shape.HEART);
+        Stone stone11 = new Stone(Stone.Color.RED, Stone.Shape.SQUARE);
+        Stone stone12 = new Stone(Stone.Color.RED, Stone.Shape.STAR);
+        Stone stone13 = new Stone(Stone.Color.RED, Stone.Shape.CIRCLE);
+        Stone stone14 = new Stone(Stone.Color.RED, Stone.Shape.CROSS);
+        Stone stone15 = new Stone(Stone.Color.RED, Stone.Shape.DIAMOND);
 
 
         stone1.setLocation(0, -1);
         stone2.setLocation(0, 0);
         stone3.setLocation(0, 1);
+        stone4.setLocation(0, 2);
+        stone5.setLocation(0, 3);
+        stone6.setLocation(0, 4);
 
-        stone4.setLocation(-1, 0);
-        stone5.setLocation(1, 0);
-        stone6.setLocation(2, 0);
+        stone7.setLocation(-1, 0);
+        stone8.setLocation(1, 0);
+        stone9.setLocation(2, 0);
+
+        stone10.setLocation(1, -1);
+        stone11.setLocation(1, -2);
+        stone12.setLocation(1, -3);
+        stone13.setLocation(1, -4);
+        stone14.setLocation(1, -5);
+        stone15.setLocation(1, -6);
 
         ArrayList<Stone> addStones = new ArrayList<>();
         addStones.add(stone1);
         addStones.add(stone2);
         addStones.add(stone3);
-
-        System.out.println("points: " + board.placeStones(addStones));
-
-        addStones = new ArrayList<>();
         addStones.add(stone4);
         addStones.add(stone5);
         addStones.add(stone6);
 
         System.out.println("points: " + board.placeStones(addStones));
+
+//        addStones = new ArrayList<>();
+//        addStones.add(stone7);
+//        addStones.add(stone8);
+//        addStones.add(stone9);
+//
+//        System.out.println("points: " + board.placeStones(addStones));
+
+        addStones = new ArrayList<>();
+        addStones.add(stone10);
+        addStones.add(stone11);
+        addStones.add(stone12);
+        addStones.add(stone13);
+        addStones.add(stone14);
+        addStones.add(stone15);
+
+        System.out.println("points: " + board.placeStones(addStones));
+
     }
 
     public void stopGame() {
