@@ -9,6 +9,7 @@ public class CliController {
     public static final String ANSI_CLS = "\u001b[2J";
     public static final String ANSI_HOME = "\u001b[H";
     public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BOLD = "\u001B[1m";
     public static final String ERROR_COLOR = "\u001B[31m";
 
     public CliController() {
@@ -40,7 +41,11 @@ public class CliController {
     }
 
     public void logSimple(String message) {
-        System.out.println(message);
+        System.out.println(message + ANSI_RESET);
+    }
+
+    public void logBold(String message) {
+        System.out.println(ANSI_BOLD + message + ANSI_RESET);
     }
 
     public static void logServerError(Exception e) {
