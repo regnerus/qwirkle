@@ -21,8 +21,8 @@ public class Board extends Move {
         this.board = new HashMap<>();
 
         // TODO: randomize first stone
-        Stone firstMove = new Stone(Stone.Color.BLUE, Stone.Shape.CIRCLE);
-        placeStone(firstMove, 0, 0);
+//        Stone firstMove = new Stone(Stone.Color.BLUE, Stone.Shape.CIRCLE);
+//        placeStone(firstMove, 0, 0);
     }
 
     public Map<Position, Stone> getBoard () {
