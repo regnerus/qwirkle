@@ -16,6 +16,7 @@ public class Qwirkle {
 
         Board board = new Board();
         Bag bag = new Bag();
+        Hand hand = new Hand(bag);
 
         System.out.println(bag.bagSize());
 
@@ -47,5 +48,7 @@ public class Qwirkle {
             }
             System.out.println();
         }
+
+        System.out.println("\u001B[1mBag " + bag.bagSize() + "     " + "Hand " + hand.toString());
     }
 }
