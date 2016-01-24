@@ -9,8 +9,8 @@ public class HumanPlayer extends Player {
 
     private ClientController client;
 
-    public HumanPlayer() {
-        super();
+    public HumanPlayer(String name) {
+        super(name);
     }
 
     public boolean isHuman() {
