@@ -37,28 +37,15 @@ public class Qwirkle {
         Stone stone7 = new Stone(Stone.Color.RED, Stone.Shape.HEART);
         Stone stone8 = new Stone(Stone.Color.YELLOW, Stone.Shape.HEART);
 
-        board.placeStone(stone1, 0, 0);
-//        board.placeStone(stone2, 1, 0);
-        board.placeStone(stone3, 2, 0);
         stone2.setLocation(1, 0);;
-        board.placeStone(stone4, 1, 1);
-        board.placeStone(stone7, 2, -1);
         stone5.setLocation(1, -1);
-        stone8.setLocation(4, -9);
-//        board.placeStone(stone5, 1, -1);
-        board.placeStone(stone6, 1, -2);
 
         ArrayList<Stone> addStones = new ArrayList<>();
         addStones.add(stone2);
         addStones.add(stone5);
-        addStones.add(stone8);
+//        addStones.add(stone8);
 
         System.out.println("points: " + board.placeStones(addStones));
-//
-//
-//        System.out.println(board.getRow(stone2));
-//
-//        System.out.println(board.getColumn(stone2).equals(board.getColumn(stone4)));
 
         // log to cli
         cli.logSimple(board.toString());

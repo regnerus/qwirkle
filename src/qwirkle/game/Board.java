@@ -50,21 +50,23 @@ public class Board extends Move {
         return boundsY;
     }
 
-    public void placeStone(Stone stone) {
-//        // TODO: Validate stone position with validateAdjacentPoint
-//
-//        if(this.validMove(stone)) {
+    public boolean placeStone(Stone stone) {
+        // TODO: Validate stone position with validateAdjacentPoint
+
+        if(this.validMove(stone)) {
             this.calculateBoardSize(stone.getLocation());
             board.put(stone.getLocation(), stone);
-//        }
-//        else {
-////            //TODO: Invalid Move
-//        }
+            stone.setPlaced(true);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
-    public void placeStone(Stone stone, int x, int y) {
+    public boolean placeStone(Stone stone, int x, int y) {
         stone.setLocation(x, y);
-        this.placeStone(stone);
+        return this.placeStone(stone);
     }
 
     public void removeStone(Stone stone) {
@@ -81,16 +83,11 @@ public class Board extends Move {
         int points = 0;
 
         for(Stone stone : stones) {
-            if(this.validMove(stone)) {
+            if(this.placeStone(stone)) {
                 placedStones.add(stone);
-                stone.setPlaced();
-                placeStone(stone);
             }
             else {
-                for(Stone s : placedStones) {
-                    this.removeStone(s);
-                }
-
+                placedStones.forEach(this::removeStone);
                 return -1;
             }
         }
