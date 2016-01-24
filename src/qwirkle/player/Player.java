@@ -14,7 +14,7 @@ public abstract class Player {
     private String name;
 
     /**
-     * Create a new local or computer player
+     * Create a new local player
      * @param name
      */
     public Player(String name) {
@@ -22,7 +22,7 @@ public abstract class Player {
     }
 
     /**
-     * Create a new networked player connected to a client
+     * Create a new networked player
      * @param name
      * @param client
      */
