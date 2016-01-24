@@ -5,8 +5,8 @@ import qwirkle.game.*;
 
 // java
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by chris on 24/01/16.
@@ -23,14 +23,13 @@ public class DumbStrategy implements Strategy {
 
         Map<Position, Stone> move = new HashMap<Position, Stone>();
 
-        for (Position pos : game.getBoard().getPossibleMoves()) {             // loop over empty fields
-            for (Stone stone : hand.getStones()) {       // loop over stones in hand
-                if (game.getBoard().validMove(stone)) {  // if valid move
-                    // game.getBoard().placeStone(stone);   // put on board
+        // loop over stones in hand
+        for (Stone stone : hand.getStones()) {
 
-                    move.
-                }
-            }
+            // get xth possible move
+
+            // add to move map so it can be placed on board
+            //move.put(stone.getLocation(), stone);
         }
 
         return move;
