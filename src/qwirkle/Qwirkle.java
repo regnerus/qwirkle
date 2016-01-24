@@ -1,6 +1,7 @@
 package qwirkle;
 
 import qwirkle.game.*;
+import qwirkle.shared.CliController;
 
 import java.util.Map;
 
@@ -18,8 +19,6 @@ public class Qwirkle {
         Bag bag = new Bag();
         Hand hand = new Hand(bag);
 
-        System.out.println(bag.bagSize());
-
         Stone stone1 = new Stone(Stone.Color.RED, Stone.Shape.STAR);
         Stone stone2 = bag.getStone();
         Stone stone3 = new Stone(Stone.Color.GREEN, Stone.Shape.STAR);
@@ -28,10 +27,8 @@ public class Qwirkle {
         Stone stone6 = bag.getStone();
         Stone stone7 = bag.getStone();
 
-        System.out.println(bag.bagSize());
-
         board.placeStone(stone1, 0, 3);
-        board.placeStone(stone2, 4, 0);
+        board.placeStone(stone2, -4, 0);
         board.placeStone(stone3, 0, 2);
         board.placeStone(stone4, 1, 1);
         board.placeStone(stone5, 0, 4);
@@ -42,13 +39,20 @@ public class Qwirkle {
 
         Map<Position, Stone> map = board.getBoard();
 
-        for(int y = board.getBoundsY().getMin(); y <= board.getBoundsY().getMax(); y++) {
-            for (int x = board.getBoundsX().getMin(); x <= board.getBoundsX().getMax(); x++) {
-                System.out.print(board.getStone(new Position(x, y)).toString() + " ");
-            }
-            System.out.println();
-        }
+//        for(int y = board.getBoundsY().getMin(); y <= board.getBoundsY().getMax(); y++) {
+//            for (int x = board.getBoundsX().getMin(); x <= board.getBoundsX().getMax(); x++) {
+//                System.out.print(board.getStone(new Position(x, y)).toString() + " ");
+//            }
+//            System.out.println();
+//        }
+        System.out.println(board.toString());
+        System.out.println("\u001B[1mBag " + bag.bagSize());
+        System.out.println("Hand " + hand.toString());
 
-        System.out.println("\u001B[1mBag " + bag.bagSize() + "     " + "Hand " + hand.toString());
+        CliController cli = new CliController();
+
+        cli.printScreen("Hello World!");
+
+        cli.printScreen("Hello World2!");
     }
 }

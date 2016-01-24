@@ -143,6 +143,19 @@ public class Board extends Move {
             return false;
         }
     }
+
+    @Override
+    public String toString() {
+        String s = "";
+        for(int y = this.getBoundsY().getMin(); y <= this.getBoundsY().getMax(); y++) {
+            for (int x = this.getBoundsX().getMin(); x <= this.getBoundsX().getMax(); x++) {
+                s = s + this.getStone(new Position(x, y)).toString() + " ";
+            }
+            s = s + "\n";
+        }
+
+        return s;
+    }
 }
 
 
