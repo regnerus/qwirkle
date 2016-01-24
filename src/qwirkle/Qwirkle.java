@@ -1,5 +1,6 @@
 package qwirkle;
 
+// game
 import qwirkle.game.Bag;
 import qwirkle.game.Board;
 import qwirkle.game.Hand;
@@ -7,6 +8,7 @@ import qwirkle.game.Stone;
 import qwirkle.shared.CliController;
 
 // shared
+// java
 
 /**
  * The Qwirkle Main
@@ -19,27 +21,25 @@ public class Qwirkle {
         // TODO: implement gameplay
 
         CliController cli = new CliController();
-
         Board board = new Board();
         Bag bag = new Bag();
         Hand hand = new Hand(bag);
 
         Stone stone1 = new Stone(Stone.Color.RED, Stone.Shape.STAR);
-        Stone stone2 = bag.getStone();
-        Stone stone3 = new Stone(Stone.Color.GREEN, Stone.Shape.STAR);
-        Stone stone4 = bag.getStone();
-        Stone stone5 = new Stone(Stone.Color.BLUE, Stone.Shape.STAR);
-        Stone stone6 = bag.getStone();
-        Stone stone7 = bag.getStone();
+        Stone stone2 = new Stone(Stone.Color.GREEN, Stone.Shape.STAR);
+        Stone stone3 = new Stone(Stone.Color.BLUE, Stone.Shape.STAR);
+        Stone stone4 = new Stone(Stone.Color.GREEN, Stone.Shape.SQUARE);
+        Stone stone5 = new Stone(Stone.Color.GREEN, Stone.Shape.CIRCLE);
+        Stone stone6 = new Stone(Stone.Color.GREEN, Stone.Shape.HEART);
 
-        board.placeStone(stone1, 0, 3);
-        board.placeStone(stone2, -4, 0);
-        board.placeStone(stone3, 0, 2);
+        board.placeStone(stone1, 0, 0);
+        board.placeStone(stone2, 1, 0);
+        board.placeStone(stone3, 2, 0);
         board.placeStone(stone4, 1, 1);
-        board.placeStone(stone5, 0, 4);
-        board.placeStone(stone6, 2, 5);
-        board.placeStone(stone7, 0, 6);
-        
+        board.placeStone(stone5, 1, -1);
+        board.placeStone(stone6, 1, -2);
+
+        // log to cli
         cli.logSimple(board.toString());
         cli.logBold("Bag " + bag.bagSize());
         cli.logBold("Hand " + hand.toString());

@@ -53,7 +53,7 @@ public class Board extends Move {
     }
 
     public void placeStone(Stone stone) {
-        //TODO: Validate stone position with validateAdjacentPoint
+        // TODO: Validate stone position with validateAdjacentPoint
 
         this.calculateBoardSize(stone.getLocation());
         board.put(stone.getLocation(), stone);
