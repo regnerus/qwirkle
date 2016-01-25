@@ -1,32 +1,28 @@
 package qwirkle.server.controllers;
 
 // java
-import java.io.IOException;
-import java.net.Socket;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.UUID;
 
-// junit
-import static org.junit.Assert.*;
-
-// game
 import qwirkle.game.Game;
 import qwirkle.player.ServerPlayer;
-
-// shared
+import qwirkle.server.QwirkleServer;
 import qwirkle.shared.CliController;
 import qwirkle.shared.Protocol;
 import qwirkle.shared.ProtocolParser;
 
+import java.io.*;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.UUID;
+
+import static org.junit.Assert.assertNotNull;
+
+// junit
+// game
+// shared
 // server
-import qwirkle.server.QwirkleServer;
 
 /**
- * ClientController
+ * ClientController.
  * Handles clients that are connecting to the game server
  */
 public class ClientController extends Thread {
@@ -55,7 +51,7 @@ public class ClientController extends Thread {
     }
 
     /**
-     * A seperate thread handles all the messages to and from a client
+     * A seperate thread handles all the messages to and from a client.
      */
     public void run() {
         try {
@@ -66,7 +62,8 @@ public class ClientController extends Thread {
     }
 
     /**
-     * Listen to all incoming messages from client and parse them
+     * Listen to all incoming messages from client and parse them..
+     *
      * @throws IOException
      */
     public void handleMessages() throws IOException {
@@ -79,7 +76,8 @@ public class ClientController extends Thread {
 
             case Protocol.Client.HALLO:
                 assertNotNull(incomingData.get(1));
-                handleHandshake((String) incomingData.get(1)); // called it handShake since HALLO is a stupid name
+                handleHandshake((String) incomingData.get(1));
+                // called it handShake since HALLO is a stupid name
                 break;
 
             case Protocol.Client.QUIT:
@@ -130,7 +128,8 @@ public class ClientController extends Thread {
     }
 
     /**
-     * Get the playerId of the client
+     * Get the playerId of the client.
+     *
      * @return int playerId
      */
     public UUID getClientId() {
@@ -138,7 +137,8 @@ public class ClientController extends Thread {
     }
 
     /**
-     * Get the current game this client is playing in
+     * Get the current game this client is playing in.
+     *
      * @return Game game
      */
     //@ pure
@@ -147,7 +147,8 @@ public class ClientController extends Thread {
     }
 
     /**
-     * Join a game
+     * Join a game.
+     *
      * @param gameId Id of game to join
      */
     public void joinGame(String gameId) {
@@ -157,7 +158,8 @@ public class ClientController extends Thread {
     }
 
     /**
-     * Get player that is playing with this connection
+     * Get player that is playing with this connection.
+     *
      * @return Player player
      */
     public ServerPlayer getPlayer() {
@@ -165,7 +167,7 @@ public class ClientController extends Thread {
     }
 
     /**
-     * Handle client quitting from game
+     * Handle client quitting from game.
      */
     //@ ensures player != null;
     public void handleQuit() {
@@ -179,7 +181,8 @@ public class ClientController extends Thread {
     }
 
     /**
-     * Send message to all clients in same game
+     * Send message to all clients in same game.
+     *
      * @param message the message to send to all other clients in current game
      */
     public void handleChat(String message) {
@@ -187,8 +190,9 @@ public class ClientController extends Thread {
     }
 
     /**
-     * Send message to a specific client
-     * @param message the message to send to the other client
+     * Send message to a specific client.
+     *
+     * @param message        the message to send to the other client
      * @param targetPlayerId the UUID of the target client to send the message to
      */
     public void handleChat(String message, String targetPlayerId) {
@@ -196,7 +200,7 @@ public class ClientController extends Thread {
     }
 
     /**
-     * Send current leaderboard to client
+     * Send current leaderboard to client.
      */
     public void handleLeaderboard() {
 
@@ -207,7 +211,8 @@ public class ClientController extends Thread {
     }
 
     /**
-     * Send message to client
+     * Send message to client.
+     *
      * @param message message to emit to client
      */
     public void emit(String message) {
@@ -215,8 +220,7 @@ public class ClientController extends Thread {
             out.write(message);
             out.newLine();
             out.flush();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             CliController.logServerError(e);
 
             // disconnect client since data can be corrupted from now on
@@ -225,7 +229,7 @@ public class ClientController extends Thread {
     }
 
     /**
-     * Handle client disconnect
+     * Handle client disconnect.
      */
     public void disconnect() {
         // TODO: log disconnect reason
