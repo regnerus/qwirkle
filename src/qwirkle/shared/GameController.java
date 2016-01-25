@@ -34,7 +34,7 @@ public class GameController {
             while (true) {
                 String[] input = cli.readArray("Place, format: \"A0 A0 1\" (return empty to submit turn)");
 
-                if (input.length < 2) {
+                if (input[0].length() < 1) {
                     break;
                 }
 
@@ -45,7 +45,7 @@ public class GameController {
 
             }
 
-            int points = board.placeStones(addStones);
+            int points = game.placeStones(testPlayer, addStones);
 
             if(points > 0) {
                 cli.logSimple("Placed " + addStones.size() + " stones for " + points + " points!");
@@ -53,9 +53,26 @@ public class GameController {
                 cli.logSimple("Invalid move, try again! Tried to place: " + addStones.toString());
                 this.determineMove();
             }
-
-
         } else if (move == 2) {
+            ArrayList<Stone> addStones = new ArrayList<>();
+
+            while (true) {
+                String[] input = cli.readArray("Switch, format: \"1\" (return empty to submit turn)");
+
+                if (input[0].length() < 1) {
+                    break;
+                }
+
+                Stone stone = testPlayer.getHand().coordinateToStone(input[0]);
+
+                addStones.add(stone);
+
+            }
+
+            game.switchStones(testPlayer, addStones);
+
+            cli.logSimple("Switched " + addStones.size() + " stones!");
+            cli.logSimple("New Hand: " + testPlayer.getHand().toString());
 
         } else if (move == 3) {
 

@@ -5,8 +5,10 @@ package qwirkle.shared;
 import qwirkle.game.Bag;
 import qwirkle.game.Board;
 import qwirkle.game.Players;
+import qwirkle.game.Stone;
 import qwirkle.player.Player;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.UUID;
 
@@ -50,6 +52,26 @@ public class Game extends Observable {
     public void addPlayer(Player player) {
         this.addObserver(player);
         this.players.addPlayer(player);
+    }
+
+    public int placeStones(Player player, List<Stone> stones) {
+        int points = this.board.placeStones(stones);
+        if (points > 0) {
+            for(Stone stone : stones) {
+                player.getHand().removeStone(stone);
+            }
+            player.addPoints(points);
+        }
+
+        return points;
+    }
+
+    public boolean switchStones(Player player, List<Stone> stones) {
+        for(Stone stone : stones) {
+            player.getHand().switchStone(stone);
+        }
+
+        return true;
     }
 
     /**
