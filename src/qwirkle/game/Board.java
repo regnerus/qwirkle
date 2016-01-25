@@ -1,6 +1,7 @@
 package qwirkle.game;
 
 // apache
+
 import org.apache.commons.collections4.ListUtils;
 import qwirkle.shared.CliController;
 
@@ -18,8 +19,9 @@ public class Board extends Move {
     private Map<Position, Stone> possibleMoves;
 
     public static final int SPACE_AROUND_BOARD = 3;
+    public static final int ASCII_INTEGER = 64; //for upper case
 
-    public Board () {
+    public Board() {
         this.possibleMoves = new HashMap<>();
         this.board = new HashMap<>();
 
@@ -28,37 +30,35 @@ public class Board extends Move {
 //        placeStone(firstMove, 0, 0);
     }
 
-    public Map<Position, Stone> getBoard () {
+    public Map<Position, Stone> getBoard() {
         return this.board;
     }
 
     private Bounds boundsX = new Bounds();
     private Bounds boundsY = new Bounds();
 
-    private void calculateBoardSize (Position position) {
+    private void calculateBoardSize(Position position) {
         int x = position.getX();
         int y = position.getY();
 
-        if(x < boundsX.getMin()) {
+        if (x < boundsX.getMin()) {
             boundsX.setMin(x);
-        }
-        else if(x > boundsX.getMax()) {
+        } else if (x > boundsX.getMax()) {
             boundsX.setMax(x);
         }
 
-        if(y < boundsY.getMin()) {
+        if (y < boundsY.getMin()) {
             boundsY.setMin(y);
-        }
-        else if(y > boundsY.getMax()) {
+        } else if (y > boundsY.getMax()) {
             boundsY.setMax(y);
         }
     }
 
-    public Bounds getBoundsX () {
+    public Bounds getBoundsX() {
         return boundsX;
     }
 
-    public Bounds getBoundsY () {
+    public Bounds getBoundsY() {
         return boundsY;
     }
 
@@ -74,7 +74,8 @@ public class Board extends Move {
     }
 
     /**
-     * Return possible moves on the board
+     * Return possible moves on the board.
+     *
      * @return
      */
     public Map<Position, Stone> getPossibleMoves() {
@@ -101,40 +102,43 @@ public class Board extends Move {
         List<Stone> placedStones = new ArrayList<>();
         int points = 0;
 
-        for(Stone stone : stones) {
-            if(this.placeStone(stone)) {
+        for (Stone stone : stones) {
+            if (this.placeStone(stone)) {
                 placedStones.add(stone);
-            }
-            else {
+            } else {
                 placedStones.forEach(this::removeStone);
                 return -1;
             }
         }
 
-        for(Stone stone : stones) {
-            if(this.getColumn(stone).size() > 1) {
-                if(connectedColumns.size() < 1) {
+        for (Stone stone : stones) {
+            if (this.getColumn(stone).size() > 1) {
+                if (connectedColumns.size() < 1) {
                     connectedColumns.add(this.getColumn(stone));
-                }
-                else {
-                    connectedColumns.addAll(connectedColumns.stream().filter(list -> !list.equals(this.getColumn(stone))).map(list -> this.getColumn(stone)).collect(Collectors.toList()));
+                } else {
+                    connectedColumns.addAll(connectedColumns.stream()
+                            .filter(list -> !list.equals(this.getColumn(stone)))
+                            .map(list -> this.getColumn(stone))
+                            .collect(Collectors.toList()));
 
                 }
             }
 
-            if(this.getRow(stone).size() > 1) {
-                if(connectedRows.size() < 1) {
+            if (this.getRow(stone).size() > 1) {
+                if (connectedRows.size() < 1) {
                     connectedRows.add(this.getRow(stone));
-                }
-                else {
-                    connectedRows.addAll(connectedRows.stream().filter(list -> !list.equals(this.getRow(stone))).map(list -> this.getRow(stone)).collect(Collectors.toList()));
+                } else {
+                    connectedRows.addAll(connectedRows.stream()
+                            .filter(list -> !list.equals(this.getRow(stone)))
+                            .map(list -> this.getRow(stone))
+                            .collect(Collectors.toList()));
                 }
             }
         }
 
         connectedAll = ListUtils.union(connectedColumns, connectedRows);
 
-        for(List<Stone> stonesList : connectedAll) {
+        for (List<Stone> stonesList : connectedAll) {
             points = points + stonesList.size();
         }
 
@@ -146,13 +150,12 @@ public class Board extends Move {
 
         if (stone == null) {
             return new Stone(Stone.Color.NULL, Stone.Shape.NULL);
-        }
-        else {
+        } else {
             return stone;
         }
     }
 
-    public List<Stone> getDirection (Stone stone, Direction direction) {
+    public List<Stone> getDirection(Stone stone, Direction direction) {
         Position location = stone.getLocation();
         List<Stone> list = new ArrayList<>();
 
@@ -173,79 +176,75 @@ public class Board extends Move {
                     break;
             }
 
-            if(stone != currentStone) {
+            if (stone != currentStone) {
                 list.add(currentStone);
             }
 
             currentStone = this.board.get(location);
         }
 
-        if(direction == Direction.LEFT || direction == Direction.UP) {
+        if (direction == Direction.LEFT || direction == Direction.UP) {
             Collections.reverse(list);
         }
 
         return list;
     }
 
-    public List<Stone> getRow (Stone stone, boolean includeSelf) {
+    public List<Stone> getRow(Stone stone, boolean includeSelf) {
         List<Stone> left = this.getDirection(stone, Direction.LEFT);
         List<Stone> right = this.getDirection(stone, Direction.RIGHT);
 
-        if(includeSelf) {
+        if (includeSelf) {
             left.add(stone);
         }
 
         return ListUtils.union(left, right);
     }
 
-    public List<Stone> getColumn (Stone stone, boolean includeSelf) {
+    public List<Stone> getColumn(Stone stone, boolean includeSelf) {
         List<Stone> up = this.getDirection(stone, Direction.UP);
         List<Stone> down = this.getDirection(stone, Direction.DOWN);
 
-        if(includeSelf) {
+        if (includeSelf) {
             up.add(stone);
         }
 
         return ListUtils.union(up, down);
     }
 
-    public List<Stone> getRow (Stone stone) {
+    public List<Stone> getRow(Stone stone) {
         return this.getRow(stone, true);
     }
 
-    public List<Stone> getColumn (Stone stone) {
+    public List<Stone> getColumn(Stone stone) {
         return this.getColumn(stone, true);
     }
 
-    public boolean validateList (List<Stone> list, Stone stone) {
+    public boolean validateList(List<Stone> list, Stone stone) {
         if (this.isUniqueShape(list, stone) && this.isMatchingColor(list, stone)) {
             return true;
         } else if (this.isMatchingShape(list, stone) && this.isUniqueColor(list, stone)) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
-    public boolean validMove (Stone stone) {
+    public boolean validMove(Stone stone) {
         List<Stone> row = this.getRow(stone, false);
         List<Stone> column = this.getColumn(stone, false);
 
-        if(this.board.size() < 1) {
+        if (this.board.size() < 1) {
             return true;
         }
 
-        if(row.size() >= 1 && column.size() >= 1) {
+        if (row.size() >= 1 && column.size() >= 1) {
             return validateList(row, stone) || validateList(column, stone);
-        }
-        else if (row.size() >= 1) {
+        } else if (row.size() >= 1) {
             return validateList(row, stone);
-        }
-        else if (column.size() >= 1) {
+        } else if (column.size() >= 1) {
             return validateList(column, stone);
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -253,22 +252,34 @@ public class Board extends Move {
     // TODO: check if this is correct
     public void addPossibleMoves(Stone stone) {
         if (!board.keySet().contains(stone.getLocation())) {
-            Stone above = board.get(new Position(stone.getLocation().getX(), stone.getLocation().getY() - 1));
-            Stone below = board.get(new Position(stone.getLocation().getX(), stone.getLocation().getY() + 1));
-            Stone left = board.get(new Position(stone.getLocation().getX() - 1, stone.getLocation().getY()));
-            Stone right = board.get(new Position(stone.getLocation().getX() + 1, stone.getLocation().getY()));
+            Stone above = board.get(
+                    new Position(stone.getLocation().getX(), stone.getLocation().getY() - 1)
+            );
+            Stone below = board.get(
+                    new Position(stone.getLocation().getX(), stone.getLocation().getY() + 1)
+            );
+            Stone left = board.get(
+                    new Position(stone.getLocation().getX() - 1, stone.getLocation().getY())
+            );
+            Stone right = board.get(
+                    new Position(stone.getLocation().getX() + 1, stone.getLocation().getY())
+            );
 
-            if (above != null)
+            if (above != null) {
                 possibleMoves.put(above.getLocation(), above);
+            }
 
-            if (below != null)
+            if (below != null) {
                 possibleMoves.put(below.getLocation(), below);
+            }
 
-            if (left != null)
+            if (left != null) {
                 possibleMoves.put(left.getLocation(), left);
+            }
 
-            if (right != null)
+            if (right != null) {
                 possibleMoves.put(right.getLocation(), right);
+            }
         }
     }
 
@@ -281,21 +292,20 @@ public class Board extends Move {
 
         int positionX = 0, positionY = 0;
 
-        int ASCII_INTEGER = 64; //for upper case
-        if(letterX<=90 & letterX>=65) {
+        if (letterX <= 90 & letterX >= 65) {
             positionX += ((letterX - ASCII_INTEGER) * 10) - 10;
             positionX += Character.getNumericValue(charsX[1]);
             positionX += this.getBoundsX().getMin() - SPACE_AROUND_BOARD;
 
         }
 
-        if(letterY<=90 & letterY>=65) {
+        if (letterY <= 90 & letterY >= 65) {
             positionY += ((letterY - ASCII_INTEGER) * 10) - 10;
             positionY += Character.getNumericValue(charsY[1]);
             positionY += this.getBoundsY().getMin() - SPACE_AROUND_BOARD;
         }
 
-        return new Position(positionX,positionY);
+        return new Position(positionX, positionY);
 
     }
 
@@ -304,7 +314,8 @@ public class Board extends Move {
     }
 
     /**
-     * Check if a stone is valid on this board
+     * Check if a stone is valid on this board.
+     *
      * @param stone stone to validate
      * @return
      */
@@ -322,10 +333,12 @@ public class Board extends Move {
 
         //Letter Row
         s += "    ";
-        for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD; x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD; x++) {
+        for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD;
+             x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD;
+             x++) {
             s += ((numberX % 10 == 0) ? sectionX : " ") + " ";
 
-            if(numberX % 10 == 0) {
+            if (numberX % 10 == 0) {
                 sectionX++;
             }
 
@@ -338,7 +351,9 @@ public class Board extends Move {
         numberX = 0;
 
         s += "    ";
-        for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD; x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD; x++) {
+        for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD;
+             x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD;
+             x++) {
             s += numberX % 10 + " ";
             numberX++;
         }
@@ -346,18 +361,22 @@ public class Board extends Move {
         s = s + CliController.RETURN;
 
         //Board
-        for(int y = this.getBoundsY().getMin() - SPACE_AROUND_BOARD; y <= this.getBoundsY().getMax() + SPACE_AROUND_BOARD; y++) {
+        for (int y = this.getBoundsY().getMin() - SPACE_AROUND_BOARD;
+             y <= this.getBoundsY().getMax() + SPACE_AROUND_BOARD;
+             y++) {
             s += ((numberY % 10 == 0) ? sectionY : " ") + " ";
             s += numberY % 10 + " ";
 
-            for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD; x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD; x++) {
+            for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD;
+                 x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD;
+                 x++) {
                 s += this.getStone(new Position(x, y)).toString() + " ";
             }
 
             s += "" + numberY % 10;
             s += " " + ((numberY % 10 == 0) ? sectionY : " ");
 
-            if(numberY % 10 == 0) {
+            if (numberY % 10 == 0) {
                 sectionY++;
             }
 
@@ -369,7 +388,9 @@ public class Board extends Move {
         numberX = 0;
 
         s += "    ";
-        for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD; x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD; x++) {
+        for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD;
+             x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD;
+             x++) {
             s += numberX % 10 + " ";
             numberX++;
         }
@@ -381,10 +402,12 @@ public class Board extends Move {
         sectionX = 'A';
 
         s += "    ";
-        for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD; x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD; x++) {
+        for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD;
+             x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD;
+             x++) {
             s += ((numberX % 10 == 0) ? sectionX : " ") + " ";
 
-            if(numberX % 10 == 0) {
+            if (numberX % 10 == 0) {
                 sectionX++;
             }
 

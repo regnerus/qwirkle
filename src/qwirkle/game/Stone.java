@@ -20,37 +20,47 @@ public class Stone {
         this.isPlaced = false;
     }
 
-    //Note: Important that NULL is the last value otherwise it will be used to generate random stones.
+    /*
+        Note: Important that NULL is the last value,
+        otherwise it will be used to generate random stones.
+     */
     public enum Shape {
         HEART, STAR, SQUARE, CIRCLE, CROSS, DIAMOND,
         NULL;
     }
 
-    //Note: Important that NULL is the last value otherwise it will be used to generate random stones.
+    /*
+        Note: Important that NULL is the last value,
+        otherwise it will be used to generate random stones.
+     */
     public enum Color {
         RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE,
         NULL;
     }
 
-    private static final Map<Shape, String> shapeMap = new HashMap<Shape, String>() {{
-        put(Shape.HEART, "\u2665");
-        put(Shape.STAR, "\u2737");
-        put(Shape.SQUARE, "\u25A0");
-        put(Shape.CIRCLE, "\u25CF");
-        put(Shape.CROSS, "\u002B");
-        put(Shape.DIAMOND, "\u25C6");
-        put(Shape.NULL, "\u25A1");
-    }};
+    private static final Map<Shape, String> SHAPE_MAP = new HashMap<Shape, String>() {
+        {
+            put(Shape.HEART, "\u2665");
+            put(Shape.STAR, "\u2737");
+            put(Shape.SQUARE, "\u25A0");
+            put(Shape.CIRCLE, "\u25CF");
+            put(Shape.CROSS, "\u002B");
+            put(Shape.DIAMOND, "\u25C6");
+            put(Shape.NULL, "\u25A1");
+        }
+    };
 
-    private static final Map<Color, String> colorMap = new HashMap<Color, String>() {{
-        put(Color.RED, "\u001B[31m");
-        put(Color.ORANGE, "\u001B[36m"); //93m (LIGHT YELLOW) Changed to CYAN for better readability
-        put(Color.YELLOW, "\u001B[33m");
-        put(Color.GREEN, "\u001B[32m");
-        put(Color.BLUE, "\u001B[34m");
-        put(Color.PURPLE, "\u001B[35m");
-        put(Color.NULL, "\u001B[90m");
-    }};
+    private static final Map<Color, String> COLOR_MAP = new HashMap<Color, String>() {
+        {
+            put(Color.RED, "\u001B[31m");
+            put(Color.ORANGE, "\u001B[36m"); //Changed to CYAN for better readability
+            put(Color.YELLOW, "\u001B[33m");
+            put(Color.GREEN, "\u001B[32m");
+            put(Color.BLUE, "\u001B[34m");
+            put(Color.PURPLE, "\u001B[35m");
+            put(Color.NULL, "\u001B[90m");
+        }
+    };
 
 
     public boolean isPlaced() {
@@ -65,32 +75,33 @@ public class Stone {
         this.setPlaced(true);
     }
 
-    public void setLocation (int x, int y) {
+    public void setLocation(int x, int y) {
         this.location = new Position(x, y);
     }
 
-    public void setShape (Shape shape) {
+    public void setShape(Shape shape) {
         this.shape = shape;
     }
 
-    public void setColor (Color color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 
-    public Position getLocation () {
+    public Position getLocation() {
         return location;
     }
 
-    public Shape getShape () {
+    public Shape getShape() {
         return shape;
     }
 
-    public Color getColor () {
+    public Color getColor() {
         return color;
     }
 
     @Override
     public String toString() {
-        return String.valueOf(colorMap.get(this.getColor()) + shapeMap.get(this.getShape()) + ANSI_RESET);
+        return String.valueOf(COLOR_MAP.get(this.getColor()) +
+                SHAPE_MAP.get(this.getShape()) + ANSI_RESET);
     }
 }

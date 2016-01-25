@@ -9,7 +9,7 @@ public class Hand {
 
     ArrayList<Stone> stones;
 
-    public Hand (Bag bag) {
+    public Hand(Bag bag) {
         this.stones = new ArrayList<>();
 
         for (int i = 0; i < Game.MAX_HANDSIZE; i++) {
@@ -17,12 +17,13 @@ public class Hand {
         }
     }
 
-    public ArrayList<Stone> getStones () {
+    public ArrayList<Stone> getStones() {
         return stones;
     }
 
     /**
-     * Add a stone to this hand
+     * Add a stone to this hand.
+     *
      * @param stone stone to add
      */
     public void addStone(Stone stone) {
@@ -30,7 +31,8 @@ public class Hand {
     }
 
     /**
-     * Remove stone from this hand
+     * Remove stone from this hand.
+     *
      * @param stone stone to remove
      */
     public void removeStone(Stone stone) {

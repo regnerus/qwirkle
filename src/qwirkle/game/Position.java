@@ -49,18 +49,20 @@ public class Position {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
-                append(position).
-                toHashCode();
+        return new HashCodeBuilder(17, 31)// two randomly chosen prime numbers
+                .append(position)
+                .toHashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(obj==null || !(obj instanceof Position))
+        if (obj == null || !(obj instanceof Position)) {
             return false;
+        }
 
-        if (obj == this)
+        if (obj == this) {
             return true;
+        }
 
         Position p = (Position) obj;
 

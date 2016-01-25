@@ -15,7 +15,7 @@ import java.util.UUID;
 // game
 
 /**
- * Main game class
+ * Main game class.
  */
 public class Game extends Observable {
 
@@ -32,7 +32,7 @@ public class Game extends Observable {
     private boolean finished = false;
 
     /**
-     * Start a new game with players and a new bag
+     * Start a new game with players and a new bag.
      */
     public Game() {
         this.players = new Players();
@@ -139,7 +139,6 @@ public class Game extends Observable {
         System.out.println("Stone Hand: " + testPlayer.getHand().coordinateToStone("4"));
 
 
-
         this.emitToAllPlayers("game started");
     }
 
@@ -160,13 +159,15 @@ public class Game extends Observable {
     }
 
     /**
-     * Emit chat message to specific human player
+     * Emit chat message to specific human player.
+     *
      * @param clientId UUID of the target client
-     * @param message message to send to client
+     * @param message  message to send to client
      */
     public void emitToPlayer(UUID clientId, String message) {
 
-        //TODO: notify observers with specific message (use observer patterns is a must described in the project description).
+        //TODO: notify observers with specific message
+        // (use observer patterns is a must described in the project description).
 //        for (Player player : players) {
 //            if (player.getClient().getClientId() == clientId)
 //                player.getClient().emit(message);
@@ -174,7 +175,8 @@ public class Game extends Observable {
     }
 
     /**
-     * Emit chat message to all human players
+     * Emit chat message to all human players.
+     *
      * @param message
      */
     public void emitToAllPlayers(String message) {

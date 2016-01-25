@@ -6,7 +6,7 @@ package qwirkle.game;
 public class Bounds {
     int min, max;
 
-    public Bounds () {
+    public Bounds() {
         this.min = 0;
         this.max = 0;
     }

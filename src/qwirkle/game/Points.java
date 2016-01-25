@@ -7,12 +7,12 @@ public class Points {
 
     int points;
 
-    public Points () {
+    public Points() {
         this.points = 0;
     }
 
-    public void addPoints(int points) {
-        this.points = this.points + points;
+    public void addPoints(int p) {
+        this.points = this.points + p;
     }
 
     public int getPoints() {

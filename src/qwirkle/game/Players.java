@@ -10,11 +10,11 @@ import java.util.ArrayList;
 public class Players {
     private ArrayList<Player> players;
 
-    public Players () {
+    public Players() {
         this.players = new ArrayList<>();
     }
 
-    public Players (ArrayList<Player> players) {
+    public Players(ArrayList<Player> players) {
         this.players = players;
     }
 
@@ -22,7 +22,7 @@ public class Players {
         return this.players;
     }
 
-    public void addPlayer (Player player) {
+    public void addPlayer(Player player) {
         this.players.add(player);
     }
 
