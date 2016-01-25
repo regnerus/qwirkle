@@ -270,6 +270,36 @@ public class Board extends Move {
         }
     }
 
+    public Position coordinateToPosition(String x, String y) {
+        char[] charsX = x.toCharArray();
+        char[] charsY = y.toCharArray();
+
+        int letterX = (int) Character.toUpperCase(charsX[0]);
+        int letterY = (int) Character.toUpperCase(charsY[0]);
+
+        int positionX = 0, positionY = 0;
+
+        int ASCII_INTEGER = 64; //for upper case
+        if(letterX<=90 & letterX>=65) {
+            positionX += ((letterX - ASCII_INTEGER) * 10) - 10;
+            positionX += Character.getNumericValue(charsX[1]);
+            positionX += this.getBoundsX().getMin() - 1;
+
+        }
+
+        if(letterY<=90 & letterY>=65) {
+            positionY += ((letterY - ASCII_INTEGER) * 10) - 10;
+            positionY += Character.getNumericValue(charsY[1]);
+            positionY += this.getBoundsY().getMin() - 1;
+        }
+
+        return new Position(positionX,positionY);
+
+    }
+
+    public Stone coordinateToStone(String x, String y) {
+        return this.getStone(this.coordinateToPosition(x, y));
+    }
 
     /**
      * Check if a stone is valid on this board

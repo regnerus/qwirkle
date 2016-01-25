@@ -65,6 +65,12 @@ public class Game {
         Stone stone14 = new Stone(Stone.Color.RED, Stone.Shape.CROSS);
         Stone stone15 = new Stone(Stone.Color.RED, Stone.Shape.DIAMOND);
 
+        Stone stone16 = new Stone(Stone.Color.BLUE, Stone.Shape.HEART);
+        Stone stone17 = new Stone(Stone.Color.BLUE, Stone.Shape.SQUARE);
+        Stone stone18 = new Stone(Stone.Color.BLUE, Stone.Shape.CROSS);
+        Stone stone19 = new Stone(Stone.Color.BLUE, Stone.Shape.CIRCLE);
+        Stone stone20 = new Stone(Stone.Color.BLUE, Stone.Shape.DIAMOND);
+
 
         stone1.setLocation(0, -1);
         stone2.setLocation(0, 0);
@@ -83,6 +89,12 @@ public class Game {
         stone13.setLocation(1, -4);
         stone14.setLocation(1, -5);
         stone15.setLocation(1, -6);
+
+        stone16.setLocation(-1, 1);
+        stone17.setLocation(-2, 1);
+        stone18.setLocation(-3, 1);
+        stone19.setLocation(1, 1);
+        stone20.setLocation(2, 1);
 
         ArrayList<Stone> addStones = new ArrayList<>();
         addStones.add(stone1);
@@ -111,6 +123,18 @@ public class Game {
 
         System.out.println("points: " + board.placeStones(addStones));
 
+        addStones = new ArrayList<>();
+        addStones.add(stone16);
+        addStones.add(stone17);
+        addStones.add(stone18);
+        addStones.add(stone19);
+        addStones.add(stone20);
+
+        System.out.println("points: " + board.placeStones(addStones));
+
+        System.out.println("Stone Board: " + board.coordinateToStone("A4", "A6"));
+
+        System.out.println("Stone Hand: " + testPlayer.getHand().coordinateToStone("4"));
     }
 
     public void stopGame() {
@@ -160,7 +184,7 @@ public class Game {
         String s;
         s = board.toString();
         s = s + "-----------------" + CliController.RETURN;
-        s = s + "     1 2 3 4 5 6" + CliController.RETURN;
+        s = s + "     0 1 2 3 4 5" + CliController.RETURN;
         s = s + "Hand " + testPlayer.getHand().toString() + CliController.RETURN;
         s = s + "Bag " + bag.bagSize() + CliController.RETURN;
         s = s + "-----------------" + CliController.RETURN;

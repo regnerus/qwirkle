@@ -25,14 +25,16 @@ public class Qwirkle {
 
         game.startGame();
 
-        while(true){
+//        while(true){
 
             cli.logSimple(game.toString());
 
-            if(input.get().equals("exit")){
-                break;
-            }
-        }
+//            if(input.get().equals("exit")){
+//                break;
+//            }
+//
+//            break;
+//        }
 
         input.close();
     }

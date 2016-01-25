@@ -1,7 +1,6 @@
 package qwirkle.game;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Bouke on 24/01/16.
@@ -36,6 +35,10 @@ public class Hand {
      */
     public void removeStone(Stone stone) {
         stones.remove(stone);
+    }
+
+    public Stone coordinateToStone(String x) {
+        return this.stones.get(Character.getNumericValue(x.charAt(0)));
     }
 
     @Override
