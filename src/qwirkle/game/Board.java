@@ -285,14 +285,14 @@ public class Board extends Move {
         if(letterX<=90 & letterX>=65) {
             positionX += ((letterX - ASCII_INTEGER) * 10) - 10;
             positionX += Character.getNumericValue(charsX[1]);
-            positionX += this.getBoundsX().getMin() - 1;
+            positionX += this.getBoundsX().getMin() - SPACE_AROUND_BOARD;
 
         }
 
         if(letterY<=90 & letterY>=65) {
             positionY += ((letterY - ASCII_INTEGER) * 10) - 10;
             positionY += Character.getNumericValue(charsY[1]);
-            positionY += this.getBoundsY().getMin() - 1;
+            positionY += this.getBoundsY().getMin() - SPACE_AROUND_BOARD;
         }
 
         return new Position(positionX,positionY);

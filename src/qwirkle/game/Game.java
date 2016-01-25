@@ -134,7 +134,7 @@ public class Game extends Observable {
 
         System.out.println("points: " + board.placeStones(addStones));
 
-        System.out.println("Stone Board: " + board.coordinateToStone("a4", "a6"));
+        System.out.println("Stone Board: " + board.coordinateToStone("a7", "b0"));
 
         System.out.println("Stone Hand: " + testPlayer.getHand().coordinateToStone("4"));
 
