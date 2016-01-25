@@ -1,53 +1,134 @@
-package qwirkle.game;
-
-// java
-
-import qwirkle.player.HumanPlayer;
-import qwirkle.player.Player;
-import qwirkle.shared.CliController;
-
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.UUID;
-
-//import qwirkle.shared.Input;
+package qwirkle.shared;
 
 // game
 
+import qwirkle.game.Bag;
+import qwirkle.game.Board;
+import qwirkle.game.Stone;
+import qwirkle.player.HumanPlayer;
+import qwirkle.player.Player;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
 /**
- * Main game class.
+ * Handles generic CLI output across server and clients.
  */
-public class Game extends Observable {
+public class GameController {
 
-    public static final int MAX_HANDSIZE = 6;
-    public static final int TILES_OF_EACH = 3; //As defined in the game rules.
+    public static final String ANSI_CLS = "\u001b[2J";
+    public static final String ANSI_HOME = "\u001b[H";
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BOLD = "\u001B[1m";
+    public static final String ERROR_COLOR = "\u001B[31m";
+    public static final String RETURN = "\n\r";
 
-    private Players players;
-    private Bag bag;
-    private Board board;
-//    private Input input;
+    private Game game;
+    private GameView gameView;
 
-    private Player testPlayer;
-
-    private boolean finished = false;
-
-    /**
-     * Start a new game with players and a new bag.
-     */
-    public Game() {
-        this.players = new Players();
-        this.bag = new Bag();
-        this.board = new Board();
-//        this.input = input;
+    public GameController(Game game, GameView gameView) {
+        this.game = game;
+        this.gameView = gameView;
     }
 
+    public int readInteger(String message) {
+        int input = 0;
+        boolean found = false;
+
+        Scanner scanner = new Scanner(System.in);
+        do {
+            this.logSimple(message);
+            try (Scanner line = new Scanner(scanner.nextLine());) {
+                if (line.hasNextInt()) {
+                    found = true;
+                    input = line.nextInt();
+                }
+            }
+        } while (!found);
+        return input;
+    }
+
+    public String readString(String message) {
+        String input = "";
+        boolean stringRead = false;
+
+        Scanner scanner = new Scanner(System.in);
+        do {
+            this.logSimple(message);
+            try (Scanner line = new Scanner(scanner.nextLine());) {
+                if (line.hasNext()) {
+                    stringRead = true;
+                    input = line.next();
+                }
+            }
+        } while (!stringRead);
+        return input;
+    }
+
+    public String[] readArray(String message) {
+        String[] input;
+
+        Scanner scanner = new Scanner(System.in);
+
+        this.logSimple(message);
+        input = scanner.nextLine().split(" ", -1);
+
+        return input;
+    }
+
+    public static void clearScreen() {
+        try {
+            final String os = System.getProperty("os.name");
+
+            if (os.contains("Windows")) {
+                Runtime.getRuntime().exec("cls");
+            } else {
+                Runtime.getRuntime().exec("clear");
+            }
+        } catch (final Exception e) {
+            //TODO: Handle Exceptions
+        }
+    }
+
+    public void printScreen(String message) {
+        this.clearScreen();
+        System.out.print(ANSI_CLS + ANSI_HOME);
+        System.out.flush();
+        System.out.println(message);
+    }
+
+    public void determineMove() {
+        this.readArray("Make a move: (Format: A0 A0 1)");
+
+
+    }
+
+    public void logSimple(String message) {
+        System.out.println(message + ANSI_RESET);
+    }
+
+    public void logBold(String message) {
+        System.out.println(ANSI_BOLD + message + ANSI_RESET);
+    }
+
+    public static void logServerError(Exception e) {
+        // print this message in red
+        System.out.println(ERROR_COLOR + e.getMessage() + ANSI_RESET);
+    }
+
+    public static void logClientError(Exception e) {
+        // print this message in red
+        System.out.println(ERROR_COLOR + e.getMessage() + ANSI_RESET);
+    }
+
+    private Player testPlayer;
+    private Board board;
+
     public void startGame() {
-        this.board = new Board();
+        this.board = game.getBoard();
 
         testPlayer = new HumanPlayer(this, "Bouke");
-        this.addObserver(testPlayer);
-
-        this.players.addPlayer(testPlayer);
+        game.addPlayer(testPlayer);
 
         Stone stone1 = new Stone(Stone.Color.RED, Stone.Shape.STAR);
         Stone stone2 = new Stone(Stone.Color.GREEN, Stone.Shape.STAR);
@@ -137,9 +218,6 @@ public class Game extends Observable {
         System.out.println("Stone Board: " + board.coordinateToStone("a7", "b0"));
 
         System.out.println("Stone Hand: " + testPlayer.getHand().coordinateToStone("4"));
-
-
-        this.emitToAllPlayers("game started");
     }
 
     public void stopGame() {
@@ -151,56 +229,18 @@ public class Game extends Observable {
     }
 
     public Bag getBag() {
-        return bag;
+        return game.getBag();
     }
 
     public Board getBoard() {
-        return board;
-    }
-
-    /**
-     * Emit chat message to specific human player.
-     *
-     * @param clientId UUID of the target client
-     * @param message  message to send to client
-     */
-    public void emitToPlayer(UUID clientId, String message) {
-
-        //TODO: notify observers with specific message
-        // (use observer patterns is a must described in the project description).
-//        for (Player player : players) {
-//            if (player.getClient().getClientId() == clientId)
-//                player.getClient().emit(message);
-//        }
-    }
-
-    /**
-     * Emit chat message to all human players.
-     *
-     * @param message
-     */
-    public void emitToAllPlayers(String message) {
-        setChanged();
-        notifyObservers(message);
+        return game.getBoard();
     }
 
     public boolean isFinished() {
-        return finished;
+        return game.isFinished();
     }
 
-    @Override
-    public String toString() {
-        String s = "";
-        s += "Players: " + players.toString() + CliController.RETURN;
-        s += "Score: " + testPlayer.getPoints() + CliController.RETURN;
-        s += CliController.RETURN;
-        s += board.toString();
-        s += CliController.RETURN;
-        s += "     0 1 2 3 4 5" + CliController.RETURN;
-        s += "Hand " + testPlayer.getHand().toString() + CliController.RETURN;
-        s += "Bag " + bag.bagSize() + CliController.RETURN;
-        s += CliController.RETURN;
-
-        return s;
+    public void updateView() {
+        gameView.printGame(game.toString());
     }
 }

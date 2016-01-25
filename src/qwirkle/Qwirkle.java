@@ -2,8 +2,9 @@ package qwirkle;
 
 // game
 
-import qwirkle.game.Game;
-import qwirkle.shared.CliController;
+import qwirkle.shared.Game;
+import qwirkle.shared.GameController;
+import qwirkle.shared.GameView;
 //import qwirkle.shared.CliObserver;
 // shared
 // java
@@ -16,39 +17,11 @@ import qwirkle.shared.CliController;
 public class Qwirkle {
 
     public static void main(String[] args) {
-        // TODO: implement gameplay
-
-//        Input input = new Input();
-//        CliObserver cli = new CliObserver();
-
-        CliController cli = new CliController();
         Game game = new Game();
+        GameView view = new GameView();
+        GameController controller = new GameController(game, view);
 
-        game.startGame();
-
-//        cli.addObserver((Observable obj, Object arg) -> {
-//            System.out.println("\nReceived response: " + arg);
-//        });
-
-//        new Thread(cli).start();
-//
-//        while(true){
-//
-        cli.logSimple(game.toString());
-//
-//            System.out.println(input.get());
-//
-//            if(input.get().equals("exit")){
-//                break;
-//            }
-//
-//            cli.addObserver((Observable obj, Object arg) -> {
-//                out.println("\nReceived response: " + arg);
-//            });
-//
-//            break;
-//        }
-
-//        input.close();
+        controller.startGame();
+        controller.updateView();
     }
 }

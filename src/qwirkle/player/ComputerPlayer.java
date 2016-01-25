@@ -3,6 +3,7 @@ package qwirkle.player;
 // game
 
 import qwirkle.game.*;
+import qwirkle.shared.GameController;
 
 /**
  * Created by Bouke on 23/01/16.
@@ -18,7 +19,7 @@ public class ComputerPlayer extends ClientPlayer {
      *
      * @param name
      */
-    public ComputerPlayer(Game game, String name) {
+    public ComputerPlayer(GameController game, String name) {
         super(game, name);
     }
 

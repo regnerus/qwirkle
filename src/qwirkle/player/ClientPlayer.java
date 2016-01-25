@@ -1,6 +1,6 @@
 package qwirkle.player;
 
-import qwirkle.game.Game;
+import qwirkle.shared.GameController;
 
 /**
  * Created by chris on 24/01/16.
@@ -8,9 +8,9 @@ import qwirkle.game.Game;
 public class ClientPlayer extends Player {
 
     private String name;
-    private Game game;
+    private GameController game;
 
-    public ClientPlayer(Game game, String name) {
+    public ClientPlayer(GameController game, String name) {
         super(game, name);
     }
 

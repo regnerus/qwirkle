@@ -5,6 +5,7 @@ package qwirkle.player;
 import qwirkle.game.Game;
 import qwirkle.game.Hand;
 import qwirkle.game.Points;
+import qwirkle.shared.GameController;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -15,11 +16,11 @@ import java.util.Observer;
 public abstract class Player implements Observer {
 
     Hand hand;
-    Game game;
+    GameController game;
     Points points;
     String name;
 
-    public Player(Game game, String name) {
+    public Player(GameController game, String name) {
         this.game = game;
         this.name = name;
         this.points = new Points();

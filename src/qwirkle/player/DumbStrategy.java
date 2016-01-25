@@ -2,10 +2,10 @@ package qwirkle.player;
 
 // game
 
-import qwirkle.game.Game;
 import qwirkle.game.Hand;
 import qwirkle.game.Position;
 import qwirkle.game.Stone;
+import qwirkle.shared.GameController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by chris on 24/01/16.
  */
-public class DumbStrategy implements Strategy {
+public abstract class DumbStrategy implements Strategy {
 
     /**
      * Calculates the next move in a really dumb way.
@@ -24,7 +24,7 @@ public class DumbStrategy implements Strategy {
      * @param hand
      * @return
      */
-    public Map<Position, Stone> calculateMove(Game game, Hand hand) {
+    public Map<Position, Stone> calculateMove(GameController game, Hand hand) {
 
         Map<Position, Stone> move = new HashMap<Position, Stone>();
 

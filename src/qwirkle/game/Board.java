@@ -3,7 +3,7 @@ package qwirkle.game;
 // apache
 
 import org.apache.commons.collections4.ListUtils;
-import qwirkle.shared.CliController;
+import qwirkle.shared.GameController;
 
 // java
 import java.util.*;
@@ -345,7 +345,7 @@ public class Board extends Move {
             numberX++;
         }
 
-        s += CliController.RETURN;
+        s += GameController.RETURN;
 
         //Number Row
         numberX = 0;
@@ -358,7 +358,7 @@ public class Board extends Move {
             numberX++;
         }
 
-        s = s + CliController.RETURN;
+        s = s + GameController.RETURN;
 
         //Board
         for (int y = this.getBoundsY().getMin() - SPACE_AROUND_BOARD;
@@ -381,7 +381,7 @@ public class Board extends Move {
             }
 
             numberY++;
-            s += CliController.RETURN;
+            s += GameController.RETURN;
         }
 
         //Number Row
@@ -395,7 +395,7 @@ public class Board extends Move {
             numberX++;
         }
 
-        s = s + CliController.RETURN;
+        s = s + GameController.RETURN;
 
         //Letter Row
         numberX = 0;
@@ -414,7 +414,7 @@ public class Board extends Move {
             numberX++;
         }
 
-        s += CliController.RETURN;
+        s += GameController.RETURN;
 
         return s;
     }

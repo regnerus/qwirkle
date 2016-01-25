@@ -2,10 +2,9 @@ package qwirkle.server.controllers;
 
 // java
 
-import qwirkle.game.Game;
 import qwirkle.player.ServerPlayer;
 import qwirkle.server.QwirkleServer;
-import qwirkle.shared.CliController;
+import qwirkle.shared.GameController;
 import qwirkle.shared.Protocol;
 import qwirkle.shared.ProtocolParser;
 
@@ -57,7 +56,7 @@ public class ClientController extends Thread {
         try {
             handleMessages();
         } catch (IOException e) {
-            CliController.logServerError(e);
+            GameController.logServerError(e);
         }
     }
 
@@ -142,7 +141,7 @@ public class ClientController extends Thread {
      * @return Game game
      */
     //@ pure
-    public Game getGame() {
+    public GameController getGame() {
         return this.getPlayer().getGame();
     }
 
@@ -186,7 +185,7 @@ public class ClientController extends Thread {
      * @param message the message to send to all other clients in current game
      */
     public void handleChat(String message) {
-        getPlayer().getGame().emitToAllPlayers(message);
+//        getPlayer().getGame().emitToAllPlayers(message);
     }
 
     /**
@@ -196,7 +195,7 @@ public class ClientController extends Thread {
      * @param targetPlayerId the UUID of the target client to send the message to
      */
     public void handleChat(String message, String targetPlayerId) {
-        getPlayer().getGame().emitToPlayer(UUID.fromString(targetPlayerId), message);
+//        getPlayer().getGame().emitToPlayer(UUID.fromString(targetPlayerId), message);
     }
 
     /**
@@ -221,7 +220,7 @@ public class ClientController extends Thread {
             out.newLine();
             out.flush();
         } catch (IOException e) {
-            CliController.logServerError(e);
+            GameController.logServerError(e);
 
             // disconnect client since data can be corrupted from now on
             disconnect();

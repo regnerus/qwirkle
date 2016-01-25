@@ -8,6 +8,7 @@ import qwirkle.game.Stone;
 
 // server
 import qwirkle.server.controllers.ClientController;
+import qwirkle.shared.GameController;
 
 /**
  * Created by chris on 24/01/16.
@@ -15,7 +16,7 @@ import qwirkle.server.controllers.ClientController;
 public abstract class ServerPlayer extends Player {
 
     private Hand hand;
-    private Game game;
+    private GameController game;
     private ClientController client;
     private String username;
 
@@ -25,7 +26,7 @@ public abstract class ServerPlayer extends Player {
      * @param client
      * @param username
      */
-    public ServerPlayer(ClientController client, Game game, String username) {
+    public ServerPlayer(ClientController client, GameController game, String username) {
         super(game, username);
         this.client = client;
         this.username = username;
@@ -77,7 +78,7 @@ public abstract class ServerPlayer extends Player {
      *
      * @param game game to join
      */
-    public void joinGame(Game g) {
+    public void joinGame(GameController g) {
         this.game = g;
         this.hand = new Hand(g.getBag());
     }
@@ -87,7 +88,7 @@ public abstract class ServerPlayer extends Player {
      *
      * @return
      */
-    public Game getGame() {
+    public GameController getGame() {
         return game;
     }
 
