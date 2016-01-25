@@ -2,7 +2,6 @@ package qwirkle.player;
 
 // game
 
-import qwirkle.game.Game;
 import qwirkle.game.Hand;
 import qwirkle.game.Points;
 import qwirkle.shared.GameController;
@@ -44,7 +43,9 @@ public abstract class Player implements Observer {
         return this.points.getPoints();
     }
 
-//    abstract String getName();
+    public String getName() {
+        return this.name;
+    }
 //
 //    abstract boolean isHuman();
 

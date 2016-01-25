@@ -24,9 +24,10 @@ public class Game extends Observable {
     public static final int MAX_HANDSIZE = 6;
     public static final int TILES_OF_EACH = 3; //As defined in the game rules.
 
-    private Players players;
+    public Players players;
     private Bag bag;
     private Board board;
+
 //    private Input input;
 
     private boolean finished = false;
@@ -54,6 +55,10 @@ public class Game extends Observable {
         this.players.addPlayer(player);
     }
 
+    public Player nextTurn() {
+        return this.players.nextTurn();
+    }
+
     public int placeStones(Player player, List<Stone> stones) {
         int points = this.board.placeStones(stones);
         if (points > 0) {
@@ -66,12 +71,10 @@ public class Game extends Observable {
         return points;
     }
 
-    public boolean switchStones(Player player, List<Stone> stones) {
+    public void switchStones(Player player, List<Stone> stones) {
         for(Stone stone : stones) {
             player.getHand().switchStone(stone);
         }
-
-        return true;
     }
 
     /**

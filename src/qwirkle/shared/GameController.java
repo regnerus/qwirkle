@@ -18,6 +18,10 @@ public class GameController {
     private Game game;
     private GameView gameView;
 
+    private Player testPlayer1;
+    private Player testPlayer2;
+    private Board board;
+
     private Cli cli;
 
     public GameController(Game game, GameView gameView) {
@@ -38,16 +42,16 @@ public class GameController {
                     break;
                 }
 
-                Stone stone = testPlayer.getHand().coordinateToStone(input[2]);
+                Stone stone = testPlayer1.getHand().coordinateToStone(input[2]);
                 stone.setLocation(board.coordinateToPosition(input[0], input[1]));
 
                 addStones.add(stone);
 
             }
 
-            int points = game.placeStones(testPlayer, addStones);
+            int points = game.placeStones(testPlayer1, addStones);
 
-            if(points > 0) {
+            if (points > 0) {
                 cli.logSimple("Placed " + addStones.size() + " stones for " + points + " points!");
             } else {
                 cli.logSimple("Invalid move, try again! Tried to place: " + addStones.toString());
@@ -63,20 +67,28 @@ public class GameController {
                     break;
                 }
 
-                Stone stone = testPlayer.getHand().coordinateToStone(input[0]);
+                Stone stone = testPlayer1.getHand().coordinateToStone(input[0]);
 
                 addStones.add(stone);
 
             }
 
-            game.switchStones(testPlayer, addStones);
+            game.switchStones(testPlayer1, addStones);
 
             cli.logSimple("Switched " + addStones.size() + " stones!");
-            cli.logSimple("New Hand: " + testPlayer.getHand().toString());
+            cli.logSimple("New Hand: " + testPlayer1.getHand().toString());
 
         } else if (move == 3) {
-
+            cli.logSimple("Skipped turn!");
         }
+
+        cli.logSimple("Next Turn: " + game.nextTurn().toString());
+
+        cli.logSimple("Next Turn: " + game.nextTurn().toString());
+
+        cli.logSimple("Next Turn: " + game.nextTurn().toString());
+
+        cli.logSimple("Next Turn: " + game.nextTurn().toString());3
 
 
 //        for (int i = 0; i < move.length; i++) {
@@ -86,7 +98,7 @@ public class GameController {
 //        if (move[0] == "PLACE") {
 //            for (int i = 1; i < move.length; i+3) {
 //                move[i] = move[i].toUpperCase();
-//                System.out.println("Hand", testPlayer.getHand().coordinateToStone("4"));
+//                System.out.println("Hand", testPlayer1.getHand().coordinateToStone("4"));
 //            }
 //        } else if (move[0] == "SWITCH") {
 //            //Todo: Switch stones with bag.
@@ -96,15 +108,17 @@ public class GameController {
 
     }
 
-    private Player testPlayer;
-    private Board board;
-
     public void startGame() {
         this.board = game.getBoard();
         this.cli = new Cli();
 
-        testPlayer = new HumanPlayer(this, "Bouke");
-        game.addPlayer(testPlayer);
+        testPlayer1 = new HumanPlayer(this, "Bouke");
+        testPlayer2 = new HumanPlayer(this, "Chris");
+
+        game.players.setCurrentPlayer(testPlayer1);
+
+        game.addPlayer(testPlayer1);
+        game.addPlayer(testPlayer2);
 
         Stone stone1 = new Stone(Stone.Color.RED, Stone.Shape.STAR);
         Stone stone2 = new Stone(Stone.Color.GREEN, Stone.Shape.STAR);
@@ -190,7 +204,7 @@ public class GameController {
         addStones.add(stone20);
 
 
-        System.out.println("Stone Hand: " + testPlayer.getHand().toString());
+        System.out.println("Stone Hand: " + testPlayer1.getHand().toString());
 
         this.updateView();
         this.determineMove();
