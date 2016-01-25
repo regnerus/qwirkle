@@ -23,6 +23,7 @@ public class QwirkleServer {
     private static String host; // hostname
 
     private ArrayList<ClientController> clients;
+    private ArrayList<Game> games;
 
     /**
      * Start new game server on default port.
@@ -100,6 +101,7 @@ public class QwirkleServer {
     }
 
     public void startNewGame() {
+
         // TODO: make dynamic
         Game game = new Game();
         GameView view = new GameView();
