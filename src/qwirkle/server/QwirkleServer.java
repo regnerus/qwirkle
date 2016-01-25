@@ -3,9 +3,7 @@ package qwirkle.server;
 // java
 
 import qwirkle.server.controllers.ClientController;
-import qwirkle.shared.Cli;
-import qwirkle.shared.GameController;
-import qwirkle.shared.Protocol;
+import qwirkle.shared.*;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -37,11 +35,10 @@ public class QwirkleServer {
     /**
      * Start new game server on chosen port.
      *
-     * @param _port
+     * @param port port to start server on
      */
-
-    public QwirkleServer(int p) {
-        port = p;
+    public QwirkleServer(int port) {
+        this.port = port;
         start();
     }
 
@@ -51,6 +48,9 @@ public class QwirkleServer {
 
     //@ ensures clients != null;
     public void start() {
+
+        // gracefully stop server and it's games
+        Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
 
         clients = new ArrayList<ClientController>();
 
@@ -99,6 +99,16 @@ public class QwirkleServer {
         // TODO: send message to other players in same game and end game
     }
 
+    public void startNewGame() {
+        // TODO: make dynamic
+        Game game = new Game();
+        GameView view = new GameView();
+        GameController controller = new GameController(game, view);
+
+        controller.startGame();
+        controller.updateView();
+    }
+
     public void handleGameMove() {
 
     }
@@ -113,10 +123,10 @@ public class QwirkleServer {
 
     public void stopServer() {
         try {
+            // TODO: gracefully stop running games
             // TODO: gracefully close connected clients
         } catch (Exception e) {
             Cli.logServerError(e);
         }
-        System.exit(0);
     }
 }

@@ -1,12 +1,10 @@
 package qwirkle;
 
-// game
+// server
+import qwirkle.server.QwirkleServer;
+import qwirkle.server.ShutdownHook;
 
-import qwirkle.shared.Game;
-import qwirkle.shared.GameController;
-import qwirkle.shared.GameView;
-// shared
-// java
+// client
 
 /**
  * The Qwirkle Main.
@@ -16,11 +14,11 @@ import qwirkle.shared.GameView;
 public class Qwirkle {
 
     public static void main(String[] args) {
-        Game game = new Game();
-        GameView view = new GameView();
-        GameController controller = new GameController(game, view);
 
-        controller.startGame();
-        controller.updateView();
+        // start new server on default port
+        QwirkleServer server = new QwirkleServer();
+
+        // start a new game manually to test
+        server.startNewGame();
     }
 }
