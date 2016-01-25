@@ -4,6 +4,7 @@ package qwirkle.server.controllers;
 
 import qwirkle.player.ServerPlayer;
 import qwirkle.server.QwirkleServer;
+import qwirkle.shared.Cli;
 import qwirkle.shared.GameController;
 import qwirkle.shared.Protocol;
 import qwirkle.shared.ProtocolParser;
@@ -56,7 +57,7 @@ public class ClientController extends Thread {
         try {
             handleMessages();
         } catch (IOException e) {
-            GameController.logServerError(e);
+            Cli.logServerError(e);
         }
     }
 
@@ -220,7 +221,7 @@ public class ClientController extends Thread {
             out.newLine();
             out.flush();
         } catch (IOException e) {
-            GameController.logServerError(e);
+            Cli.logServerError(e);
 
             // disconnect client since data can be corrupted from now on
             disconnect();

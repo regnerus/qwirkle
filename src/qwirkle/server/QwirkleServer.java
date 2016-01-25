@@ -3,6 +3,7 @@ package qwirkle.server;
 // java
 
 import qwirkle.server.controllers.ClientController;
+import qwirkle.shared.Cli;
 import qwirkle.shared.GameController;
 import qwirkle.shared.Protocol;
 
@@ -68,7 +69,7 @@ public class QwirkleServer {
                 handleClientConnection(client);
             }
         } catch (IOException e) {
-            GameController.logServerError(e);
+            Cli.logServerError(e);
         }
     }
 
@@ -114,7 +115,7 @@ public class QwirkleServer {
         try {
             // TODO: gracefully close connected clients
         } catch (Exception e) {
-            GameController.logServerError(e);
+            Cli.logServerError(e);
         }
         System.exit(0);
     }

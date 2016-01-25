@@ -5,7 +5,6 @@ package qwirkle;
 import qwirkle.shared.Game;
 import qwirkle.shared.GameController;
 import qwirkle.shared.GameView;
-//import qwirkle.shared.CliObserver;
 // shared
 // java
 

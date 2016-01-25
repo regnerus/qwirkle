@@ -85,15 +85,15 @@ public class Game extends Observable {
     @Override
     public String toString() {
         String s = "";
-        s += "Players: " + players.toString() + GameController.RETURN;
-        s += "Score: " + GameController.RETURN;
-        s += GameController.RETURN;
+        s += "Players: " + players.toString() + Cli.RETURN;
+        s += "Score: " + Cli.RETURN;
+        s += Cli.RETURN;
         s += board.toString();
-        s += GameController.RETURN;
-        s += "     0 1 2 3 4 5" + GameController.RETURN;
-        s += "Hand " + GameController.RETURN;
-        s += "Bag " + bag.bagSize() + GameController.RETURN;
-        s += GameController.RETURN;
+        s += Cli.RETURN;
+        s += "     0 1 2 3 4 5" + Cli.RETURN;
+        s += "Hand " + Cli.RETURN;
+        s += "Bag " + bag.bagSize() + Cli.RETURN;
+        s += Cli.RETURN;
 
         return s;
     }

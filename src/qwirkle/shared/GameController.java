@@ -9,116 +9,74 @@ import qwirkle.player.HumanPlayer;
 import qwirkle.player.Player;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Handles generic CLI output across server and clients.
  */
 public class GameController {
 
-    public static final String ANSI_CLS = "\u001b[2J";
-    public static final String ANSI_HOME = "\u001b[H";
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BOLD = "\u001B[1m";
-    public static final String ERROR_COLOR = "\u001B[31m";
-    public static final String RETURN = "\n\r";
-
     private Game game;
     private GameView gameView;
+
+    private Cli cli;
 
     public GameController(Game game, GameView gameView) {
         this.game = game;
         this.gameView = gameView;
     }
 
-    public int readInteger(String message) {
-        int input = 0;
-        boolean found = false;
-
-        Scanner scanner = new Scanner(System.in);
-        do {
-            this.logSimple(message);
-            try (Scanner line = new Scanner(scanner.nextLine());) {
-                if (line.hasNextInt()) {
-                    found = true;
-                    input = line.nextInt();
-                }
-            }
-        } while (!found);
-        return input;
-    }
-
-    public String readString(String message) {
-        String input = "";
-        boolean stringRead = false;
-
-        Scanner scanner = new Scanner(System.in);
-        do {
-            this.logSimple(message);
-            try (Scanner line = new Scanner(scanner.nextLine());) {
-                if (line.hasNext()) {
-                    stringRead = true;
-                    input = line.next();
-                }
-            }
-        } while (!stringRead);
-        return input;
-    }
-
-    public String[] readArray(String message) {
-        String[] input;
-
-        Scanner scanner = new Scanner(System.in);
-
-        this.logSimple(message);
-        input = scanner.nextLine().split(" ", -1);
-
-        return input;
-    }
-
-    public static void clearScreen() {
-        try {
-            final String os = System.getProperty("os.name");
-
-            if (os.contains("Windows")) {
-                Runtime.getRuntime().exec("cls");
-            } else {
-                Runtime.getRuntime().exec("clear");
-            }
-        } catch (final Exception e) {
-            //TODO: Handle Exceptions
-        }
-    }
-
-    public void printScreen(String message) {
-        this.clearScreen();
-        System.out.print(ANSI_CLS + ANSI_HOME);
-        System.out.flush();
-        System.out.println(message);
-    }
-
     public void determineMove() {
-        this.readArray("Make a move: (Format: A0 A0 1)");
+        int move = cli.readInt("Make a move: (1. Place, 2. Switch, 3. Skip)");
+
+        if (move == 1) {
+            ArrayList<Stone> addStones = new ArrayList<>();
+
+            while (true) {
+                String[] input = cli.readArray("Place, format: \"A0 A0 1\" (return empty to submit turn)");
+
+                if (input.length < 2) {
+                    break;
+                }
+
+                Stone stone = testPlayer.getHand().coordinateToStone(input[2]);
+                stone.setLocation(board.coordinateToPosition(input[0], input[1]));
+
+                addStones.add(stone);
+
+            }
+
+            int points = board.placeStones(addStones);
+
+            if(points > 0) {
+                cli.logSimple("Placed " + addStones.size() + " stones for " + points + " points!");
+            } else {
+                cli.logSimple("Invalid move, try again! Tried to place: " + addStones.toString());
+                this.determineMove();
+            }
 
 
-    }
+        } else if (move == 2) {
 
-    public void logSimple(String message) {
-        System.out.println(message + ANSI_RESET);
-    }
+        } else if (move == 3) {
 
-    public void logBold(String message) {
-        System.out.println(ANSI_BOLD + message + ANSI_RESET);
-    }
+        }
 
-    public static void logServerError(Exception e) {
-        // print this message in red
-        System.out.println(ERROR_COLOR + e.getMessage() + ANSI_RESET);
-    }
 
-    public static void logClientError(Exception e) {
-        // print this message in red
-        System.out.println(ERROR_COLOR + e.getMessage() + ANSI_RESET);
+//        for (int i = 0; i < move.length; i++) {
+//            move[i] = move[i].toUpperCase();
+//        }
+
+//        if (move[0] == "PLACE") {
+//            for (int i = 1; i < move.length; i+3) {
+//                move[i] = move[i].toUpperCase();
+//                System.out.println("Hand", testPlayer.getHand().coordinateToStone("4"));
+//            }
+//        } else if (move[0] == "SWITCH") {
+//            //Todo: Switch stones with bag.
+//        } else if (move[0] == "SKIP") {
+//            //Todo: Implement turns.
+//        }
+
     }
 
     private Player testPlayer;
@@ -126,6 +84,7 @@ public class GameController {
 
     public void startGame() {
         this.board = game.getBoard();
+        this.cli = new Cli();
 
         testPlayer = new HumanPlayer(this, "Bouke");
         game.addPlayer(testPlayer);
@@ -213,11 +172,11 @@ public class GameController {
         addStones.add(stone19);
         addStones.add(stone20);
 
-        System.out.println("points: " + board.placeStones(addStones));
 
-        System.out.println("Stone Board: " + board.coordinateToStone("a7", "b0"));
+        System.out.println("Stone Hand: " + testPlayer.getHand().toString());
 
-        System.out.println("Stone Hand: " + testPlayer.getHand().coordinateToStone("4"));
+        this.updateView();
+        this.determineMove();
     }
 
     public void stopGame() {
