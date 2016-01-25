@@ -1,6 +1,7 @@
 package qwirkle.player;
 
 // game
+
 import qwirkle.game.*;
 
 // java

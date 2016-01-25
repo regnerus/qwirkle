@@ -1,6 +1,7 @@
 package qwirkle.player;
 
 // game
+
 import qwirkle.game.Game;
 import qwirkle.game.Hand;
 import qwirkle.game.Stone;
@@ -19,7 +20,8 @@ public abstract class ServerPlayer extends Player {
     private String username;
 
     /**
-     * The ServerPlayer is used to keep track of players on the server side
+     * The ServerPlayer is used to keep track of players on the server side.
+     *
      * @param client
      * @param username
      */
@@ -30,7 +32,8 @@ public abstract class ServerPlayer extends Player {
     }
 
     /**
-     * Let player receive a stone in their hand
+     * Let player receive a stone in their hand.
+     *
      * @param stone stone to receive
      */
     public void getStone(Stone stone) {
@@ -38,7 +41,8 @@ public abstract class ServerPlayer extends Player {
     }
 
     /**
-     * Lay a stone on the board
+     * Lay a stone on the board.
+     *
      * @param stone
      */
     public void playStone(Stone stone) {
@@ -49,7 +53,8 @@ public abstract class ServerPlayer extends Player {
     }
 
     /**
-     * Trade stone with random stone from game's bag
+     * Trade stone with random stone from game's bag.
+     *
      * @param stone
      */
     public void tradeStone(Stone stone) {
@@ -59,7 +64,8 @@ public abstract class ServerPlayer extends Player {
     }
 
     /**
-     * Get player's hand
+     * Get player's hand.
+     *
      * @return
      */
     public Hand getHand() {
@@ -67,16 +73,18 @@ public abstract class ServerPlayer extends Player {
     }
 
     /**
-     * Join a game and receive a random hand from bag
+     * Join a game and receive a random hand from bag.
+     *
      * @param game game to join
      */
-    public void joinGame(Game game) {
-        this.game = game;
-        this.hand = new Hand(game.getBag());
+    public void joinGame(Game g) {
+        this.game = g;
+        this.hand = new Hand(g.getBag());
     }
 
     /**
-     * Get game currently playing in
+     * Get game currently playing in.
+     *
      * @return
      */
     public Game getGame() {
@@ -84,18 +92,18 @@ public abstract class ServerPlayer extends Player {
     }
 
     /**
-     * Leave game currently in
+     * Leave game currently in.
      */
     public void leaveGame() {
         // TODO: add score to leaderboard when game was finished
-        if (game.isFinished())
-
-
-        this.game = null;
+        if (game.isFinished()) {
+            this.game = null;
+        }
     }
 
     /**
-     * Get client that player is connected to
+     * Get client that player is connected to.
+     *
      * @return
      */
     public ClientController getClient() {
@@ -103,7 +111,8 @@ public abstract class ServerPlayer extends Player {
     }
 
     /**
-     * Get player's username
+     * Get player's username.
+     *
      * @return
      */
     public String getUsername() {

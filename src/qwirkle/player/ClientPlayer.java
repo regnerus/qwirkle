@@ -5,7 +5,7 @@ import qwirkle.game.Game;
 /**
  * Created by chris on 24/01/16.
  */
-public class ClientPlayer extends Player  {
+public class ClientPlayer extends Player {
 
     private String name;
     private Game game;

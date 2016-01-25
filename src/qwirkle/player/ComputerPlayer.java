@@ -1,6 +1,7 @@
 package qwirkle.player;
 
 // game
+
 import qwirkle.game.*;
 
 /**
@@ -11,9 +12,10 @@ public class ComputerPlayer extends ClientPlayer {
     private int thinkTime;
 
     /**
-     * Constructor of computerPlayer
+     * Constructor of computerPlayer.
      * A computer player is a player that is not controlled by a human
      * but has an AI to determine the next moves in order to win the game.
+     *
      * @param name
      */
     public ComputerPlayer(Game game, String name) {
@@ -21,7 +23,8 @@ public class ComputerPlayer extends ClientPlayer {
     }
 
     /**
-     * Ask if player is human
+     * Ask if player is human.
+     *
      * @return
      */
     public boolean isHuman() {
@@ -29,7 +32,8 @@ public class ComputerPlayer extends ClientPlayer {
     }
 
     /**
-     * Calculate the next best move based on a board
+     * Calculate the next best move based on a board.
+     *
      * @param board
      * @return
      */
@@ -38,7 +42,8 @@ public class ComputerPlayer extends ClientPlayer {
     }
 
     /**
-     * Set the time that an AI player can think before retuning a move
+     * Set the time that an AI player can think before retuning a move.
+     *
      * @param thinkTime
      */
     public void setThinkTime(int thinkTime) {

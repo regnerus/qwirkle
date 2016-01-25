@@ -19,11 +19,11 @@ public abstract class Player implements Observer {
     Points points;
     String name;
 
-    public Player (Game game, String name) {
+    public Player(Game game, String name) {
         this.game = game;
         this.name = name;
         this.points = new Points();
-        this.hand = new Hand (game.getBag());
+        this.hand = new Hand(game.getBag());
     }
 
     //TODO: Do something with the Observable data
@@ -31,15 +31,15 @@ public abstract class Player implements Observer {
         System.out.println("Game State: " + arg);
     }
 
-    public Hand getHand () {
+    public Hand getHand() {
         return this.hand;
     }
 
-    public void addPoints (int points) {
-        this.points.addPoints(points);
+    public void addPoints(int p) {
+        this.points.addPoints(p);
     }
 
-    public int getPoints () {
+    public int getPoints() {
         return this.points.getPoints();
     }
 
