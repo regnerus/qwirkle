@@ -2,7 +2,7 @@ package qwirkle.shared;
 
 // game
 /**
- * Handles generic CLI output across server and clients
+ * Handles generic CLI output across server and clients.
  */
 public class CliController {
 
@@ -23,13 +23,10 @@ public class CliController {
 
             if (os.contains("Windows")) {
                 Runtime.getRuntime().exec("cls");
-            }
-            else {
+            } else {
                 Runtime.getRuntime().exec("clear");
             }
-        }
-        catch (final Exception e)
-        {
+        } catch (final Exception e) {
             //TODO: Handle Exceptions
         }
     }

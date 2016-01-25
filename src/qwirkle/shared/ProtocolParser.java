@@ -1,11 +1,12 @@
 package qwirkle.shared;
 
 // java
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Parser for message protocol
+ * Parser for message protocol.
  */
 public class ProtocolParser {
 
@@ -34,12 +35,12 @@ public class ProtocolParser {
 
                 if (counter == 0) {
                     parsed.add(value);
-                }
-                else {
+                } else {
 
                     // scanner to read parts of a parameter
                     Scanner subParamScanner = new Scanner(value);
-                    subParamScanner.useDelimiter(Character.toString(Protocol.Server.Settings.DELIMITER2));
+                    subParamScanner
+                            .useDelimiter(Character.toString(Protocol.Server.Settings.DELIMITER2));
 
                     ArrayList<Object> subValues = new ArrayList<>();
 
@@ -52,8 +53,7 @@ public class ProtocolParser {
                     // add param to parsed
                     if (subValues.size() <= 1) {
                         parsed.add(value);
-                    }
-                    else {
+                    } else {
                         parsed.add(subValues);
                     }
                 }

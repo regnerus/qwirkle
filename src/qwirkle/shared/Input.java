@@ -11,14 +11,14 @@ public class Input {
 
     Scanner scanner;
 
-    public Input () {
+    public Input() {
         this.scanner = new Scanner(System.in).useDelimiter("\\s");
     }
 
     public List<String> get() {
         List<String> result = new ArrayList<>();
 
-        while(this.scanner.hasNext() == true){
+        while (this.scanner.hasNext() == true) {
             result.add(this.scanner.next());
         }
 

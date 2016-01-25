@@ -9,8 +9,8 @@ import qwirkle.shared.CliController;
 // java
 
 /**
- * The Qwirkle Main
- *
+ * The Qwirkle Main.
+ * <p>
  * Created by Chris ter Beke and Bouke Regnerus
  */
 public class Qwirkle {
@@ -34,7 +34,7 @@ public class Qwirkle {
 //
 //        while(true){
 //
-            cli.logSimple(game.toString());
+        cli.logSimple(game.toString());
 //
 //            System.out.println(input.get());
 //
