@@ -3,6 +3,7 @@ package qwirkle.player;
 // game
 
 import qwirkle.game.*;
+import qwirkle.shared.Game;
 
 // java
 import java.util.Map;
