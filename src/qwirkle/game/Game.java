@@ -5,17 +5,19 @@ package qwirkle.game;
 import qwirkle.player.HumanPlayer;
 import qwirkle.player.Player;
 import qwirkle.shared.CliController;
-import qwirkle.shared.Input;
 
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.UUID;
+
+//import qwirkle.shared.Input;
 
 // game
 
 /**
  * Main game class
  */
-public class Game {
+public class Game extends Observable {
 
     public static final int MAX_HANDSIZE = 6;
     public static final int TILES_OF_EACH = 3; //As defined in the game rules.
@@ -24,7 +26,7 @@ public class Game {
 
     private Bag bag;
     private Board board;
-    private Input input;
+//    private Input input;
 
     private Player testPlayer;
 
@@ -33,17 +35,18 @@ public class Game {
     /**
      * Start a new game with players and a new bag
      */
-    public Game(Input input) {
+    public Game() {
         this.players = new ArrayList();
         this.bag = new Bag();
         this.board = new Board();
-        this.input = input;
+//        this.input = input;
     }
 
     public void startGame() {
         this.board = new Board();
 
         testPlayer = new HumanPlayer(this, "Bouke");
+        this.addObserver(testPlayer);
 
         this.players.add(testPlayer);
 
@@ -132,9 +135,13 @@ public class Game {
 
         System.out.println("points: " + board.placeStones(addStones));
 
-        System.out.println("Stone Board: " + board.coordinateToStone("A4", "A6"));
+        System.out.println("Stone Board: " + board.coordinateToStone("a4", "a6"));
 
         System.out.println("Stone Hand: " + testPlayer.getHand().coordinateToStone("4"));
+
+
+
+        this.emitToAllPlayers("game started");
     }
 
     public void stopGame() {
@@ -159,10 +166,12 @@ public class Game {
      * @param message message to send to client
      */
     public void emitToPlayer(UUID clientId, String message) {
-        for (Player player : players) {
+
+        //TODO: notify observers with specific message.
+//        for (Player player : players) {
 //            if (player.getClient().getClientId() == clientId)
 //                player.getClient().emit(message);
-        }
+//        }
     }
 
     /**
@@ -170,9 +179,8 @@ public class Game {
      * @param message
      */
     public void emitToAllPlayers(String message) {
-        for (Player player : players) {
-//            player.getClient().emit(message);
-        }
+        setChanged();
+        notifyObservers(message);
     }
 
     public boolean isFinished() {

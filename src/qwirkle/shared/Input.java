@@ -1,5 +1,7 @@
 package qwirkle.shared;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -10,11 +12,19 @@ public class Input {
     Scanner scanner;
 
     public Input () {
-        this.scanner = new Scanner(System.in);
+        this.scanner = new Scanner(System.in).useDelimiter("\\s");
     }
 
-    public String get() {
-        return this.scanner.nextLine();
+    public List<String> get() {
+        List<String> result = new ArrayList<>();
+
+        while(this.scanner.hasNext() == true){
+            result.add(this.scanner.next());
+        }
+
+        this.close();
+
+        return result;
     }
 
     public void close() {

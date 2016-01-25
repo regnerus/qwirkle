@@ -11,7 +11,7 @@ import qwirkle.server.controllers.ClientController;
 /**
  * Created by chris on 24/01/16.
  */
-public abstract class ServerPlayer implements Player {
+public abstract class ServerPlayer extends Player {
 
     private Hand hand;
     private Game game;
@@ -23,7 +23,8 @@ public abstract class ServerPlayer implements Player {
      * @param client
      * @param username
      */
-    public ServerPlayer(ClientController client, String username) {
+    public ServerPlayer(ClientController client, Game game, String username) {
+        super(game, username);
         this.client = client;
         this.username = username;
     }
