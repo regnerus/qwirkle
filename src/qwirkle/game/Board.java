@@ -318,46 +318,78 @@ public class Board extends Move {
         char sectionX = 'A', sectionY = 'A';
         int numberX = 0, numberY = 0;
 
-        s = s + "    ";
+        //Letter Row
+        s += "    ";
         for (int x = this.getBoundsX().getMin() - 1; x <= this.getBoundsX().getMax() + 1; x++) {
+            s += ((numberX % 10 == 0) ? sectionX : " ") + " ";
+
             if(numberX % 10 == 0) {
-                s = s + sectionX + " ";
                 sectionX++;
             }
-            else {
-                s = s + "  ";
-            }
+
             numberX++;
         }
 
-        s = s + CliController.RETURN;
+        s += CliController.RETURN;
 
+        //Number Row
         numberX = 0;
 
-        s = s + "    ";
+        s += "    ";
         for (int x = this.getBoundsX().getMin() - 1; x <= this.getBoundsX().getMax() + 1; x++) {
-            s = s + numberX % 10 + " ";
+            s += numberX % 10 + " ";
             numberX++;
         }
 
         s = s + CliController.RETURN;
 
+        //Board
         for(int y = this.getBoundsY().getMin() - 1; y <= this.getBoundsY().getMax() + 1; y++) {
+            s += ((numberY % 10 == 0) ? sectionY : " ") + " ";
+            s += numberY % 10 + " ";
+
+            for (int x = this.getBoundsX().getMin() - 1; x <= this.getBoundsX().getMax() + 1; x++) {
+                s += this.getStone(new Position(x, y)).toString() + " ";
+            }
+
+            s += "" + numberY % 10;
+            s += " " + ((numberY % 10 == 0) ? sectionY : " ");
+
             if(numberY % 10 == 0) {
-                s = s + sectionY + " ";
                 sectionY++;
             }
-            else {
-                s = s + "  ";
-            }
-            s = s + numberY % 10 + " ";
-            numberY++;
-            for (int x = this.getBoundsX().getMin() - 1; x <= this.getBoundsX().getMax() + 1; x++) {
 
-                s = s + this.getStone(new Position(x, y)).toString() + " ";
-            }
-            s = s + CliController.RETURN;
+            numberY++;
+            s += CliController.RETURN;
         }
+
+        //Number Row
+        numberX = 0;
+
+        s += "    ";
+        for (int x = this.getBoundsX().getMin() - 1; x <= this.getBoundsX().getMax() + 1; x++) {
+            s += numberX % 10 + " ";
+            numberX++;
+        }
+
+        s = s + CliController.RETURN;
+
+        //Letter Row
+        numberX = 0;
+        sectionX = 'A';
+
+        s += "    ";
+        for (int x = this.getBoundsX().getMin() - 1; x <= this.getBoundsX().getMax() + 1; x++) {
+            s += ((numberX % 10 == 0) ? sectionX : " ") + " ";
+
+            if(numberX % 10 == 0) {
+                sectionX++;
+            }
+
+            numberX++;
+        }
+
+        s += CliController.RETURN;
 
         return s;
     }

@@ -4,6 +4,7 @@ package qwirkle.player;
 
 import qwirkle.game.Game;
 import qwirkle.game.Hand;
+import qwirkle.game.Points;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -15,20 +16,31 @@ public abstract class Player implements Observer {
 
     Hand hand;
     Game game;
+    Points points;
     String name;
 
     public Player (Game game, String name) {
         this.game = game;
         this.name = name;
+        this.points = new Points();
         this.hand = new Hand (game.getBag());
     }
 
+    //TODO: Do something with the Observable data
     public void update(Observable o, Object arg) {
-        System.out.println("Game changed: " + arg);
+        System.out.println("Game State: " + arg);
     }
 
     public Hand getHand () {
         return this.hand;
+    }
+
+    public void addPoints (int points) {
+        this.points.addPoints(points);
+    }
+
+    public int getPoints () {
+        return this.points.getPoints();
     }
 
 //    abstract String getName();
@@ -50,4 +62,9 @@ public abstract class Player implements Observer {
 //    public void joinGame(Game game);
 //
 //    public void leaveGame();
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

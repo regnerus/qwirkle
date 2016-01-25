@@ -46,7 +46,7 @@ public class Hand {
         String s = "";
 
         for (int i = 0; i < this.stones.size(); i++) {
-            s = s + this.stones.get(i).toString() + " ";
+            s += this.stones.get(i).toString() + " ";
         }
 
         return s;

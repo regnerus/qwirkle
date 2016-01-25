@@ -22,8 +22,7 @@ public class Game extends Observable {
     public static final int MAX_HANDSIZE = 6;
     public static final int TILES_OF_EACH = 3; //As defined in the game rules.
 
-    private ArrayList<Player> players;
-
+    private Players players;
     private Bag bag;
     private Board board;
 //    private Input input;
@@ -36,7 +35,7 @@ public class Game extends Observable {
      * Start a new game with players and a new bag
      */
     public Game() {
-        this.players = new ArrayList();
+        this.players = new Players();
         this.bag = new Bag();
         this.board = new Board();
 //        this.input = input;
@@ -48,7 +47,7 @@ public class Game extends Observable {
         testPlayer = new HumanPlayer(this, "Bouke");
         this.addObserver(testPlayer);
 
-        this.players.add(testPlayer);
+        this.players.addPlayer(testPlayer);
 
         Stone stone1 = new Stone(Stone.Color.RED, Stone.Shape.STAR);
         Stone stone2 = new Stone(Stone.Color.GREEN, Stone.Shape.STAR);
@@ -167,7 +166,7 @@ public class Game extends Observable {
      */
     public void emitToPlayer(UUID clientId, String message) {
 
-        //TODO: notify observers with specific message.
+        //TODO: notify observers with specific message (use observer patterns is a must described in the project description).
 //        for (Player player : players) {
 //            if (player.getClient().getClientId() == clientId)
 //                player.getClient().emit(message);
@@ -189,13 +188,16 @@ public class Game extends Observable {
 
     @Override
     public String toString() {
-        String s;
-        s = board.toString();
-        s = s + "-----------------" + CliController.RETURN;
-        s = s + "     0 1 2 3 4 5" + CliController.RETURN;
-        s = s + "Hand " + testPlayer.getHand().toString() + CliController.RETURN;
-        s = s + "Bag " + bag.bagSize() + CliController.RETURN;
-        s = s + "-----------------" + CliController.RETURN;
+        String s = "";
+        s += "Players: " + players.toString() + CliController.RETURN;
+        s += "Score: " + testPlayer.getPoints() + CliController.RETURN;
+        s += CliController.RETURN;
+        s += board.toString();
+        s += CliController.RETURN;
+        s += "     0 1 2 3 4 5" + CliController.RETURN;
+        s += "Hand " + testPlayer.getHand().toString() + CliController.RETURN;
+        s += "Bag " + bag.bagSize() + CliController.RETURN;
+        s += CliController.RETURN;
 
         return s;
     }
