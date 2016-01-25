@@ -17,6 +17,8 @@ public class Board extends Move {
     private Map<Position, Stone> board;
     private Map<Position, Stone> possibleMoves;
 
+    public static final int SPACE_AROUND_BOARD = 3;
+
     public Board () {
         this.possibleMoves = new HashMap<>();
         this.board = new HashMap<>();
@@ -320,7 +322,7 @@ public class Board extends Move {
 
         //Letter Row
         s += "    ";
-        for (int x = this.getBoundsX().getMin() - 1; x <= this.getBoundsX().getMax() + 1; x++) {
+        for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD; x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD; x++) {
             s += ((numberX % 10 == 0) ? sectionX : " ") + " ";
 
             if(numberX % 10 == 0) {
@@ -336,7 +338,7 @@ public class Board extends Move {
         numberX = 0;
 
         s += "    ";
-        for (int x = this.getBoundsX().getMin() - 1; x <= this.getBoundsX().getMax() + 1; x++) {
+        for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD; x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD; x++) {
             s += numberX % 10 + " ";
             numberX++;
         }
@@ -344,11 +346,11 @@ public class Board extends Move {
         s = s + CliController.RETURN;
 
         //Board
-        for(int y = this.getBoundsY().getMin() - 1; y <= this.getBoundsY().getMax() + 1; y++) {
+        for(int y = this.getBoundsY().getMin() - SPACE_AROUND_BOARD; y <= this.getBoundsY().getMax() + SPACE_AROUND_BOARD; y++) {
             s += ((numberY % 10 == 0) ? sectionY : " ") + " ";
             s += numberY % 10 + " ";
 
-            for (int x = this.getBoundsX().getMin() - 1; x <= this.getBoundsX().getMax() + 1; x++) {
+            for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD; x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD; x++) {
                 s += this.getStone(new Position(x, y)).toString() + " ";
             }
 
@@ -367,7 +369,7 @@ public class Board extends Move {
         numberX = 0;
 
         s += "    ";
-        for (int x = this.getBoundsX().getMin() - 1; x <= this.getBoundsX().getMax() + 1; x++) {
+        for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD; x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD; x++) {
             s += numberX % 10 + " ";
             numberX++;
         }
@@ -379,7 +381,7 @@ public class Board extends Move {
         sectionX = 'A';
 
         s += "    ";
-        for (int x = this.getBoundsX().getMin() - 1; x <= this.getBoundsX().getMax() + 1; x++) {
+        for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD; x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD; x++) {
             s += ((numberX % 10 == 0) ? sectionX : " ") + " ";
 
             if(numberX % 10 == 0) {

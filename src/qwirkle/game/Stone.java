@@ -44,12 +44,12 @@ public class Stone {
 
     private static final Map<Color, String> colorMap = new HashMap<Color, String>() {{
         put(Color.RED, "\u001B[31m");
-        put(Color.ORANGE, "\u001B[33m");
+        put(Color.ORANGE, "\u001B[93m");
         put(Color.YELLOW, "\u001B[33m");
         put(Color.GREEN, "\u001B[32m");
         put(Color.BLUE, "\u001B[34m");
         put(Color.PURPLE, "\u001B[35m");
-        put(Color.NULL, "\u001B[37m");
+        put(Color.NULL, "\u001B[90m");
     }};
 
 
