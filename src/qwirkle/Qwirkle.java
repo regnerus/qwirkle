@@ -2,9 +2,12 @@ package qwirkle;
 
 // server
 import qwirkle.server.QwirkleServer;
-import qwirkle.server.ShutdownHook;
 
 // client
+import qwirkle.client.QwirkleClient;
+
+// java
+import java.io.IOException;
 
 /**
  * The Qwirkle Main.
@@ -15,10 +18,33 @@ public class Qwirkle {
 
     public static void main(String[] args) {
 
-        // start new server on default port
-        QwirkleServer server = new QwirkleServer();
+        // TODO: ask to start client or server when not running either one directly
 
-        // start a new game manually to test
-        server.startNewGame();
+        // test server
+        try {
+            // create new server on default port
+            QwirkleServer server = new QwirkleServer();
+
+            // start a new server manually to test
+            // server.run();
+
+            // test starting new game
+            server.startNewGame();
+        }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // test client
+        try {
+            // create a new client connect to default port
+            QwirkleClient client = new QwirkleClient("127.0.0.1");
+
+            // start a new client to manually test
+            // client.run();
+        }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
