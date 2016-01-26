@@ -2,6 +2,7 @@ package qwirkle.player;
 
 // game
 
+import qwirkle.shared.Game;
 import qwirkle.game.Hand;
 import qwirkle.game.Points;
 import qwirkle.shared.GameController;

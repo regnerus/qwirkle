@@ -2,7 +2,7 @@ package qwirkle.player;
 
 // game
 
-import qwirkle.game.Game;
+import qwirkle.shared.Game;
 import qwirkle.game.Hand;
 import qwirkle.game.Stone;
 

@@ -1,12 +1,13 @@
 package qwirkle;
 
-// game
+// server
+import qwirkle.server.QwirkleServer;
 
-import qwirkle.shared.Game;
-import qwirkle.shared.GameController;
-import qwirkle.shared.GameView;
-// shared
+// client
+import qwirkle.client.QwirkleClient;
+
 // java
+import java.io.IOException;
 
 /**
  * The Qwirkle Main.
@@ -16,11 +17,34 @@ import qwirkle.shared.GameView;
 public class Qwirkle {
 
     public static void main(String[] args) {
-        Game game = new Game();
-        GameView view = new GameView();
-        GameController controller = new GameController(game, view);
 
-        controller.startGame();
-        controller.updateView();
+        // TODO: ask to start client or server when not running either one directly
+
+        // test server
+        try {
+            // create new server on default port
+            QwirkleServer server = new QwirkleServer();
+
+            // start a new server manually to test
+            // server.run();
+
+            // test starting new game
+            server.startNewGame();
+        }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // test client
+        try {
+            // create a new client connect to default port
+            QwirkleClient client = new QwirkleClient("127.0.0.1");
+
+            // start a new client to manually test
+            // client.run();
+        }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

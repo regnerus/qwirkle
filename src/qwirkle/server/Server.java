@@ -1,50 +1,45 @@
 package qwirkle.server;
 
-// java
-
+// server
 import qwirkle.server.controllers.ClientController;
-import qwirkle.shared.Cli;
-import qwirkle.shared.GameController;
-import qwirkle.shared.Protocol;
 
+// shared
+import qwirkle.shared.*;
+
+// java
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-// controllers
-// shared
-
 /**
  * The Qwirkle Server.
  */
-public class Server extends Thread {
-
-    private ServerSocket server;
-    private boolean running;
+public class QwirkleServer extends Thread {
 
     private static int port;    // port
     private static String host; // hostname
 
+    private ServerSocket serverSock;
+
     private ArrayList<ClientController> clients;
+    private ArrayList<Game> games;
 
     /**
      * Start new game server on default port.
      */
-    public Server() {
-        this(Protocol.Server.Settings.DEFAULT_PORT)
+    public QwirkleServer() throws IOException {
+        port = Protocol.Server.Settings.DEFAULT_PORT; // use leed port :P
     }
 
     /**
      * Start new game server on chosen port.
      *
-     * @param port
+     * @param port port to start server on
      */
-
-    public Server(int port) {
+    public QwirkleServer(int port) throws IOException {
         this.port = port;
-        start();
     }
 
     /**
@@ -52,16 +47,17 @@ public class Server extends Thread {
      */
 
     //@ ensures clients != null;
-    public void start() {
+    public void run() {
+
+        // gracefully stop server and it's games
+        Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
 
         clients = new ArrayList<ClientController>();
 
         // use try catch around setting up server, port may be in use!
         try {
-            this.server = new ServerSocket(port);
-            this.host = InetAddress.getLocalHost().getHostAddress();
-
-            System.out.println("Listening on port: " + port);
+            serverSock = new ServerSocket(port);
+            host = InetAddress.getLocalHost().getHostAddress();
 
             while (true) {
                 // start accepting socket connections
@@ -103,6 +99,17 @@ public class Server extends Thread {
         // TODO: send message to other players in same game and end game
     }
 
+    public void startNewGame() {
+
+        // TODO: make dynamic
+        Game game = new Game();
+        GameView view = new GameView();
+        GameController controller = new GameController(game, view);
+
+        controller.startGame();
+        controller.updateView();
+    }
+
     public void handleGameMove() {
 
     }
@@ -117,10 +124,23 @@ public class Server extends Thread {
 
     public void stopServer() {
         try {
-            // TODO: gracefully close connected clients
+            // TODO: gracefully stop running games
+            // TODO: gracefully notify and close connected clients
+            serverSock.close();
         } catch (Exception e) {
             Cli.logServerError(e);
         }
-        System.exit(0);
+    }
+
+    /**
+     * New server program
+     * @param args
+     */
+    public static void main(String[] args) {
+        try {
+            QwirkleServer server = new QwirkleServer();
+        } catch (IOException e) {
+            Cli.logServerError(e);
+        }
     }
 }

@@ -76,8 +76,7 @@ public class ClientController extends Thread {
 
             case Protocol.Client.HALLO:
                 assertNotNull(incomingData.get(1));
-                handleHandshake((String) incomingData.get(1));
-                // called it handShake since HALLO is a stupid name
+                handleHandshake((String) incomingData.get(1)); // called it handShake since HALLO is a stupid name
                 break;
 
             case Protocol.Client.QUIT:
@@ -152,7 +151,7 @@ public class ClientController extends Thread {
      * @param gameId Id of game to join
      */
     public void joinGame(String gameId) {
-        // TODO: create a new ServerPlayer for this client and let it join the game
+        // TODO: create a new ServerPlayer for this client and let it join a game
 
 
     }
