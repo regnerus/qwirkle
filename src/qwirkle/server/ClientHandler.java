@@ -1,31 +1,20 @@
-package qwirkle.server.controllers;
-
-// java
+package qwirkle.server;
 
 import qwirkle.player.ServerPlayer;
-import qwirkle.server.Server;
 import qwirkle.shared.Cli;
 import qwirkle.shared.GameController;
 import qwirkle.shared.Protocol;
-import qwirkle.shared.ProtocolParser;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.Assert.assertNotNull;
 
-// junit
-// game
-// shared
-// server
-
 /**
- * ClientController.
- * Handles clients that are connecting to the game server
+ * Created by Bouke on 26/01/16.
  */
-public class ClientController extends Thread {
+public class ClientHandler extends Thread {
 
     private Server server;
 
@@ -33,31 +22,48 @@ public class ClientController extends Thread {
 
     private BufferedReader in;
     private BufferedWriter out;
+    private Socket socket;
 
     private UUID clientId;
 
-    public ClientController(Server server, Socket socket) throws IOException {
-        this.server = server;
+    public ClientHandler(Socket socket) {
+        this.socket = socket;
         clientId = UUID.randomUUID();
 
-        // create in- and output stream readers
-        in = new BufferedReader(
-                new InputStreamReader(
-                        socket.getInputStream()));
+        try {
+            in = new BufferedReader(new InputStreamReader(
+                    socket.getInputStream(), Protocol.Server.Settings.ENCODING));
+            out = new BufferedWriter(new OutputStreamWriter(
+                    socket.getOutputStream(), Protocol.Server.Settings.ENCODING));
+        } catch (IOException e) {
+            //TODO error logs
+            System.out.println(e.getMessage());
+            stopClientConnection();
+        }
 
-        out = new BufferedWriter(
-                new OutputStreamWriter(
-                        socket.getOutputStream()));
+        System.out.println("New client connected");
     }
 
     /**
      * A seperate thread handles all the messages to and from a client.
      */
+    @Override
     public void run() {
-        try {
-            handleMessages();
-        } catch (IOException e) {
-            Cli.logServerError(e);
+        while (true) {
+            try {
+                String message = in.readLine();
+                if(message != null) {
+                    handleMessages(message);
+                } else {
+                    stopClientConnection();
+                    break;
+                }
+            } catch (IOException e) {
+                //TODO error logs
+                System.out.println(e.getMessage());
+                stopClientConnection();
+                break;
+            }
         }
     }
 
@@ -66,17 +72,17 @@ public class ClientController extends Thread {
      *
      * @throws IOException
      */
-    public void handleMessages() throws IOException {
+    public void handleMessages(String message) {
+//
+//        // split incoming message string to find message type
+//        ArrayList incomingData = ProtocolParser.parse(in.readLine());
+//        assertNotNull(incomingData.get(0));
 
-        // split incoming message string to find message type
-        ArrayList incomingData = ProtocolParser.parse(in.readLine());
-        assertNotNull(incomingData.get(0));
-
-        switch ((String) incomingData.get(0)) {
+        switch (message) {
 
             case Protocol.Client.HALLO:
-                assertNotNull(incomingData.get(1));
-                handleHandshake((String) incomingData.get(1)); // called it handShake since HALLO is a stupid name
+//                assertNotNull(incomingData.get(1));
+//                handleHandshake((String) incomingData.get(1)); // called it handShake since HALLO is a stupid name
                 break;
 
             case Protocol.Client.QUIT:
@@ -100,8 +106,8 @@ public class ClientController extends Thread {
                 break;
 
             case Protocol.Client.CHAT:
-                assertNotNull(incomingData.get(1));
-                handleChat((String) incomingData.get(1));
+//                assertNotNull(incomingData.get(1));
+//                handleChat((String) incomingData.get(1));
                 break;
 
             case Protocol.Client.REQUESTGAME:
@@ -223,15 +229,19 @@ public class ClientController extends Thread {
             Cli.logServerError(e);
 
             // disconnect client since data can be corrupted from now on
-            disconnect();
+            stopClientConnection();
         }
     }
 
-    /**
-     * Handle client disconnect.
-     */
-    public void disconnect() {
-        // TODO: log disconnect reason
-        server.handleClientDisconnect(this);
+    private void stopClientConnection() {
+        try {
+            in.close();
+            out.close();
+            socket.close();
+//            ServerController.getInstance().removeHandler(this);
+        } catch (IOException e) {
+            //TODO errors
+            System.out.println(e.getMessage());
+        }
     }
 }

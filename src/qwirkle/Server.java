@@ -1,7 +1,10 @@
 package qwirkle;
 
-/**
- * Created by Bouke on 26/01/16.
- */
+import qwirkle.server.ServerController;
+
 public class Server {
+    public static void main(String[] args) {
+        ServerController controller = ServerController.getInstance();
+        controller.run();
+    }
 }

@@ -2,12 +2,11 @@ package qwirkle.player;
 
 // game
 
-import qwirkle.shared.Game;
 import qwirkle.game.Hand;
 import qwirkle.game.Stone;
 
 // server
-import qwirkle.server.controllers.ClientController;
+import qwirkle.server.ClientHandler;
 import qwirkle.shared.GameController;
 
 /**
@@ -17,7 +16,7 @@ public abstract class ServerPlayer extends Player {
 
     private Hand hand;
     private GameController game;
-    private ClientController client;
+    private ClientHandler client;
     private String username;
 
     /**
@@ -26,7 +25,7 @@ public abstract class ServerPlayer extends Player {
      * @param client
      * @param username
      */
-    public ServerPlayer(ClientController client, GameController game, String username) {
+    public ServerPlayer(ClientHandler client, GameController game, String username) {
         super(game, username);
         this.client = client;
         this.username = username;
@@ -107,7 +106,7 @@ public abstract class ServerPlayer extends Player {
      *
      * @return
      */
-    public ClientController getClient() {
+    public ClientHandler getClient() {
         return client;
     }
 
