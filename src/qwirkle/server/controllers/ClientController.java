@@ -3,7 +3,7 @@ package qwirkle.server.controllers;
 // java
 
 import qwirkle.player.ServerPlayer;
-import qwirkle.server.QwirkleServer;
+import qwirkle.server.Server;
 import qwirkle.shared.Cli;
 import qwirkle.shared.GameController;
 import qwirkle.shared.Protocol;
@@ -27,7 +27,7 @@ import static org.junit.Assert.assertNotNull;
  */
 public class ClientController extends Thread {
 
-    private QwirkleServer server;
+    private Server server;
 
     private ServerPlayer player;
 
@@ -36,7 +36,7 @@ public class ClientController extends Thread {
 
     private UUID clientId;
 
-    public ClientController(QwirkleServer server, Socket socket) throws IOException {
+    public ClientController(Server server, Socket socket) throws IOException {
         this.server = server;
         clientId = UUID.randomUUID();
 

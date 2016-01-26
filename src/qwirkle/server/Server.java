@@ -19,7 +19,10 @@ import java.util.ArrayList;
 /**
  * The Qwirkle Server.
  */
-public class QwirkleServer {
+public class Server extends Thread {
+
+    private ServerSocket server;
+    private boolean running;
 
     private static int port;    // port
     private static String host; // hostname
@@ -29,19 +32,18 @@ public class QwirkleServer {
     /**
      * Start new game server on default port.
      */
-    public QwirkleServer() {
-        port = Protocol.Server.Settings.DEFAULT_PORT; // use leed port :P
-        start();
+    public Server() {
+        this(Protocol.Server.Settings.DEFAULT_PORT)
     }
 
     /**
      * Start new game server on chosen port.
      *
-     * @param _port
+     * @param port
      */
 
-    public QwirkleServer(int p) {
-        port = p;
+    public Server(int port) {
+        this.port = port;
         start();
     }
 
@@ -56,8 +58,10 @@ public class QwirkleServer {
 
         // use try catch around setting up server, port may be in use!
         try {
-            ServerSocket serverSock = new ServerSocket(port);
-            host = InetAddress.getLocalHost().getHostAddress();
+            this.server = new ServerSocket(port);
+            this.host = InetAddress.getLocalHost().getHostAddress();
+
+            System.out.println("Listening on port: " + port);
 
             while (true) {
                 // start accepting socket connections
