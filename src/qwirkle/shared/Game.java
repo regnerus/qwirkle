@@ -2,15 +2,10 @@ package qwirkle.shared;
 
 // java
 
-import qwirkle.game.Bag;
-import qwirkle.game.Board;
-import qwirkle.game.Players;
-import qwirkle.game.Stone;
+import qwirkle.game.*;
 import qwirkle.player.Player;
 
-import java.util.List;
-import java.util.Observable;
-import java.util.UUID;
+import java.util.*;
 
 //import qwirkle.shared.Input;
 
@@ -28,6 +23,8 @@ public class Game extends Observable {
     private Bag bag;
     private Board board;
 
+    private Map<Player, List<Stone>> firstMoves;
+
 //    private Input input;
 
     private boolean finished = false;
@@ -39,6 +36,7 @@ public class Game extends Observable {
         this.players = new Players();
         this.bag = new Bag();
         this.board = new Board();
+        this.firstMoves = new HashMap<>();
 //        this.input = input;
     }
 
@@ -57,6 +55,41 @@ public class Game extends Observable {
 
     public Player nextTurn() {
         return this.players.nextTurn();
+    }
+
+    public List<Stone> firstMove(Player player, List<Stone> stones) {
+        List<Stone> row = new ArrayList<>();
+
+        for(int i = 0; i < stones.size(); i++) {
+            stones.get(i).setLocation(0, i);
+
+            if(board.validateList(row, stones.get(i))) {
+                row.add(stones.get(i));
+            }
+            else {
+                this.firstMoves.put(player, new ArrayList<>());
+                return new ArrayList<>();
+            }
+        }
+
+        this.firstMoves.put(player, row);
+        return row;
+    }
+
+    public Player longestRow() {
+        Player player = null;
+        List<Stone> row = new ArrayList<>();
+
+        for (Map.Entry<Player, List<Stone>> entry : this.firstMoves.entrySet()) {
+            if(entry.getValue().size() > row.size()) {
+                row = entry.getValue();
+                player = entry.getKey();
+            }
+        }
+
+        placeStones(player, row);
+
+        return player;
     }
 
     public int placeStones(Player player, List<Stone> stones) {

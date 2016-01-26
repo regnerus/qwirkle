@@ -88,7 +88,7 @@ public class GameController {
 
         cli.logSimple("Next Turn: " + game.nextTurn().toString());
 
-        cli.logSimple("Next Turn: " + game.nextTurn().toString());3
+        cli.logSimple("Next Turn: " + game.nextTurn().toString());
 
 
 //        for (int i = 0; i < move.length; i++) {
@@ -145,29 +145,31 @@ public class GameController {
         Stone stone20 = new Stone(Stone.Color.BLUE, Stone.Shape.DIAMOND);
 
 
-        stone1.setLocation(0, -1);
-        stone2.setLocation(0, 0);
-        stone3.setLocation(0, 1);
-        stone4.setLocation(0, 2);
-        stone5.setLocation(0, 3);
-        stone6.setLocation(0, 4);
 
-        stone7.setLocation(-1, 0);
-        stone8.setLocation(1, 0);
-        stone9.setLocation(2, 0);
-
-        stone10.setLocation(1, -1);
-        stone11.setLocation(1, -2);
-        stone12.setLocation(1, -3);
-        stone13.setLocation(1, -4);
-        stone14.setLocation(1, -5);
-        stone15.setLocation(1, -6);
-
-        stone16.setLocation(-1, 1);
-        stone17.setLocation(-2, 1);
-        stone18.setLocation(-3, 1);
-        stone19.setLocation(1, 1);
-        stone20.setLocation(2, 1);
+//
+//        stone1.setLocation(0, -1);
+//        stone2.setLocation(0, 0);
+//        stone3.setLocation(0, 1);
+//        stone4.setLocation(0, 2);
+//        stone5.setLocation(0, 3);
+//        stone6.setLocation(0, 4);
+//
+//        stone7.setLocation(-1, 0);
+//        stone8.setLocation(1, 0);
+//        stone9.setLocation(2, 0);
+//
+//        stone10.setLocation(1, -1);
+//        stone11.setLocation(1, -2);
+//        stone12.setLocation(1, -3);
+//        stone13.setLocation(1, -4);
+//        stone14.setLocation(1, -5);
+//        stone15.setLocation(1, -6);
+//
+//        stone16.setLocation(-1, 1);
+//        stone17.setLocation(-2, 1);
+//        stone18.setLocation(-3, 1);
+//        stone19.setLocation(1, 1);
+//        stone20.setLocation(2, 1);
 
         ArrayList<Stone> addStones = new ArrayList<>();
         addStones.add(stone1);
@@ -177,7 +179,7 @@ public class GameController {
         addStones.add(stone5);
         addStones.add(stone6);
 
-        System.out.println("points: " + board.placeStones(addStones));
+        System.out.println("first move 1: " + game.firstMove(testPlayer1, addStones));
 
 //        addStones = new ArrayList<>();
 //        addStones.add(stone7);
@@ -194,7 +196,9 @@ public class GameController {
         addStones.add(stone14);
         addStones.add(stone15);
 
-        System.out.println("points: " + board.placeStones(addStones));
+//        System.out.println("first move 2: " + game.firstMove(testPlayer2, addStones));
+
+//        System.out.println("points: " + board.placeStones(addStones));
 
         addStones = new ArrayList<>();
         addStones.add(stone16);
@@ -203,8 +207,13 @@ public class GameController {
         addStones.add(stone19);
         addStones.add(stone20);
 
+        System.out.println("first move 2: " + game.firstMove(testPlayer2, addStones));
+
 
         System.out.println("Stone Hand: " + testPlayer1.getHand().toString());
+
+        System.out.println("Start with: " + game.longestRow());
+
 
         this.updateView();
         this.determineMove();
