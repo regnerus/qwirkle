@@ -61,7 +61,7 @@ public class Game extends Observable {
         List<Stone> row = new ArrayList<>();
 
         for(int i = 0; i < stones.size(); i++) {
-            stones.get(i).setLocation(0, i);
+            stones.get(i).setLocation(i, 0);
 
             if(board.validateList(row, stones.get(i))) {
                 row.add(stones.get(i));
@@ -88,6 +88,7 @@ public class Game extends Observable {
         }
 
         placeStones(player, row);
+        this.players.setCurrentPlayer(player);
 
         return player;
     }
