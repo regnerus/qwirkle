@@ -1,5 +1,9 @@
 package qwirkle.player;
 
+import qwirkle.game.Stone;
+
+import java.util.List;
+
 /**
  * Created by chris on 24/01/16.
  */
@@ -17,6 +21,14 @@ public class ClientPlayer extends Player {
         return true; //TODO
     }
 
+    public void addToHand(Stone stone) {
+        super.getHand().addStone(stone);
+    }
+
+    public void addToHand(List<Stone> stones) {
+        super.getHand().addStone(stones);
+    }
+
 //    public Stone getStone(Stone stone) {
 //        return stone;
 //    }
@@ -26,14 +38,6 @@ public class ClientPlayer extends Player {
 //    }
 //
 //    public void tradeStone(Stone stone) {
-//        //TODO
-//    }
-//
-//    public Move nextMove(Board board) {
-//        //TODO
-//    }
-//
-//    public Move firstMove(Board board) {
 //        //TODO
 //    }
 //

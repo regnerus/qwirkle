@@ -24,6 +24,8 @@ public class Bag {
                 }
             }
         }
+
+        System.out.println(this.bag);
     }
 
     public int bagSize() {

@@ -1,9 +1,9 @@
 package qwirkle.server;
 
-import qwirkle.game.Players;
-import qwirkle.player.HumanPlayer;
-import qwirkle.player.Player;
 import qwirkle.game.Game;
+import qwirkle.game.Players;
+import qwirkle.player.Player;
+import qwirkle.player.ServerPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +97,7 @@ public class ServerController {
         Game game;
         Players players;
         int waitingFor = 0;
-        Player player = new HumanPlayer(client, client.getUsername());
+        Player player = new ServerPlayer(client, client.getUsername());
 
         if (amount > 0 && amount < 2) {
             //TODO: Computer Player
@@ -109,6 +109,7 @@ public class ServerController {
 
             if(waitingFor < 1) {
                 game = new Game(room);
+                game.start();
             }
         } else {
             //TODO: Error

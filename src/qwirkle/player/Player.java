@@ -2,9 +2,9 @@ package qwirkle.player;
 
 // game
 
+import qwirkle.game.Game;
 import qwirkle.game.Hand;
 import qwirkle.game.Points;
-import qwirkle.shared.GameController;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -14,20 +14,35 @@ import java.util.Observer;
  */
 public abstract class Player implements Observer {
 
-//    Hand hand;
-//    GameController game;
-    Points points;
-    String username;
+    private Hand hand;
+    private Points points;
+    private String username;
+    private Game game;
 
     public Player() {
-        this.points = new Points();
-//        this.hand = new Hand(game.getBag());
+        this.hand = new Hand();
     }
 
     public Player(String username) {
         this();
         this.username = username;
     }
+
+    public void setGame(Game game) {
+        this.game = game;
+        this.points = new Points();
+
+        hand.init(game.getBag());
+
+        if(this instanceof ServerPlayer) {
+            ((ServerPlayer) this).getClient().handleAddToHand(this.hand);
+        }
+    }
+
+    public Game getGame() {
+        return this.game;
+    }
+
 
     //TODO: Do something with the Observable data
     public void update(Observable o, Object arg) {
@@ -53,6 +68,7 @@ public abstract class Player implements Observer {
     public String getUsername() {
         return this.username;
     }
+
 //
 //    abstract boolean isHuman();
 
@@ -62,11 +78,16 @@ public abstract class Player implements Observer {
 //
 //    public void tradeStone(Stone stone);
 //
-//    public Move nextMove(Board board);
-//
-//    public Move firstMove(Board board);
 //
 //    abstract Hand getHand();
+
+    public void setHand(Hand hand) {
+        this.hand = hand;
+    }
+
+    public Hand getHand() {
+        return this.hand;
+    }
 //
 //    public void joinGame(Game game);
 //

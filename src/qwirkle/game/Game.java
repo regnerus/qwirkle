@@ -3,6 +3,7 @@ package qwirkle.game;
 // java
 
 import qwirkle.player.Player;
+import qwirkle.player.ServerPlayer;
 import qwirkle.shared.Cli;
 
 import java.util.*;
@@ -33,17 +34,19 @@ public class Game extends Observable {
      * Start a new game with players and a new bag.
      */
     public Game(Players players) {
-        this.players = players;
         this.bag = new Bag();
         this.board = new Board();
         this.firstMoves = new HashMap<>();
-//        this.input = input;
+
+        this.players = players;
+        this.players.setGame(this);
+
+        players.getPlayers().forEach(this::addObserver);
     }
 
     public Game() {
         this(new Players());
     }
-
 
     public Bag getBag() {
         return bag;
@@ -54,6 +57,7 @@ public class Game extends Observable {
     }
 
     public void addPlayer(Player player) {
+        player.setGame(this);
         this.addObserver(player);
         this.players.addPlayer(player);
     }
@@ -144,8 +148,15 @@ public class Game extends Observable {
         notifyObservers(message);
     }
 
-    public void startGame() {
-
+    public void start() {
+        for(Player player : players.getPlayers()) {
+            if(player instanceof ServerPlayer) {
+                ((ServerPlayer) player).getClient().handleStartGame(players.getPlayers());
+            } else {
+                //TODO computer player
+//                players.get(i).determineMove(getBoard().deepCopy());
+            }
+        }
     }
 
     public boolean isFinished() {
@@ -161,7 +172,6 @@ public class Game extends Observable {
         s += board.toString();
         s += Cli.RETURN;
         s += "     0 1 2 3 4 5" + Cli.RETURN;
-        s += "Hand " + Cli.RETURN;
         s += "Bag " + bag.bagSize() + Cli.RETURN;
         s += Cli.RETURN;
 

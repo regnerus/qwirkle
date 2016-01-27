@@ -2,8 +2,8 @@ package qwirkle.client;
 
 // shared
 
-import qwirkle.player.HumanPlayer;
-import qwirkle.player.Player;
+import qwirkle.game.Stone;
+import qwirkle.player.ClientPlayer;
 import qwirkle.shared.Protocol;
 
 import java.io.*;
@@ -59,7 +59,7 @@ public class Client extends Thread {
     private static final InetAddress getLocalHost() {
         InetAddress host = null;
         try {
-            host =  InetAddress.getLocalHost();
+            host = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
             System.out.println(e.getMessage());
         }
@@ -105,7 +105,7 @@ public class Client extends Thread {
 
             case Protocol.Server.HALLO:
                 runnable = () -> {
-                    Player player = new HumanPlayer(ClientController.getInstance().getUsername());
+                    ClientPlayer player = new ClientPlayer(ClientController.getInstance().getUsername());
                     ClientController.getInstance().setPlayer(player);
                     ClientController.getInstance().enterWaitingRoom();
                 };
@@ -130,7 +130,7 @@ public class Client extends Thread {
                 runnable = () -> {
                     List<String> opponentsList = new ArrayList<>();
 
-                    for(String player : params) {
+                    for (String player : params) {
                         opponentsList.add(player);
                     }
 
@@ -152,9 +152,9 @@ public class Client extends Thread {
                     String next = params[1];
 
                     //It is not our own move.
-                    if(!current.equals(ClientController.getInstance().getUsername())) {
+                    if (!current.equals(ClientController.getInstance().getUsername())) {
 //                        String[] stones = params[2].split(Character.toString(Protocol.Server.Settings.DELIMITER));
-//                        Move move = new Move();
+//                         move = new ();
 //
 //                        for(String stone : stones) {
 //                            String[] parts = stone.split(Character.toString(Protocol.Server.Settings.DELIMITER2));
@@ -164,7 +164,7 @@ public class Client extends Thread {
 //                            move.addTile(t, Utils.toInt(parts[1]), Utils.toInt(parts[2]));
 //                        }
 
-                        if(next.equals(ClientController.getInstance().getUsername())) { //It is our turn now
+                        if (next.equals(ClientController.getInstance().getUsername())) { //It is our turn now
                             System.out.println("Our turn"); //TODO debug
                         }
                     }
@@ -174,9 +174,10 @@ public class Client extends Thread {
                 break;
 
             case Protocol.Server.ADDTOHAND:
-                for(String tile : params) {
-//                    Tile t = Tile.fromChars(tile);
-//                    ClientController.getInstance().getPlayer().addToHand(t);
+                for (String stone : params) {
+                    ClientController.getInstance().getPlayer().addToHand(Stone.fromChars(stone));
+
+                    System.out.println(ClientController.getInstance().getPlayer().getHand().toString()); //TODO debug
                 }
                 break;
 
@@ -210,6 +211,20 @@ public class Client extends Thread {
 
     public void handleGameRequest(int opponents) {
         String cmd = Protocol.Client.REQUESTGAME + Protocol.Server.Settings.DELIMITER + opponents;
+        emit(cmd);
+    }
+
+    public void handleMakeMove(List<Stone> moves) {
+        String ms = "";
+
+        for(Stone stone : moves) {
+            ms += stone.toMove() + Protocol.Server.Settings.DELIMITER;
+        }
+
+        ms = ms.substring(0, ms.length() - 1);
+
+        String cmd = Protocol.Client.MAKEMOVE + Protocol.Server.Settings.DELIMITER + ms;
+
         emit(cmd);
     }
 

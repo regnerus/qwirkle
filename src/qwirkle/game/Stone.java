@@ -1,7 +1,11 @@
 package qwirkle.game;
 
+import qwirkle.shared.Protocol;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import static qwirkle.game.Stone.Color.RED;
 
 /**
  * Created by chris on 15/01/16.
@@ -52,7 +56,7 @@ public class Stone {
 
     private static final Map<Color, String> COLOR_MAP = new HashMap<Color, String>() {
         {
-            put(Color.RED, "\u001B[31m");
+            put(RED, "\u001B[31m");
             put(Color.ORANGE, "\u001B[36m"); //Changed to CYAN for better readability
             put(Color.YELLOW, "\u001B[33m");
             put(Color.GREEN, "\u001B[32m");
@@ -101,6 +105,119 @@ public class Stone {
 
     public Color getColor() {
         return color;
+    }
+
+    public String toMove() {
+        return this.toString() + Protocol.Server.Settings.DELIMITER2 + this.location.toString();
+    }
+
+    public static Stone fromChars(String chars) {
+        if(chars.length() != 2) {
+            return null;
+        }
+
+        Color c;
+        Shape s;
+
+        switch(chars.charAt(0)) {
+            case 'A':
+                c = Color.RED;
+                break;
+            case 'B':
+                c = Color.ORANGE;
+                break;
+            case 'C':
+                c = Color.YELLOW;
+                break;
+            case 'D':
+                c = Color.GREEN;
+                break;
+            case 'E':
+                c = Color.BLUE;
+                break;
+            case 'F':
+                c = Color.PURPLE;
+                break;
+            default:
+                c = Color.NULL;
+        }
+
+        switch(chars.charAt(1)) {
+            case 'F':
+                s = Shape.HEART;
+                break;
+            case 'E':
+                s = Shape.STAR;
+                break;
+            case 'D':
+                s = Shape.SQUARE;
+                break;
+            case 'A':
+                s = Shape.CIRCLE;
+                break;
+            case 'B':
+                s = Shape.CROSS;
+                break;
+            case 'C':
+                s = Shape.DIAMOND;
+                break;
+            default:
+                s = Shape.NULL;
+        }
+
+        return new Stone(c, s);
+    }
+
+    public String toChars() {
+        char c, s;
+
+        switch (this.getColor()) {
+            case RED:
+                c = 'A';
+                break;
+            case ORANGE:
+                c = 'B';
+                break;
+            case YELLOW:
+                c = 'C';
+                break;
+            case GREEN:
+                c = 'D';
+                break;
+            case BLUE:
+                c = 'E';
+                break;
+            case PURPLE:
+                c = 'F';
+                break;
+            default:
+                return null;
+        }
+
+        switch (this.getShape()) {
+            case HEART:
+                s = 'F';
+                break;
+            case STAR:
+                s = 'E';
+                break;
+            case SQUARE:
+                s = 'D';
+                break;
+            case CIRCLE:
+                s = 'A';
+                break;
+            case CROSS:
+                s = 'B';
+                break;
+            case DIAMOND:
+                s = 'C';
+                break;
+            default:
+                return null;
+        }
+
+        return Character.toString(c) + Character.toString(s);
     }
 
     @Override

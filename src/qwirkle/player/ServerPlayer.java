@@ -1,24 +1,37 @@
-//package qwirkle.player;
-//
-//// game
-//
-//import qwirkle.game.Hand;
-//import qwirkle.game.Stone;
-//
-//// server
-//import qwirkle.server.ClientHandler;
-//import qwirkle.shared.GameController;
-//
-///**
-// * Created by chris on 24/01/16.
-// */
-//public abstract class ServerPlayer extends Player {
-//
-//    private Hand hand;
-//    private GameController game;
-//    private ClientHandler client;
-//    private String username;
-//
+package qwirkle.player;
+
+// game
+
+// server
+
+import qwirkle.server.ClientHandler;
+
+/**
+ * Created by chris on 24/01/16.
+ */
+public class ServerPlayer extends Player {
+
+    private ClientHandler client;
+
+    public ServerPlayer(ClientHandler client) {
+        super();
+        this.client = client;
+    }
+
+    public ServerPlayer(ClientHandler client, String username) {
+        super(username);
+        this.client = client;
+    }
+
+    public ClientHandler getClient() {
+        return this.client;
+    }
+
+
+    public boolean isHuman() {
+        return true;
+    }
+
 //    /**
 //     * The ServerPlayer is used to keep track of players on the server side.
 //     *
@@ -118,4 +131,4 @@
 //    public String getUsername() {
 //        return username;
 //    }
-//}
+}

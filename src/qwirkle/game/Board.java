@@ -14,13 +14,17 @@ import java.util.stream.Collectors;
 /**
  * Created by chris on 15/01/16.
  */
-public class Board extends Move {
+public class Board {
 
     private Map<Position, Stone> board;
     private Map<Position, Stone> possibleMoves;
 
     public static final int SPACE_AROUND_BOARD = 3;
     public static final int ASCII_INTEGER = 64; //for upper case
+
+    public enum Direction {
+        UP, DOWN, LEFT, RIGHT
+    }
 
     public Board() {
         this.possibleMoves = new HashMap<>();
@@ -72,6 +76,10 @@ public class Board extends Move {
         } else {
             return false;
         }
+    }
+
+    public boolean isEmpty() {
+        return (board.size() < 1);
     }
 
     /**
@@ -154,6 +162,42 @@ public class Board extends Move {
         } else {
             return stone;
         }
+    }
+
+    public static boolean isUniqueShape(List<Stone> list, Stone stone) {
+        for (Stone s : list) {
+            if (s.getShape() == stone.getShape()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isMatchingShape(List<Stone> list, Stone stone) {
+        for (Stone s : list) {
+            if (s.getShape() != stone.getShape()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isUniqueColor(List<Stone> list, Stone stone) {
+        for (Stone s : list) {
+            if (s.getColor() == stone.getColor()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isMatchingColor(List<Stone> list, Stone stone) {
+        for (Stone s : list) {
+            if (s.getColor() != stone.getColor()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public List<Stone> getDirection(Stone stone, Direction direction) {

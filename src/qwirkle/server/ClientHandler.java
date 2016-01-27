@@ -1,10 +1,12 @@
 package qwirkle.server;
 
+import qwirkle.game.Hand;
 import qwirkle.player.Player;
 import qwirkle.shared.Protocol;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -107,7 +109,28 @@ public class ClientHandler extends Thread {
                 break;
 
             case Protocol.Client.MAKEMOVE:
+                if(player.getGame().getBoard().isEmpty()) {
+                    //This is a first move.
+                    String[] stones = params[0].split(Character.toString(Protocol.Server.Settings.DELIMITER));
 
+                    System.out.println("This is the first move");
+//
+//                    for(String stone : stones) {
+//                        String[] parts = stone.split(Character.toString(Protocol.Server.Settings.DELIMITER2));
+//
+//                        Stone s = Stone.fromChars(parts[0]);
+//
+//                        move.addTile(t, Utils.toInt(parts[1]), Utils.toInt(parts[2]));
+//                    }
+//
+//                    if(player.moveAllowed(move) && player.getGame().getBoard().moveAllowed(move)) {
+//                        player.getGame().addFirstMove(move, player);
+//                    } else {
+//                        //TODO: Error
+//                    }
+                } else {
+
+                }
                 break;
 
             case Protocol.Client.CHAT:
@@ -175,7 +198,6 @@ public class ClientHandler extends Thread {
 //    public ServerPlayer getPlayer() {
 //        return this.player;
 //    }
-
     public String getUsername() {
         return this.username;
     }
@@ -192,6 +214,19 @@ public class ClientHandler extends Thread {
     public void handleRequestGame(int players) {
         String cmd = Protocol.Server.OKWAITFOR + Protocol.Server.Settings.DELIMITER + players;
         this.emit(cmd);
+    }
+
+    public void handleStartGame(ArrayList<Player> players) {
+        String ps = "";
+
+        for (Player player : players) {
+            ps += player.getUsername() + Protocol.Server.Settings.DELIMITER;
+        }
+
+        ps = ps.substring(0, ps.length() - 1);
+
+        String cmd = Protocol.Server.STARTGAME + Protocol.Server.Settings.DELIMITER + ps;
+        emit(cmd);
     }
 
     public void handleHandshake() {
@@ -223,6 +258,11 @@ public class ClientHandler extends Thread {
      */
     public void handleLeaderboard() {
 
+    }
+
+    public void handleAddToHand(Hand hand) {
+        String cmd = Protocol.Server.ADDTOHAND + Protocol.Server.Settings.DELIMITER + hand.toChars();
+        emit(cmd);
     }
 
     public void handleError(String errorCode) {

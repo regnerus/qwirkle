@@ -30,6 +30,22 @@ public class Players {
         return this.players.size();
     }
 
+    public void init() {
+        this.getGame();
+    }
+
+    public void getGame() {
+        for(Player player : this.players) {
+            player.getGame();
+        }
+    }
+
+    public void setGame(Game game) {
+        for(Player player : this.players) {
+            player.setGame(game);
+        }
+    }
+
     public void addPlayer(Player player) {
         this.players.add(player);
     }

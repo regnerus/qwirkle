@@ -2,6 +2,7 @@ package qwirkle.game;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import qwirkle.shared.Protocol;
 
 import java.awt.*;
 
@@ -73,6 +74,6 @@ public class Position {
 
     @Override
     public String toString() {
-        return "(" + this.getX() + "," + this.getY() + ")";
+        return "" + this.getX() + Protocol.Server.Settings.DELIMITER2 + this.getY();
     }
 }

@@ -1,6 +1,9 @@
 package qwirkle.game;
 
+import qwirkle.shared.Protocol;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Bouke on 24/01/16.
@@ -10,8 +13,11 @@ public class Hand {
     ArrayList<Stone> stones;
     Bag bag;
 
-    public Hand(Bag bag) {
+    public Hand() {
         this.stones = new ArrayList<>();
+    }
+
+    public void init(Bag bag) {
         this.bag = bag;
 
         for (int i = 0; i < Game.MAX_HANDSIZE; i++) {
@@ -32,6 +38,10 @@ public class Hand {
         this.stones.add(stone);
     }
 
+    public void addStone(List<Stone> stones) {
+        stones.forEach(this::addStone);
+    }
+
     /**
      * Remove stone from this hand and add a new one from the bag.
      *
@@ -43,6 +53,10 @@ public class Hand {
         if(this.bag.bagSize() > 0) {
             this.stones.add(bag.getStone());
         }
+    }
+
+    public void removeStone(List<Stone> stones) {
+        stones.forEach(this::removeStone);
     }
 
     /**
@@ -57,10 +71,24 @@ public class Hand {
         }
     }
 
+    public void switchStone(List<Stone> stones) {
+        stones.forEach(this::switchStone);
+    }
+
     public Stone coordinateToStone(String x) {
         return this.stones.get(Character.getNumericValue(x.charAt(0)));
     }
 
+
+    public String toChars() {
+        String s = "";
+
+        for (int i = 0; i < this.stones.size(); i++) {
+            s += this.stones.get(i).toChars() + Protocol.Server.Settings.DELIMITER;
+        }
+
+        return s;
+    }
     @Override
     public String toString() {
         String s = "";

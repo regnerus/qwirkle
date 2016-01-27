@@ -1,11 +1,10 @@
 package qwirkle.client;
 
+import qwirkle.game.Game;
+import qwirkle.game.Players;
+import qwirkle.player.ClientPlayer;
 import qwirkle.player.Player;
 import qwirkle.shared.Cli;
-import qwirkle.game.Game;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Bouke on 26/01/16.
@@ -21,7 +20,7 @@ public class ClientController {
     private Cli view;
     private Client client;
 
-    private Player player;
+    private ClientPlayer player;
     private Game game;
 
     public ClientController() {
@@ -52,6 +51,10 @@ public class ClientController {
 ////        getUsername();
 //    }
 
+    public Cli getView() {
+        return this.view;
+    }
+
     public void run() {
         this.client = new Client();
         this.client.start();
@@ -60,55 +63,29 @@ public class ClientController {
     }
 
     public void startGame(String[] opponents) {
-        List<Player> players = new ArrayList<>();
-        for(String opponent : opponents) {
-//            Player p = new HumanPlayer(null);
-//            p.setUsername(opponent);
+        Players players = new Players();
 
-//            players.add(p);
+        for(String opponent : opponents) {
+            Player p = new ClientPlayer(opponent);
+
+            players.addPlayer(p);
         }
 
-//        this.game = new Game(players);
+        this.game = new Game(players);
 
-        //We need to make a first move.
-//        Move m = player.determineMove();
+        view.logSimple(this.game.toString());
+        view.logSimple(this.player.getHand().toString());
+
+        this.firstMove();
+
     }
 
+    public void firstMove() {
+        String move = view.readString("What's your firstmove?");
 
-//    /**
-//     * Gets Server Info
-//     *
-//     *
-//     */
-//    public void getServerInfo() {
-//        IPAddress ipval = new IPAddress("The IP address you entered was not valid.");
-//        server_ip = ui.getValidatedInput("Server IP: ", new Validator[] {ipval});
-//
-//        Numeric num = new Numeric("The port you entered wasn't numeric");
-//        String p = ui.getValidatedInput("What port would you like to connect to?", new Validator[] {num});
-//        server_port = Utils.toInt(p);
-//
-//        InetAddress server = null;
-//        try {
-//            server = InetAddress.getByName(server_ip);
-//            System.out.println(server);
-//        } catch (UnknownHostException e) {
-//            //TODO error logs
-//            System.out.println(e.getMessage());
-//        }
-//
-//        this.communication = new Client(server, server_port);
-//        this.communication.start();
-//    }
+        this.client.handleMakeMove();
+    }
 
-//    /**
-//     * Gets the Username
-//     */
-//    public void getUsername() {
-//        MaxLength ml = new MaxLength(15, "The username cannot be long than 15 characters");
-//        this.username = ui.getValidatedInput("What's your username?", new Validator[] {ml});
-//        this.communication.sendHello(username);
-//    }
 
     public void setUsername() {
         this.username = view.readString("What's your username?");
@@ -161,18 +138,18 @@ public class ClientController {
 //        this.game = new Game(players);
 //
 //        //We need to make a first move.
-//        Move m = player.determineMove();
+//         m = player.determineMove();
 //    }
 //
 //    public void getMove() {
-//        Move m = player.determineMove();
+//         m = player.determineMove();
 //    }
 //
-    public void setPlayer(Player player) {
+    public void setPlayer(ClientPlayer player) {
         this.player = player;
     }
 
-    public Player getPlayer() {
+    public ClientPlayer getPlayer() {
         return player;
     }
 }

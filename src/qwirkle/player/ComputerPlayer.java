@@ -38,9 +38,6 @@
 //     * @param board
 //     * @return
 //     */
-//    public Move calculateNextMove(Board board) {
-//        return new Move();
-//    }
 //
 //    /**
 //     * Set the time that an AI player can think before retuning a move.
