@@ -1,21 +1,16 @@
 package qwirkle.player;
 
-import qwirkle.shared.GameController;
-
 /**
  * Created by chris on 24/01/16.
  */
 public class ClientPlayer extends Player {
 
-    private String name;
-    private GameController game;
-
-    public ClientPlayer(GameController game, String name) {
-        super(game, name);
+    public ClientPlayer() {
+        super();
     }
 
-    public String getName() {
-        return this.name;
+    public ClientPlayer(String username) {
+        super(username);
     }
 
     public boolean isHuman() {

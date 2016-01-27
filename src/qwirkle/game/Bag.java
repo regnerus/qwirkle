@@ -1,7 +1,5 @@
 package qwirkle.game;
 
-import qwirkle.shared.Game;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

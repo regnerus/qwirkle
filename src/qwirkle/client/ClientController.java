@@ -1,22 +1,33 @@
 package qwirkle.client;
 
+import qwirkle.player.Player;
+import qwirkle.shared.Cli;
+import qwirkle.game.Game;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Bouke on 26/01/16.
  */
 public class ClientController {
     private static ClientController instance = null;
 
+    private String username;
 //    private String server_ip, username;
 //    private int server_port;
 
 //    private TUI ui;
+    private Cli view;
     private Client client;
 
-//    private Player player;
-//    private Game game;
+    private Player player;
+    private Game game;
 
     public ClientController() {
 //        ui = new TUI();
+        view = new Cli();
+
     }
 
     public static ClientController getInstance() {
@@ -44,6 +55,23 @@ public class ClientController {
     public void run() {
         this.client = new Client();
         this.client.start();
+
+        setUsername();
+    }
+
+    public void startGame(String[] opponents) {
+        List<Player> players = new ArrayList<>();
+        for(String opponent : opponents) {
+//            Player p = new HumanPlayer(null);
+//            p.setUsername(opponent);
+
+//            players.add(p);
+        }
+
+//        this.game = new Game(players);
+
+        //We need to make a first move.
+//        Move m = player.determineMove();
     }
 
 
@@ -81,10 +109,15 @@ public class ClientController {
 //        this.username = ui.getValidatedInput("What's your username?", new Validator[] {ml});
 //        this.communication.sendHello(username);
 //    }
-//
-//    public String getName() {
-//        return this.username;
-//    }
+
+    public void setUsername() {
+        this.username = view.readString("What's your username?");
+        this.client.handleHandshake(username);
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
 //
 //    public void pause() {
 //        try {
@@ -99,6 +132,10 @@ public class ClientController {
 //        count.countDown();
 //    }
 
+    public void enterWaitingRoom() {
+        int opponents = view.readInt("How many opponents?");
+        this.client.handleGameRequest(opponents);
+    }
 //    public void startLobby() {
 //        //TODO change if challenging has to be supported
 //        Numeric num = new Numeric("The amount of players has to be numeric.");
@@ -131,11 +168,11 @@ public class ClientController {
 //        Move m = player.determineMove();
 //    }
 //
-//    public void setPlayer(Player player) {
-//        this.player = player;
-//    }
-//
-//    public Player getPlayer() {
-//        return player;
-//    }
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
 }

@@ -1,15 +1,12 @@
 package qwirkle.server;
 
-import qwirkle.player.ServerPlayer;
-import qwirkle.shared.Cli;
-import qwirkle.shared.GameController;
+import qwirkle.player.Player;
 import qwirkle.shared.Protocol;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.UUID;
-
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by Bouke on 26/01/16.
@@ -18,13 +15,15 @@ public class ClientHandler extends Thread {
 
     private Server server;
 
-    private ServerPlayer player;
+    private Player player;
 
     private BufferedReader in;
     private BufferedWriter out;
     private Socket socket;
 
     private UUID clientId;
+
+    private String username;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -52,16 +51,16 @@ public class ClientHandler extends Thread {
         while (true) {
             try {
                 String message = in.readLine();
-                if(message != null) {
+                if (message != null) {
                     handleMessages(message);
                 } else {
-                    stopClientConnection();
+                    this.stopClientConnection();
                     break;
                 }
             } catch (IOException e) {
                 //TODO error logs
                 System.out.println(e.getMessage());
-                stopClientConnection();
+                this.stopClientConnection();
                 break;
             }
         }
@@ -73,16 +72,22 @@ public class ClientHandler extends Thread {
      * @throws IOException
      */
     public void handleMessages(String message) {
-//
-//        // split incoming message string to find message type
-//        ArrayList incomingData = ProtocolParser.parse(in.readLine());
-//        assertNotNull(incomingData.get(0));
+        System.out.println("Message:" + message);
 
-        switch (message) {
+        String[] messageArray = message.split(String.valueOf(Protocol.Server.Settings.DELIMITER));
+        String command = messageArray[0];
+        final String[] params = Arrays.copyOfRange(messageArray, 1, messageArray.length);
+
+        switch (command) {
 
             case Protocol.Client.HALLO:
-//                assertNotNull(incomingData.get(1));
-//                handleHandshake((String) incomingData.get(1)); // called it handShake since HALLO is a stupid name
+                if (ServerController.getInstance().isUniqueUsername(params[0])) {
+                    System.out.println("Hello " + params[0]);
+                    handleHandshake();
+                    this.username = params[0];
+                } else {
+                    handleError("1");
+                }
                 break;
 
             case Protocol.Client.QUIT:
@@ -111,7 +116,7 @@ public class ClientHandler extends Thread {
                 break;
 
             case Protocol.Client.REQUESTGAME:
-
+                handleRequestGame(ServerController.getInstance().joinWaitingRoom(Integer.parseInt(params[0]), this));
                 break;
 
             case Protocol.Client.CHANGESTONE:
@@ -147,9 +152,9 @@ public class ClientHandler extends Thread {
      * @return Game game
      */
     //@ pure
-    public GameController getGame() {
-        return this.getPlayer().getGame();
-    }
+//    public GameController getGame() {
+////        return this.getPlayer().getGame();
+//    }
 
     /**
      * Join a game.
@@ -167,8 +172,12 @@ public class ClientHandler extends Thread {
      *
      * @return Player player
      */
-    public ServerPlayer getPlayer() {
-        return this.player;
+//    public ServerPlayer getPlayer() {
+//        return this.player;
+//    }
+
+    public String getUsername() {
+        return this.username;
     }
 
     /**
@@ -176,13 +185,18 @@ public class ClientHandler extends Thread {
      */
     //@ ensures player != null;
     public void handleQuit() {
-        assertNotNull(player);
-        player.leaveGame();
+//        player.leaveGame();
         // TODO: delete player
     }
 
-    public void handleHandshake(String handshakeData) {
+    public void handleRequestGame(int players) {
+        String cmd = Protocol.Server.OKWAITFOR + Protocol.Server.Settings.DELIMITER + players;
+        this.emit(cmd);
+    }
 
+    public void handleHandshake() {
+        String cmd = Protocol.Server.HALLO + Protocol.Server.Settings.DELIMITER + ServerController.getInstance().getServerName();
+        this.emit(cmd);
     }
 
     /**
@@ -211,8 +225,9 @@ public class ClientHandler extends Thread {
 
     }
 
-    public void handleError() {
-
+    public void handleError(String errorCode) {
+        String cmd = Protocol.Server.ERROR + Protocol.Server.Settings.DELIMITER + errorCode;
+        emit(cmd);
     }
 
     /**
@@ -226,7 +241,7 @@ public class ClientHandler extends Thread {
             out.newLine();
             out.flush();
         } catch (IOException e) {
-            Cli.logServerError(e);
+            System.out.println(e.getMessage());
 
             // disconnect client since data can be corrupted from now on
             stopClientConnection();

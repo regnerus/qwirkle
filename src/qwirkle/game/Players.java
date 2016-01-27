@@ -26,6 +26,10 @@ public class Players {
         return this.players;
     }
 
+    public int getSize() {
+        return this.players.size();
+    }
+
     public void addPlayer(Player player) {
         this.players.add(player);
     }

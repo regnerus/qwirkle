@@ -2,7 +2,6 @@ package qwirkle.player;
 
 // game
 
-import qwirkle.shared.Game;
 import qwirkle.game.Hand;
 import qwirkle.game.Points;
 import qwirkle.shared.GameController;
@@ -15,16 +14,19 @@ import java.util.Observer;
  */
 public abstract class Player implements Observer {
 
-    Hand hand;
-    GameController game;
+//    Hand hand;
+//    GameController game;
     Points points;
-    String name;
+    String username;
 
-    public Player(GameController game, String name) {
-        this.game = game;
-        this.name = name;
+    public Player() {
         this.points = new Points();
-        this.hand = new Hand(game.getBag());
+//        this.hand = new Hand(game.getBag());
+    }
+
+    public Player(String username) {
+        this();
+        this.username = username;
     }
 
     //TODO: Do something with the Observable data
@@ -32,9 +34,9 @@ public abstract class Player implements Observer {
         System.out.println("Game State: " + arg);
     }
 
-    public Hand getHand() {
-        return this.hand;
-    }
+//    public Hand getHand() {
+//        return this.hand;
+//    }
 
     public void addPoints(int p) {
         this.points.addPoints(p);
@@ -44,8 +46,12 @@ public abstract class Player implements Observer {
         return this.points.getPoints();
     }
 
-    public String getName() {
-        return this.name;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return this.username;
     }
 //
 //    abstract boolean isHuman();
@@ -68,6 +74,6 @@ public abstract class Player implements Observer {
 
     @Override
     public String toString() {
-        return this.name;
+        return this.username;
     }
 }

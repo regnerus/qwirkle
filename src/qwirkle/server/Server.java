@@ -3,6 +3,7 @@ package qwirkle.server;
 // server
 
 // shared
+import qwirkle.game.Game;
 import qwirkle.shared.*;
 
 import java.io.IOException;

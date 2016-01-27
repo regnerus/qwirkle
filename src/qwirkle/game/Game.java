@@ -1,9 +1,9 @@
-package qwirkle.shared;
+package qwirkle.game;
 
 // java
 
-import qwirkle.game.*;
 import qwirkle.player.Player;
+import qwirkle.shared.Cli;
 
 import java.util.*;
 
@@ -32,13 +32,18 @@ public class Game extends Observable {
     /**
      * Start a new game with players and a new bag.
      */
-    public Game() {
-        this.players = new Players();
+    public Game(Players players) {
+        this.players = players;
         this.bag = new Bag();
         this.board = new Board();
         this.firstMoves = new HashMap<>();
 //        this.input = input;
     }
+
+    public Game() {
+        this(new Players());
+    }
+
 
     public Bag getBag() {
         return bag;
@@ -94,21 +99,23 @@ public class Game extends Observable {
     }
 
     public int placeStones(Player player, List<Stone> stones) {
-        int points = this.board.placeStones(stones);
-        if (points > 0) {
-            for(Stone stone : stones) {
-                player.getHand().removeStone(stone);
-            }
-            player.addPoints(points);
-        }
+//        int points = this.board.placeStones(stones);
+//        if (points > 0) {
+//            for(Stone stone : stones) {
+//                player.getHand().removeStone(stone);
+//            }
+//            player.addPoints(points);
+//        }
+//
+//        return points;
 
-        return points;
+        return 0;
     }
 
     public void switchStones(Player player, List<Stone> stones) {
-        for(Stone stone : stones) {
-            player.getHand().switchStone(stone);
-        }
+//        for(Stone stone : stones) {
+//            player.getHand().switchStone(stone);
+//        }
     }
 
     /**
@@ -135,6 +142,10 @@ public class Game extends Observable {
     public void emitToAllPlayers(String message) {
         setChanged();
         notifyObservers(message);
+    }
+
+    public void startGame() {
+
     }
 
     public boolean isFinished() {
