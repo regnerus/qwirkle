@@ -1,10 +1,15 @@
 package qwirkle.client;
 
+import qwirkle.game.Board;
 import qwirkle.game.Game;
 import qwirkle.game.Players;
+import qwirkle.game.Stone;
 import qwirkle.player.ClientPlayer;
+import qwirkle.player.HumanPlayer;
 import qwirkle.player.Player;
 import qwirkle.shared.Cli;
+
+import java.util.ArrayList;
 
 /**
  * Created by Bouke on 26/01/16.
@@ -16,11 +21,11 @@ public class ClientController {
 //    private String server_ip, username;
 //    private int server_port;
 
-//    private TUI ui;
+    //    private TUI ui;
     private Cli view;
     private Client client;
 
-    private ClientPlayer player;
+    private HumanPlayer player;
     private Game game;
 
     public ClientController() {
@@ -30,7 +35,7 @@ public class ClientController {
     }
 
     public static ClientController getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new ClientController();
         }
 
@@ -65,7 +70,7 @@ public class ClientController {
     public void startGame(String[] opponents) {
         Players players = new Players();
 
-        for(String opponent : opponents) {
+        for (String opponent : opponents) {
             Player p = new ClientPlayer(opponent);
 
             players.addPlayer(p);
@@ -73,23 +78,31 @@ public class ClientController {
 
         this.game = new Game(players);
 
-        view.logSimple(this.game.toString());
-        view.logSimple(this.player.getHand().toString());
+        this.logGame();
 
         this.firstMove();
 
     }
 
-    public void firstMove() {
-        String move = view.readString("What's your firstmove?");
+    public void logGame() {
+        view.logSimple(this.game.toString());
+        view.logSimple(this.player.getHand().toString());
+    }
 
-        this.client.handleMakeMove();
+    public void firstMove() {
+        ArrayList<Stone> move = this.player.determineFirstMove();
+
+        this.client.handleMakeMove(move);
     }
 
 
     public void setUsername() {
         this.username = view.readString("What's your username?");
         this.client.handleHandshake(username);
+    }
+
+    public Game getGame() {
+        return this.game;
     }
 
     public String getUsername() {
@@ -113,7 +126,8 @@ public class ClientController {
         int opponents = view.readInt("How many opponents?");
         this.client.handleGameRequest(opponents);
     }
-//    public void startLobby() {
+
+    //    public void startLobby() {
 //        //TODO change if challenging has to be supported
 //        Numeric num = new Numeric("The amount of players has to be numeric.");
 //        InRange range = new InRange(0, 4, "Only games with up to 4 players are supported.");
@@ -141,15 +155,19 @@ public class ClientController {
 //         m = player.determineMove();
 //    }
 //
-//    public void getMove() {
-//         m = player.determineMove();
-//    }
+    public void getMove() {
+        Board board = this.game.getBoard();
+
+        ArrayList<Stone> move = player.determineMove(board);
+
+        this.client.handleMakeMove(move);
+    }
 //
-    public void setPlayer(ClientPlayer player) {
+    public void setPlayer(HumanPlayer player) {
         this.player = player;
     }
 
-    public ClientPlayer getPlayer() {
+    public HumanPlayer getPlayer() {
         return player;
     }
 }

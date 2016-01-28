@@ -35,7 +35,7 @@ public abstract class Player implements Observer {
         hand.init(game.getBag());
 
         if(this instanceof ServerPlayer) {
-            ((ServerPlayer) this).getClient().handleAddToHand(this.hand);
+            ((ServerPlayer) this).getClient().handleInitHand(this.hand);
         }
     }
 
@@ -45,8 +45,8 @@ public abstract class Player implements Observer {
 
 
     //TODO: Do something with the Observable data
-    public void update(Observable o, Object arg) {
-        System.out.println("Game State: " + arg);
+    public void update(Observable o, Object cmd) {
+        ((ServerPlayer) this).getClient().handleEmitToAllPlayers("" + cmd);
     }
 
 //    public Hand getHand() {

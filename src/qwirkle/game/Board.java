@@ -265,10 +265,10 @@ public class Board {
         return this.getColumn(stone, true);
     }
 
-    public boolean validateList(List<Stone> list, Stone stone) {
-        if (this.isUniqueShape(list, stone) && this.isMatchingColor(list, stone)) {
+    public static boolean validateList(List<Stone> list, Stone stone) {
+        if (Board.isUniqueShape(list, stone) && Board.isMatchingColor(list, stone)) {
             return true;
-        } else if (this.isMatchingShape(list, stone) && this.isUniqueColor(list, stone)) {
+        } else if (Board.isMatchingShape(list, stone) && Board.isUniqueColor(list, stone)) {
             return true;
         } else {
             return false;

@@ -50,9 +50,12 @@ public class Hand {
     public void removeStone(Stone stone) {
         this.stones.remove(stone);
 
-        if(this.bag.bagSize() > 0) {
-            this.stones.add(bag.getStone());
-        }
+
+        System.out.println("Hand: " + this.stones.toString());
+
+//        if(this.bag.bagSize() > 0) {
+//            this.stones.add(bag.getStone());
+//        }
     }
 
     public void removeStone(List<Stone> stones) {
@@ -87,8 +90,11 @@ public class Hand {
             s += this.stones.get(i).toChars() + Protocol.Server.Settings.DELIMITER;
         }
 
+        s = s.substring(0, s.length() - 1);
+
         return s;
     }
+
     @Override
     public String toString() {
         String s = "";

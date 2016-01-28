@@ -3,7 +3,7 @@ package qwirkle.client;
 // shared
 
 import qwirkle.game.Stone;
-import qwirkle.player.ClientPlayer;
+import qwirkle.player.HumanPlayer;
 import qwirkle.shared.Protocol;
 
 import java.io.*;
@@ -105,7 +105,7 @@ public class Client extends Thread {
 
             case Protocol.Server.HALLO:
                 runnable = () -> {
-                    ClientPlayer player = new ClientPlayer(ClientController.getInstance().getUsername());
+                    HumanPlayer player = new HumanPlayer(ClientController.getInstance().getUsername());
                     ClientController.getInstance().setPlayer(player);
                     ClientController.getInstance().enterWaitingRoom();
                 };
@@ -151,22 +151,30 @@ public class Client extends Thread {
                     String current = params[0];
                     String next = params[1];
 
+                    List<Stone> move = new ArrayList<>();
+
+                    String[] stones = Arrays.copyOfRange(params, 2, params.length);
+                    for (int i = 0; i < stones.length; i++) {
+                        move.add(Stone.fromMove(stones[i]));
+                    }
+
+                    ClientController.getInstance().getGame().getBoard().placeStones(move);
+
                     //It is not our own move.
                     if (!current.equals(ClientController.getInstance().getUsername())) {
-//                        String[] stones = params[2].split(Character.toString(Protocol.Server.Settings.DELIMITER));
-//                         move = new ();
-//
-//                        for(String stone : stones) {
-//                            String[] parts = stone.split(Character.toString(Protocol.Server.Settings.DELIMITER2));
-//
-//                            Tile t = Tile.fromChars(parts[0]);
-//
-//                            move.addTile(t, Utils.toInt(parts[1]), Utils.toInt(parts[2]));
-//                        }
 
-                        if (next.equals(ClientController.getInstance().getUsername())) { //It is our turn now
-                            System.out.println("Our turn"); //TODO debug
-                        }
+                    }
+                    else {
+//                        int points = ClientController.getInstance().getGame().placeStones(ClientController.getInstance().getPlayer(), move);
+//                        System.out.println("Got points: " + points);
+                        ClientController.getInstance().getPlayer().getHand().removeStone(move);
+                    }
+
+                    ClientController.getInstance().logGame();
+
+                    if (next.equals(ClientController.getInstance().getUsername())) { //It is our turn now
+                        System.out.println("Our Turn!");
+                        ClientController.getInstance().getMove();
                     }
                 };
 
@@ -199,7 +207,43 @@ public class Client extends Thread {
                 break;
 
             case Protocol.Server.ERROR:
-                // client is failing hard
+                //TODO implement different error handlers.
+                switch (params[0]) {
+                    case "1":
+                        //Not your turn
+                        System.out.println("It wasn't your turn.");
+                        break;
+                    case "2":
+                        //Not Your Stone
+                        break;
+                    case "3":
+                        //Not enough stones for trading
+                        break;
+                    case "4":
+                        //Name is taken
+                        runnable = (Runnable) () -> {
+//                                ClientController.getInstance().getUI().error("The username was already taken.");
+//                                ClientController.getInstance().getUsername();
+                        };
+
+                        startNewThread(runnable);
+                        break;
+                    case "5":
+                        //Not Challengable
+                        break;
+                    case "6":
+                        //Challenge Refused
+                        break;
+                    case "7":
+                        //Invalid Move
+                        System.out.println("The move you tried to make wasn't valid.");
+
+                        //TODO get a new move
+                        break;
+                    case "8":
+                        //General
+                        break;
+                }
                 break;
         }
     }
@@ -221,7 +265,9 @@ public class Client extends Thread {
             ms += stone.toMove() + Protocol.Server.Settings.DELIMITER;
         }
 
-        ms = ms.substring(0, ms.length() - 1);
+        if(ms.length() > 1) {
+            ms = ms.substring(0, ms.length() - 1);
+        }
 
         String cmd = Protocol.Client.MAKEMOVE + Protocol.Server.Settings.DELIMITER + ms;
 

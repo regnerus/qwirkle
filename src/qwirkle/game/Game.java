@@ -5,6 +5,7 @@ package qwirkle.game;
 import qwirkle.player.Player;
 import qwirkle.player.ServerPlayer;
 import qwirkle.shared.Cli;
+import qwirkle.shared.Protocol;
 
 import java.util.*;
 
@@ -66,7 +67,7 @@ public class Game extends Observable {
         return this.players.nextTurn();
     }
 
-    public List<Stone> firstMove(Player player, List<Stone> stones) {
+    public void firstMove(Player player, List<Stone> stones) {
         List<Stone> row = new ArrayList<>();
 
         for(int i = 0; i < stones.size(); i++) {
@@ -77,12 +78,45 @@ public class Game extends Observable {
             }
             else {
                 this.firstMoves.put(player, new ArrayList<>());
-                return new ArrayList<>();
             }
         }
 
         this.firstMoves.put(player, row);
-        return row;
+
+        if(this.firstMoves.size() == this.players.getSize()) {
+            System.out.println(this.firstMoves);
+            Player winnerFirstRow = this.longestRow();
+
+            this.players.getPlayers().stream().filter(p -> p instanceof ServerPlayer).forEach(p -> {
+                if (p == winnerFirstRow) {
+                    this.move(p, this.firstMoves.get(p));
+                } else {
+                    ((ServerPlayer) p).getClient().handleError("1");
+                }
+            });
+        }
+    }
+
+    public void move(Player player, List<Stone> stones) {
+        emitToAllPlayers(this.getMoveCommand(player, this.players.nextTurn(), stones));
+
+        ((ServerPlayer) player).getClient().handleAddToHand(this.bag, stones.size());
+
+        player.getHand().removeStone(stones);
+    }
+
+    public String getMoveCommand(Player currentPlayer, Player nextPlayer, List<Stone> moves) {
+        String ms = "";
+
+        for(Stone stone : moves) {
+            ms += stone.toMove() + Protocol.Server.Settings.DELIMITER;
+        }
+
+        ms = ms.substring(0, ms.length() - 1);
+
+        String cmd = Protocol.Server.MOVE + Protocol.Server.Settings.DELIMITER + currentPlayer.getUsername() + Protocol.Server.Settings.DELIMITER + nextPlayer.getUsername() + Protocol.Server.Settings.DELIMITER + ms;
+
+        return cmd;
     }
 
     public Player longestRow() {
@@ -103,17 +137,15 @@ public class Game extends Observable {
     }
 
     public int placeStones(Player player, List<Stone> stones) {
-//        int points = this.board.placeStones(stones);
-//        if (points > 0) {
-//            for(Stone stone : stones) {
-//                player.getHand().removeStone(stone);
-//            }
-//            player.addPoints(points);
-//        }
-//
-//        return points;
+        int points = this.board.placeStones(stones);
+        if (points > 0) {
+            for(Stone stone : stones) {
+                player.getHand().removeStone(stone);
+            }
+            player.addPoints(points);
+        }
 
-        return 0;
+        return points;
     }
 
     public void switchStones(Player player, List<Stone> stones) {

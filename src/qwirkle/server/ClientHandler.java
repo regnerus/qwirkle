@@ -1,13 +1,17 @@
 package qwirkle.server;
 
+import qwirkle.game.Bag;
 import qwirkle.game.Hand;
+import qwirkle.game.Stone;
 import qwirkle.player.Player;
+import qwirkle.player.ServerPlayer;
 import qwirkle.shared.Protocol;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -17,7 +21,7 @@ public class ClientHandler extends Thread {
 
     private Server server;
 
-    private Player player;
+    private ServerPlayer player;
 
     private BufferedReader in;
     private BufferedWriter out;
@@ -109,19 +113,16 @@ public class ClientHandler extends Thread {
                 break;
 
             case Protocol.Client.MAKEMOVE:
-                if(player.getGame().getBoard().isEmpty()) {
-                    //This is a first move.
-                    String[] stones = params[0].split(Character.toString(Protocol.Server.Settings.DELIMITER));
+                System.out.println("Player:" + player);
 
-                    System.out.println("This is the first move");
-//
-//                    for(String stone : stones) {
-//                        String[] parts = stone.split(Character.toString(Protocol.Server.Settings.DELIMITER2));
-//
-//                        Stone s = Stone.fromChars(parts[0]);
-//
-//                        move.addTile(t, Utils.toInt(parts[1]), Utils.toInt(parts[2]));
-//                    }
+                if (player.getGame().getBoard().isEmpty()) {
+                    ArrayList<Stone> move = new ArrayList<>();
+
+                    for (int i = 0; i < params.length; i++) {
+                        move.add(Stone.fromMove(params[i]));
+                    }
+
+                    player.getGame().firstMove(player, move);
 //
 //                    if(player.moveAllowed(move) && player.getGame().getBoard().moveAllowed(move)) {
 //                        player.getGame().addFirstMove(move, player);
@@ -129,7 +130,13 @@ public class ClientHandler extends Thread {
 //                        //TODO: Error
 //                    }
                 } else {
+                    ArrayList<Stone> move = new ArrayList<>();
 
+                    for (int i = 0; i < params.length; i++) {
+                        move.add(Stone.fromMove(params[i]));
+                    }
+
+                    player.getGame().move(player, move);
                 }
                 break;
 
@@ -260,14 +267,59 @@ public class ClientHandler extends Thread {
 
     }
 
-    public void handleAddToHand(Hand hand) {
+    public void handleInitHand(Hand hand) {
         String cmd = Protocol.Server.ADDTOHAND + Protocol.Server.Settings.DELIMITER + hand.toChars();
+        emit(cmd);
+    }
+
+    public void handleAddToHand(Bag bag, int amount) {
+        String ms = "";
+
+        for(int i = 0; i < amount; i++) {
+            ms += bag.getStone().toChars() + Protocol.Server.Settings.DELIMITER;
+        }
+
+        ms = ms.substring(0, ms.length() - 1);
+
+        String cmd = Protocol.Server.ADDTOHAND + Protocol.Server.Settings.DELIMITER + ms;
+
+        emit(cmd);
+    }
+
+    public void handleMove(Player currentPlayer, Player nextPlayer, List<Stone> moves) {
+        String ms = "";
+
+        for(Stone stone : moves) {
+            ms += stone.toMove() + Protocol.Server.Settings.DELIMITER;
+        }
+
+        ms = ms.substring(0, ms.length() - 1);
+
+        String cmd = Protocol.Server.MOVE + Protocol.Server.Settings.DELIMITER + currentPlayer.getUsername() + Protocol.Server.Settings.DELIMITER + nextPlayer.getUsername() + Protocol.Server.Settings.DELIMITER + ms;
+
         emit(cmd);
     }
 
     public void handleError(String errorCode) {
         String cmd = Protocol.Server.ERROR + Protocol.Server.Settings.DELIMITER + errorCode;
         emit(cmd);
+    }
+
+    public void handleEmitToAllPlayers(String cmd) {
+        emit(cmd);
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    /**
+     * Set the player for the handler
+     *
+     * @param player player
+     */
+    public void setPlayer(ServerPlayer player) {
+        this.player = player;
     }
 
     /**

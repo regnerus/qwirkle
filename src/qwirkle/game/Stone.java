@@ -1,5 +1,7 @@
 package qwirkle.game;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import qwirkle.shared.Protocol;
 
 import java.util.HashMap;
@@ -108,18 +110,38 @@ public class Stone {
     }
 
     public String toMove() {
-        return this.toString() + Protocol.Server.Settings.DELIMITER2 + this.location.toString();
+        return this.toChars() + Protocol.Server.Settings.DELIMITER2 + this.location.toString();
+    }
+
+    public static Stone fromMove(String move) {
+        String[] chars = move.split("\\" + Character.toString(Protocol.Server.Settings.DELIMITER2));
+
+        Stone stone = Stone.fromChars(chars[0]);
+
+        int x = 0;
+        int y = 0;
+
+        try {
+            x = Integer.parseInt(chars[1]);
+            y = Integer.parseInt(chars[2]);
+        } catch (NumberFormatException e) {
+            System.out.println(e.getMessage());
+        }
+
+        stone.setLocation(x, y);
+
+        return stone;
     }
 
     public static Stone fromChars(String chars) {
-        if(chars.length() != 2) {
+        if (chars.length() != 2) {
             return null;
         }
 
         Color c;
         Shape s;
 
-        switch(chars.charAt(0)) {
+        switch (chars.charAt(0)) {
             case 'A':
                 c = Color.RED;
                 break;
@@ -142,7 +164,7 @@ public class Stone {
                 c = Color.NULL;
         }
 
-        switch(chars.charAt(1)) {
+        switch (chars.charAt(1)) {
             case 'F':
                 s = Shape.HEART;
                 break;
@@ -218,6 +240,30 @@ public class Stone {
         }
 
         return Character.toString(c) + Character.toString(s);
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+                // if deriving: appendSuper(super.hashCode()).
+                        append(shape).
+                        append(color).
+                        toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Stone))
+            return false;
+        if (obj == this)
+            return true;
+
+        Stone s = (Stone) obj;
+        return new EqualsBuilder().
+                // if deriving: appendSuper(super.equals(obj)).
+                        append(shape, s.shape).
+                        append(color, s.color).
+                        isEquals();
     }
 
     @Override

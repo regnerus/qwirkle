@@ -16,11 +16,15 @@ public class ServerPlayer extends Player {
     public ServerPlayer(ClientHandler client) {
         super();
         this.client = client;
+
+        client.setPlayer(this);
     }
 
     public ServerPlayer(ClientHandler client, String username) {
         super(username);
         this.client = client;
+
+        client.setPlayer(this);
     }
 
     public ClientHandler getClient() {
