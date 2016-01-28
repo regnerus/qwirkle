@@ -89,24 +89,12 @@ public class Stone {
         this.isPlaced = placed;
     }
 
-    public void setPlaced() {
-        this.setPlaced(true);
-    }
-
     public void setLocation(Position position) {
         this.location = position;
     }
 
     public void setLocation(int x, int y) {
         this.location = new Position(x, y);
-    }
-
-    public void setShape(Shape shape) {
-        this.shape = shape;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 
     public Position getLocation() {

@@ -68,17 +68,19 @@ public class Board {
     }
 
     public boolean placeStone(Stone stone) {
-        if (this.validMove(stone)) {
-            this.calculateBoardSize(stone.getLocation());
-            this.removePossibleMove(stone);
-            this.addPossibleMoves(stone);
+        if (!this.board.containsKey(stone.getLocation())) {
+            if (this.validMove(stone)) {
+                this.calculateBoardSize(stone.getLocation());
+                this.removePossibleMove(stone);
+                this.addPossibleMoves(stone);
 
-            board.put(stone.getLocation(), stone);
-            stone.setPlaced(true);
-            return true;
-        } else {
-            return false;
+                board.put(stone.getLocation(), stone);
+                stone.setPlaced(true);
+                return true;
+            }
         }
+
+        return false;
     }
 
     public boolean isEmpty() {
@@ -302,11 +304,11 @@ public class Board {
             return true;
         }
 
-        if (row.size() >= 1 && column.size() >= 1) {
-            return validateList(row, stone) || validateList(column, stone);
-        } else if (row.size() >= 1) {
+        if (row.size() >= 1 && row.size() < 6 && column.size() >= 1 && column.size() < 6) {
+            return validateList(row, stone) && validateList(column, stone);
+        } else if (row.size() >= 1 && row.size() < 6) {
             return validateList(row, stone);
-        } else if (column.size() >= 1) {
+        } else if (column.size() >= 1 && column.size() < 6) {
             return validateList(column, stone);
         } else {
             return false;
@@ -417,8 +419,6 @@ public class Board {
         }
 
         s = s + Cli.RETURN;
-
-        System.out.println("Possible Moves: " + possibleMoves);
 
         //Board
         for (int y = this.getBoundsY().getMin() - SPACE_AROUND_BOARD;

@@ -6,7 +6,6 @@ import qwirkle.client.Client;
 import qwirkle.client.ClientController;
 import qwirkle.game.*;
 import qwirkle.shared.Cli;
-import qwirkle.shared.GameController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +63,20 @@ public class ComputerPlayer extends ClientPlayer {
         ArrayList<Stone> move = DumbStrategy.calculateMove(board, ClientController.getInstance().getPlayer().getHand());
         if(move.size() > 1) {
             client.handleMakeMove(move);
+
+            for(Stone stone : move) {
+                ClientController.getInstance().getPlayer().getHand().removeStone(stone);
+            }
         }
         else {
-            client.handleChangeStones(ClientController.getInstance().getPlayer().getHand().getStones());
+            ArrayList<Stone> hand = ClientController.getInstance().getPlayer().getHand().getStones();
+
+            for(Stone stone : hand) {
+                ClientController.getInstance().getPlayer().getHand().removeStone(stone);
+            }
+
+            client.handleChangeStones(hand);
+
         }
     }
 

@@ -24,8 +24,6 @@ public class Bag {
                 }
             }
         }
-
-        System.out.println(this.bag);
     }
 
     public int bagSize() {
@@ -37,10 +35,9 @@ public class Bag {
     }
 
     public int randomStone() {
-        if(bag.size() > 0) {
+        if (bag.size() > 0) {
             return RANDOM.nextInt(bag.size());
-        }
-        else {
+        } else {
             return -1;
         }
     }

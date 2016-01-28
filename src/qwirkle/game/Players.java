@@ -17,21 +17,12 @@ public class Players {
         this.currentPlayer = null;
     }
 
-    public Players(ArrayList<Player> players) {
-        this.players = players;
-        this.currentPlayer = null;
-    }
-
     public ArrayList<Player> getPlayers() {
         return this.players;
     }
 
     public int getSize() {
         return this.players.size();
-    }
-
-    public void init() {
-        this.getGame();
     }
 
     public void getGame() {

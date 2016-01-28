@@ -33,11 +33,11 @@ public class Position {
     }
 
     public Position above() {
-        return new Position(this.getX(), this.getY() - 1);
+        return new Position(this.getX(), this.getY() + 1);
     }
 
     public Position below() {
-        return new Position(this.getX(), this.getY() + 1);
+        return new Position(this.getX(), this.getY() - 1);
     }
 
     public Position right() {

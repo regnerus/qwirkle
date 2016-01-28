@@ -94,7 +94,7 @@ public class Client extends Thread {
     }
 
     public void handleMessages(String message) {
-        System.out.println("Message:" + message);
+//        System.out.println("Message:" + message);
 
         String[] messageArray = message.split(String.valueOf(Protocol.Server.Settings.DELIMITER));
         String command = messageArray[0];

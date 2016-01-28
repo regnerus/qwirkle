@@ -49,8 +49,8 @@ public class Hand {
      */
     public void removeStone(Stone stone) {
         this.stones.remove(stone);
-
-        System.out.println("Hand: " + this.stones.toString());
+//
+//        System.out.println("Hand: " + this.stones.toString());
     }
 
     public void removeStone(List<Stone> stones) {
@@ -63,20 +63,15 @@ public class Hand {
      * @param stone stone to remove
      */
     public void switchStone(Stone stone) {
-        if(this.bag.bagSize() > 0) {
+        if (this.bag.bagSize() > 0) {
             this.stones.remove(stone);
             bag.addStone(stone);
         }
     }
 
-    public void switchStone(List<Stone> stones) {
-        stones.forEach(this::switchStone);
-    }
-
     public Stone coordinateToStone(String x) {
         return this.stones.get(Character.getNumericValue(x.charAt(0)));
     }
-
 
     public String toChars() {
         String s = "";

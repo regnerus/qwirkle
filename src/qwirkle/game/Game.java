@@ -27,8 +27,6 @@ public class Game extends Observable {
 
     private Map<Player, List<Stone>> firstMoves;
 
-//    private Input input;
-
     private boolean finished = false;
 
     /**
@@ -59,16 +57,6 @@ public class Game extends Observable {
 
     public Players getPlayers() {
         return this.players;
-    }
-
-    public void addPlayer(Player player) {
-        player.setGame(this);
-        this.addObserver(player);
-        this.players.addPlayer(player);
-    }
-
-    public Player nextTurn() {
-        return this.players.nextTurn();
     }
 
     public void firstMove(Player player, List<Stone> stones) {
@@ -169,8 +157,6 @@ public class Game extends Observable {
             player.getHand().switchStone(stone);
         }
 
-//        emitToAllPlayers(this.getMoveCommand(player, this.players.nextTurn()));
-
         ((ServerPlayer) player).getClient().handleAddToHand(this.bag, stones.size());
 
         player.getHand().removeStone(stones);
@@ -180,21 +166,6 @@ public class Game extends Observable {
         emitToAllPlayers(this.getMoveCommand(player, this.players.nextTurn()));
     }
 
-    /**
-     * Emit chat message to specific human player.
-     *
-     * @param clientId UUID of the target client
-     * @param message  message to send to client
-     */
-    public void emitToPlayer(UUID clientId, String message) {
-
-        //TODO: notify observers with specific message
-        // (use observer patterns is a must described in the project description).
-//        for (Player player : players) {
-//            if (player.getClient().getClientId() == clientId)
-//                player.getClient().emit(message);
-//        }
-    }
 
     /**
      * Emit chat message to all human players.
@@ -210,9 +181,6 @@ public class Game extends Observable {
         for(Player player : players.getPlayers()) {
             if(player instanceof ServerPlayer) {
                 ((ServerPlayer) player).getClient().handleStartGame(players.getPlayers());
-            } else {
-                //TODO computer player
-//                players.get(i).determineMove(getBoard().deepCopy());
             }
         }
     }

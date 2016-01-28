@@ -69,17 +69,6 @@ public abstract class Player implements Observer {
         return this.username;
     }
 
-//
-//    abstract boolean isHuman();
-
-//    public Stone getStone(Stone stone);
-//
-//    public void playStone(Stone stone);
-//
-//    public void tradeStone(Stone stone);
-//
-//
-//    abstract Hand getHand();
 
     public void setHand(Hand hand) {
         this.hand = hand;
@@ -88,10 +77,6 @@ public abstract class Player implements Observer {
     public Hand getHand() {
         return this.hand;
     }
-//
-//    public void joinGame(Game game);
-//
-//    public void leaveGame();
 
     @Override
     public String toString() {
