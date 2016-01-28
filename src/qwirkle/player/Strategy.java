@@ -2,16 +2,18 @@ package qwirkle.player;
 
 // game
 
-import qwirkle.game.*;
 import qwirkle.game.Game;
+import qwirkle.game.Hand;
+import qwirkle.game.Stone;
+
+import java.util.ArrayList;
 
 // java
-import java.util.Map;
 
 /**
  * Created by chris on 24/01/16.
  */
 public interface Strategy {
 
-    public Map<Position, Stone> calculateMove(Game game, Hand hand);
+    public ArrayList<Stone> calculateMove(Game game, Hand hand);
 }

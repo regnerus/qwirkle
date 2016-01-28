@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class Board {
 
     private Map<Position, Stone> board;
-    private Map<Position, Stone> possibleMoves;
+    private List<Position> possibleMoves;
 
     public static final int SPACE_AROUND_BOARD = 3;
     public static final int ASCII_INTEGER = 64; //for upper case
@@ -27,8 +27,8 @@ public class Board {
     }
 
     public Board() {
-        this.possibleMoves = new HashMap<>();
         this.board = new HashMap<>();
+        this.possibleMoves = new ArrayList();
 
         // TODO: randomize first stone
 //        Stone firstMove = new Stone(Stone.Color.BLUE, Stone.Shape.CIRCLE);
@@ -70,6 +70,9 @@ public class Board {
     public boolean placeStone(Stone stone) {
         if (this.validMove(stone)) {
             this.calculateBoardSize(stone.getLocation());
+            this.removePossibleMove(stone);
+            this.addPossibleMoves(stone);
+
             board.put(stone.getLocation(), stone);
             stone.setPlaced(true);
             return true;
@@ -87,8 +90,8 @@ public class Board {
      *
      * @return
      */
-    public Map<Position, Stone> getPossibleMoves() {
-        return possibleMoves;
+    public List<Position> getPossibleMoves() {
+        return this.possibleMoves;
     }
 
     public boolean placeStone(Stone stone, int x, int y) {
@@ -148,7 +151,11 @@ public class Board {
         connectedAll = ListUtils.union(connectedColumns, connectedRows);
 
         for (List<Stone> stonesList : connectedAll) {
-            points = points + stonesList.size();
+            //Add six points if the user has a Qwirkle!
+            if (stonesList.size() > 5) {
+                points += 6;
+            }
+            points += stonesList.size();
         }
 
         return points;
@@ -159,6 +166,18 @@ public class Board {
 
         if (stone == null) {
             return new Stone(Stone.Color.NULL, Stone.Shape.NULL);
+        } else {
+            return stone;
+        }
+    }
+
+    public Stone getStone(Position location, boolean possibleMove) {
+        Stone stone = this.board.get(location);
+
+        if (stone == null) {
+            Stone s = new Stone(Stone.Color.NULL, Stone.Shape.NULL);
+            s.setTemporary(possibleMove);
+            return s;
         } else {
             return stone;
         }
@@ -294,36 +313,30 @@ public class Board {
         }
     }
 
-    // TODO: check if this is correct
+    public void removePossibleMove(Stone stone) {
+        if (possibleMoves.contains(stone.getLocation())) {
+            possibleMoves.remove(stone.getLocation());
+        }
+    }
+
     public void addPossibleMoves(Stone stone) {
         if (!board.keySet().contains(stone.getLocation())) {
-            Stone above = board.get(
-                    new Position(stone.getLocation().getX(), stone.getLocation().getY() - 1)
-            );
-            Stone below = board.get(
-                    new Position(stone.getLocation().getX(), stone.getLocation().getY() + 1)
-            );
-            Stone left = board.get(
-                    new Position(stone.getLocation().getX() - 1, stone.getLocation().getY())
-            );
-            Stone right = board.get(
-                    new Position(stone.getLocation().getX() + 1, stone.getLocation().getY())
-            );
+            Position location = stone.getLocation();
 
-            if (above != null) {
-                possibleMoves.put(above.getLocation(), above);
+            if (this.getStone(location.above()).getShape() == Stone.Shape.NULL) {
+                this.possibleMoves.add(location.above());
             }
 
-            if (below != null) {
-                possibleMoves.put(below.getLocation(), below);
+            if (this.getStone(location.below()).getShape() == Stone.Shape.NULL) {
+                this.possibleMoves.add(location.below());
             }
 
-            if (left != null) {
-                possibleMoves.put(left.getLocation(), left);
+            if (this.getStone(location.left()).getShape() == Stone.Shape.NULL) {
+                this.possibleMoves.add(location.left());
             }
 
-            if (right != null) {
-                possibleMoves.put(right.getLocation(), right);
+            if (this.getStone(location.right()).getShape() == Stone.Shape.NULL) {
+                this.possibleMoves.add(location.right());
             }
         }
     }
@@ -405,6 +418,8 @@ public class Board {
 
         s = s + Cli.RETURN;
 
+        System.out.println("Possible Moves: " + possibleMoves);
+
         //Board
         for (int y = this.getBoundsY().getMin() - SPACE_AROUND_BOARD;
              y <= this.getBoundsY().getMax() + SPACE_AROUND_BOARD;
@@ -415,7 +430,7 @@ public class Board {
             for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD;
                  x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD;
                  x++) {
-                s += this.getStone(new Position(x, y)).toString() + " ";
+                s += this.getStone(new Position(x, y), possibleMoves.contains(new Position(x, y))).toString() + " ";
             }
 
             s += "" + numberY % 10;

@@ -1,50 +1,82 @@
-//package qwirkle.player;
-//
-//// game
-//
-//import qwirkle.game.*;
-//import qwirkle.shared.GameController;
-//
-///**
-// * Created by Bouke on 23/01/16.
-// */
-//public class ComputerPlayer extends ClientPlayer {
-//
-//    private int thinkTime;
-//
-//    /**
-//     * Constructor of computerPlayer.
-//     * A computer player is a player that is not controlled by a human
-//     * but has an AI to determine the next moves in order to win the game.
-//     *
-//     * @param name
-//     */
-//    public ComputerPlayer(GameController game, String name) {
-//        super(game, name);
-//    }
-//
-//    /**
-//     * Ask if player is human.
-//     *
-//     * @return
-//     */
-//    public boolean isHuman() {
-//        return false;
-//    }
-//
-//    /**
-//     * Calculate the next best move based on a board.
-//     *
-//     * @param board
-//     * @return
-//     */
-//
-//    /**
-//     * Set the time that an AI player can think before retuning a move.
-//     *
-//     * @param thinkTime
-//     */
-//    public void setThinkTime(int thinkTime) {
-//        this.thinkTime = thinkTime;
-//    }
-//}
+package qwirkle.player;
+
+// game
+
+import qwirkle.client.Client;
+import qwirkle.client.ClientController;
+import qwirkle.game.*;
+import qwirkle.shared.Cli;
+import qwirkle.shared.GameController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by Bouke on 23/01/16.
+ */
+public class ComputerPlayer extends ClientPlayer {
+
+    private int thinkTime;
+    private DumbStrategy strategy;
+
+    /**
+     * Constructor of computerPlayer.
+     * A computer player is a player that is not controlled by a human
+     * but has an AI to determine the next moves in order to win the game.
+     *
+     * @param name
+     */
+    public ComputerPlayer(ClientController clientController) {
+        super(clientController);
+    }
+
+    public ComputerPlayer(ClientController clientController, String username) {
+        super(clientController, username);
+    }
+
+    /**
+     * Ask if player is human.
+     *
+     * @return
+     */
+    public boolean isHuman() {
+        return false;
+    }
+
+    @Override
+    public ArrayList<Stone> determineFirstMove() {
+        ArrayList<Stone> move = new ArrayList<>();
+        Stone stone = ClientController.getInstance().getPlayer().getHand().getStones().get(0);
+        stone.setLocation(0,0);
+        move.add(stone);
+
+        return move;
+    }
+
+    /**
+     * Calculate the next best move based on a board.
+     *
+     * @param board
+     * @return
+     */
+    @Override
+    public void determineMove(Board board, Client client) {
+        ArrayList<Stone> move = DumbStrategy.calculateMove(board, ClientController.getInstance().getPlayer().getHand());
+        if(move.size() > 1) {
+            client.handleMakeMove(move);
+        }
+        else {
+            client.handleChangeStones(ClientController.getInstance().getPlayer().getHand().getStones());
+        }
+    }
+
+
+    /**
+     * Set the time that an AI player can think before retuning a move.
+     *
+     * @param thinkTime
+     */
+    public void setThinkTime(int thinkTime) {
+        this.thinkTime = thinkTime;
+    }
+}

@@ -114,29 +114,32 @@ public class ClientHandler extends Thread {
 
             case Protocol.Client.MAKEMOVE:
                 System.out.println("Player:" + player);
+                System.out.println("Move size:" + params.length);
+                List<Stone> move = new ArrayList<>();
 
-                if (player.getGame().getBoard().isEmpty()) {
-                    ArrayList<Stone> move = new ArrayList<>();
+                boolean validMove = true;
 
-                    for (int i = 0; i < params.length; i++) {
-                        move.add(Stone.fromMove(params[i]));
-                    }
-
-                    player.getGame().firstMove(player, move);
-//
-//                    if(player.moveAllowed(move) && player.getGame().getBoard().moveAllowed(move)) {
-//                        player.getGame().addFirstMove(move, player);
-//                    } else {
-//                        //TODO: Error
-//                    }
+                if (params.length < 1) {
+                    player.getGame().skipTurn(player);
                 } else {
-                    ArrayList<Stone> move = new ArrayList<>();
-
                     for (int i = 0; i < params.length; i++) {
-                        move.add(Stone.fromMove(params[i]));
+                        Stone stone = Stone.fromMove(params[i]);
+                        if (player.getGame().getBoard().validMove(stone)) {
+                            move.add(stone);
+                        } else {
+                            player.getClient().handleError("7");
+                            validMove = false;
+                            break;
+                        }
                     }
 
-                    player.getGame().move(player, move);
+                    if (validMove) {
+                        if (player.getGame().getBoard().isEmpty()) {
+                            player.getGame().firstMove(player, move);
+                        } else {
+                            player.getGame().move(player, move);
+                        }
+                    }
                 }
                 break;
 
@@ -150,7 +153,23 @@ public class ClientHandler extends Thread {
                 break;
 
             case Protocol.Client.CHANGESTONE:
+                System.out.println("Player:" + player);
 
+                List<Stone> changeStones = new ArrayList<>();
+
+                for (int i = 0; i < params.length; i++) {
+                    changeStones.add(Stone.fromChars(params[i]));
+                }
+
+                player.getGame().switchStones(player, changeStones);
+
+//                if(validMove) {
+//                    if (player.getGame().getBoard().isEmpty()) {
+//                        player.getGame().firstMove(player, move);
+//                    } else {
+//                        player.getGame().move(player, move);
+//                    }
+//                }
                 break;
 
             case Protocol.Client.GETLEADERBOARD:
@@ -158,7 +177,7 @@ public class ClientHandler extends Thread {
                 break;
 
             case Protocol.Client.GETSTONESINBAG:
-
+                handleStonesInBag();
                 break;
 
             case Protocol.Client.ERROR:
@@ -218,6 +237,13 @@ public class ClientHandler extends Thread {
         // TODO: delete player
     }
 
+    public void handleStonesInBag() {
+        int stonesInBag = this.player.getGame().getBag().bagSize();
+
+        String cmd = Protocol.Server.STONESINBAG + Protocol.Server.Settings.DELIMITER + stonesInBag;
+        this.emit(cmd);
+    }
+
     public void handleRequestGame(int players) {
         String cmd = Protocol.Server.OKWAITFOR + Protocol.Server.Settings.DELIMITER + players;
         this.emit(cmd);
@@ -275,7 +301,7 @@ public class ClientHandler extends Thread {
     public void handleAddToHand(Bag bag, int amount) {
         String ms = "";
 
-        for(int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount; i++) {
             Stone stone = bag.getStone();
             this.player.getHand().addStone(stone);
             ms += stone.toChars() + Protocol.Server.Settings.DELIMITER;
@@ -291,7 +317,7 @@ public class ClientHandler extends Thread {
     public void handleMove(Player currentPlayer, Player nextPlayer, List<Stone> moves) {
         String ms = "";
 
-        for(Stone stone : moves) {
+        for (Stone stone : moves) {
             ms += stone.toMove() + Protocol.Server.Settings.DELIMITER;
         }
 

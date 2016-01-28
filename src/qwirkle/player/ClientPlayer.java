@@ -1,25 +1,33 @@
 package qwirkle.player;
 
+import qwirkle.client.Client;
+import qwirkle.client.ClientController;
+import qwirkle.game.Board;
 import qwirkle.game.Stone;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by chris on 24/01/16.
  */
-public class ClientPlayer extends Player {
+public abstract class ClientPlayer extends Player {
 
-    public ClientPlayer() {
-        super();
+    public ClientController clientController;
+
+    public ClientPlayer(ClientController clientController) {
+        super(clientController.getUsername());
+        this.clientController = clientController;
     }
 
-    public ClientPlayer(String username) {
+    public ClientPlayer(ClientController clientController, String username) {
         super(username);
+        this.clientController = clientController;
     }
 
-    public boolean isHuman() {
-        return true; //TODO
-    }
+    public abstract ArrayList<Stone> determineFirstMove();
+
+    public abstract void determineMove(Board board, Client client);
 
     public void addToHand(Stone stone) {
         super.getHand().addStone(stone);
@@ -28,24 +36,4 @@ public class ClientPlayer extends Player {
     public void addToHand(List<Stone> stones) {
         super.getHand().addStone(stones);
     }
-
-//    public Stone getStone(Stone stone) {
-//        return stone;
-//    }
-//
-//    public void playStone(Stone stone) {
-//        //TODO
-//    }
-//
-//    public void tradeStone(Stone stone) {
-//        //TODO
-//    }
-//
-//    public void joinGame(Game game) {
-//        //TODO
-//    }
-//
-//    public void leaveGame() {
-//        //TODO
-//    }
 }

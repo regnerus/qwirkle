@@ -50,11 +50,15 @@ public class Game extends Observable {
     }
 
     public Bag getBag() {
-        return bag;
+        return this.bag;
     }
 
     public Board getBoard() {
-        return board;
+        return this.board;
+    }
+
+    public Players getPlayers() {
+        return this.players;
     }
 
     public void addPlayer(Player player) {
@@ -98,6 +102,8 @@ public class Game extends Observable {
     }
 
     public void move(Player player, List<Stone> stones) {
+        this.placeStones(player, stones);
+
         emitToAllPlayers(this.getMoveCommand(player, this.players.nextTurn(), stones));
 
         ((ServerPlayer) player).getClient().handleAddToHand(this.bag, stones.size());
@@ -112,9 +118,20 @@ public class Game extends Observable {
             ms += stone.toMove() + Protocol.Server.Settings.DELIMITER;
         }
 
-        ms = ms.substring(0, ms.length() - 1);
+        if(ms.length() > 1) {
+            ms = ms.substring(0, ms.length() - 1);
+        }
 
         String cmd = Protocol.Server.MOVE + Protocol.Server.Settings.DELIMITER + currentPlayer.getUsername() + Protocol.Server.Settings.DELIMITER + nextPlayer.getUsername() + Protocol.Server.Settings.DELIMITER + ms;
+
+        return cmd;
+    }
+
+
+    public String getMoveCommand(Player currentPlayer, Player nextPlayer) {
+        String ms = "";
+
+        String cmd = Protocol.Server.MOVE + Protocol.Server.Settings.DELIMITER + currentPlayer.getUsername() + Protocol.Server.Settings.DELIMITER + nextPlayer.getUsername();
 
         return cmd;
     }
@@ -130,7 +147,6 @@ public class Game extends Observable {
             }
         }
 
-        placeStones(player, row);
         this.players.setCurrentPlayer(player);
 
         return player;
@@ -149,9 +165,19 @@ public class Game extends Observable {
     }
 
     public void switchStones(Player player, List<Stone> stones) {
-//        for(Stone stone : stones) {
-//            player.getHand().switchStone(stone);
-//        }
+        for(Stone stone : stones) {
+            player.getHand().switchStone(stone);
+        }
+
+//        emitToAllPlayers(this.getMoveCommand(player, this.players.nextTurn()));
+
+        ((ServerPlayer) player).getClient().handleAddToHand(this.bag, stones.size());
+
+        player.getHand().removeStone(stones);
+    }
+
+    public void skipTurn(Player player) {
+        emitToAllPlayers(this.getMoveCommand(player, this.players.nextTurn()));
     }
 
     /**
@@ -202,9 +228,6 @@ public class Game extends Observable {
         s += "Score: " + Cli.RETURN;
         s += Cli.RETURN;
         s += board.toString();
-        s += Cli.RETURN;
-        s += "     0 1 2 3 4 5" + Cli.RETURN;
-        s += "Bag " + bag.bagSize() + Cli.RETURN;
         s += Cli.RETURN;
 
         return s;

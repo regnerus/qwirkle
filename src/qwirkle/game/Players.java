@@ -74,7 +74,7 @@ public class Players {
         String s = "";
 
         for (int i = 0; i < this.players.size(); i++) {
-            s += this.players.get(i).toString() + " ";
+            s += this.players.get(i).toString() + " (" + this.players.get(i).getPoints() + ") ";
         }
 
         return s;

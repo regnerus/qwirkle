@@ -2,43 +2,28 @@ package qwirkle.player;
 
 // game
 
+import qwirkle.client.Client;
 import qwirkle.client.ClientController;
 import qwirkle.game.Board;
 import qwirkle.game.Stone;
-import qwirkle.server.ClientHandler;
 import qwirkle.shared.Cli;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Bouke on 23/01/16.
  */
 public class HumanPlayer extends ClientPlayer {
-    private ClientHandler client;
-
-    public HumanPlayer() {
-        super();
+    public HumanPlayer(ClientController clientController) {
+        super(clientController);
     }
 
-    public HumanPlayer(String username) {
-        super(username);
+    public HumanPlayer(ClientController clientController, String username) {
+        super(clientController, username);
     }
 
-//    public HumanPlayer(ClientHandler client) {
-//        super();
-//        this.client = client;
-//    }
-//
-//    public HumanPlayer(ClientHandler client, String username) {
-//        super(username);
-//        this.client = client;
-//    }
-
-    public ClientHandler getClient() {
-        return this.client;
-    }
-
+    @Override
     public ArrayList<Stone> determineFirstMove() {
         Cli view = ClientController.getInstance().getView();
         ArrayList<Stone> addStones = new ArrayList<>();
@@ -70,79 +55,76 @@ public class HumanPlayer extends ClientPlayer {
         return row;
     }
 
-    public ArrayList<Stone> determineMove(Board board) {
+    public ArrayList<Stone> determinePlaceStones(Board board) {
         Cli view = ClientController.getInstance().getView();
         ArrayList<Stone> addStones = new ArrayList<>();
 
-        int move = view.readInt("Make a move: (1. Place, 2. Switch, 3. Skip)");
+        while (true) {
+            String[] input = view.readArray("Place, format: \"A0 A0 1\" (return empty to submit turn)");
 
-        if (move == 1) {
-            while (true) {
-                String[] input = view.readArray("Place, format: \"A0 A0 1\" (return empty to submit turn)");
-
-                if (input[0].length() < 1) {
-                    break;
-                }
-
-                System.out.println(Arrays.deepToString(input));
-
-                Stone stone = this.getHand().coordinateToStone(input[2]);
-                stone.setLocation(board.coordinateToPosition(input[0], input[1]));
-
-                addStones.add(stone);
-
+            if (input[0].length() < 1) {
+                break;
             }
 
-//            int points = game.placeStones(this, addStones);
-//            int points = 0;
-//
-//            if (points > 0) {
-////                view.logSimple("Placed " + addStones.size() + " stones for " + points + " points!");
-//            } else {
-//                view.logSimple("Invalid move, try again! Tried to place: " + addStones.toString());
-//                this.determineMove();
-//            }
-        } else if (move == 2) {
-            while (true) {
-                String[] input = view.readArray("Switch, format: \"1\" (return empty to submit turn)");
+            Stone stone = this.getHand().coordinateToStone(input[2]);
+            stone.setLocation(board.coordinateToPosition(input[0], input[1]));
+            stone.setTemporary(true);
 
-                if (input[0].length() < 1) {
-                    break;
-                }
-
-                Stone stone = this.getHand().coordinateToStone(input[0]);
-
+            if(board.validMove(stone)) {
+                board.placeStone(stone);
                 addStones.add(stone);
 
+                view.logSimple(board.toString());
             }
-
-//            game.switchStones(testPlayer1, addStones);
-
-            view.logSimple("Switched " + addStones.size() + " stones!");
-//            view.logSimple("New Hand: " + testPlayer1.getHand().toString());
-
-        } else if (move == 3) {
-            view.logSimple("Skipped turn!");
+            else {
+                view.logSimple("You can not place that stone there!");
+            }
         }
 
         return addStones;
+    }
 
+    public ArrayList<Stone> determineSwitchStones(Board board) {
+        Cli view = ClientController.getInstance().getView();
+        ArrayList<Stone> addStones = new ArrayList<>();
 
-//        for (int i = 0; i < move.length; i++) {
-//            move[i] = move[i].toUpperCase();
-//        }
+        while (true) {
+            String[] input = view.readArray("Switch, format: \"1\" (return empty to submit turn)");
 
-//        if (move[0] == "PLACE") {
-//            for (int i = 1; i < move.length; i+3) {
-//                move[i] = move[i].toUpperCase();
-//                System.out.println("Hand", testPlayer1.getHand().coordinateToStone("4"));
-//            }
-//        } else if (move[0] == "SWITCH") {
-//            //Todo: Switch stones with bag.
-//        } else if (move[0] == "SKIP") {
-//            //Todo: Implement turns.
-//        }
+            if (input[0].length() < 1) {
+                break;
+            }
 
+            Stone stone = this.getHand().coordinateToStone(input[0]);
+
+            addStones.add(stone);
+
+        }
+
+        view.logSimple("Switched " + addStones.size() + " stones!");
+
+        return addStones;
+    }
+
+    @Override
+    public void determineMove(Board board, Client client) {
+        Cli view = ClientController.getInstance().getView();
+
+        int moveChoice = view.readInt("Make a move: (1. Place, 2. Switch, 3. Skip)");
+
+        if (moveChoice == 1) {
+            client.handleMakeMove(this.determinePlaceStones(board));
+        } else if (moveChoice == 2) {
+            List<Stone> stones = this.determineSwitchStones(board);
+            for(Stone stone : stones) {
+                ClientController.getInstance().getPlayer().getHand().removeStone(stone);
+            }
+
+            client.handleChangeStones(stones);
+        } else if (moveChoice == 3) {
+            client.handleMakeMove();
+            view.logSimple("Turn Skipped!");
+        }
     }
 
 

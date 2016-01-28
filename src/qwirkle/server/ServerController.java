@@ -19,8 +19,6 @@ public class ServerController {
 
     List<Players> waitingRooms = new ArrayList<>(MAX_PLAYERS);
 
-    private int server_port, max_connections;
-
     private Server server;
     private String serverName;
 
@@ -70,38 +68,21 @@ public class ServerController {
         // TODO: send message to other players in same game and end game
     }
 
-    public void startNewGame() {
-        // TODO: make dynamic
-//        Game game = new Game();
-//        GameView view = new GameView();
-//        GameController controller = new GameController(game, view);
-//
-//        controller.startGame();
-//        controller.updateView();
-    }
-
-    public void handleGameMove() {
-
-    }
-
-    public void handleGameEnded() {
-
-    }
-
-    public void handleGameTurn() {
-
-    }
-
     public int joinWaitingRoom(int amount, ClientHandler client) {
         //Todo create this method
         Game game;
-        Players players;
         int waitingFor = 0;
         Player player = new ServerPlayer(client, client.getUsername());
 
         if (amount > 0 && amount < 2) {
             //TODO: Computer Player
-        } else if (amount >= 2 && amount <= MAX_PLAYERS) {
+
+//            Players room = new Players();
+//            room.addPlayer(player);
+
+
+        }
+        else if (amount >= 2 && amount <= MAX_PLAYERS) {
             Players room = waitingRooms.get(amount - 1);
 
             room.addPlayer(player);
@@ -115,56 +96,7 @@ public class ServerController {
             //TODO: Error
         }
 
-//
-//        switch (amount) {
-//            default:
-//            case "0":
-//            case "1":
-//                //Todo start game with new computer player
-//                break;
-//            case "2":
-//                List<Player> room = waitingRooms.get(0);
-//
-//                room.add(player);
-//                waitingFor = 2 - room.size();
-//
-//                if (room.size() == 2) {
-////                    g = new Game(lobby_2);
-////                    games.add(g);
-//                }
-//                break;
-//            case "3":
-//                lobby_3.add(p);
-//                waitingFor = 3 - lobby_3.size();
-//
-//                if (lobby_3.size() == 3) {
-//                    g = new Game(lobby_3);
-//                    games.add(g);
-////                    g.start();
-//                }
-//                break;
-//            case "4":
-//                lobby_4.add(p);
-//                waitingFor = 4 - lobby_4.size();
-//
-//                if (lobby_4.size() == 4) {
-//                    g = new Game(lobby_4);
-//                    games.add(g);
-//                }
-//                break;
-//        }
-
         return waitingFor;
-    }
-
-    public void stopServer() {
-//        try {
-//            // TODO: gracefully stop running games
-//            // TODO: gracefully notify and close connected clients
-//            server.close();
-//        } catch (Exception e) {
-//            Cli.logServerError(e);
-//        }
     }
 
     public String getServerName() {

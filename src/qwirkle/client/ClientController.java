@@ -5,6 +5,7 @@ import qwirkle.game.Game;
 import qwirkle.game.Players;
 import qwirkle.game.Stone;
 import qwirkle.player.ClientPlayer;
+import qwirkle.player.ComputerPlayer;
 import qwirkle.player.HumanPlayer;
 import qwirkle.player.Player;
 import qwirkle.shared.Cli;
@@ -25,13 +26,16 @@ public class ClientController {
     private Cli view;
     private Client client;
 
-    private HumanPlayer player;
+    private ClientPlayer player;
+    private int opponents;
     private Game game;
+    private int bagSize;
 
     public ClientController() {
 //        ui = new TUI();
+        opponents = 0;
         view = new Cli();
-
+        bagSize = (Stone.Shape.values().length - 1) * (Stone.Color.values().length - 1) * Game.TILES_OF_EACH;
     }
 
     public static ClientController getInstance() {
@@ -71,7 +75,7 @@ public class ClientController {
         Players players = new Players();
 
         for (String opponent : opponents) {
-            Player p = new ClientPlayer(opponent);
+            Player p = new HumanPlayer(this, opponent);
 
             players.addPlayer(p);
         }
@@ -81,11 +85,13 @@ public class ClientController {
         this.logGame();
 
         this.firstMove();
-
     }
 
     public void logGame() {
         view.logSimple(this.game.toString());
+        view.logSimple("Bag " + this.bagSize);
+
+        view.logSimple("0 1 2 3 4 5");
         view.logSimple(this.player.getHand().toString());
     }
 
@@ -95,10 +101,21 @@ public class ClientController {
         this.client.handleMakeMove(move);
     }
 
-
     public void setUsername() {
         this.username = view.readString("What's your username?");
-        this.client.handleHandshake(username);
+        this.setPlayerType();
+    }
+
+    public void setPlayerType() {
+        int playerType = view.readInt("Do you want to play as a user or computer player? (1. User, 2. Computer)");
+        if (playerType == 1) {
+            this.setHumanPlayer(new HumanPlayer(this, this.username));
+            this.client.handleHandshake(this.username);
+        } else {
+            this.setComputerPlayer(new ComputerPlayer(this, this.username));
+            this.client.handleHandshake(this.username);
+        }
+
     }
 
     public Game getGame() {
@@ -108,66 +125,39 @@ public class ClientController {
     public String getUsername() {
         return this.username;
     }
-//
-//    public void pause() {
-//        try {
-//            count = new CountDownLatch(1);
-//            count.await();
-//        } catch (InterruptedException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
-//
-//    public void resume() {
-//        count.countDown();
-//    }
 
-    public void enterWaitingRoom() {
-        int opponents = view.readInt("How many opponents?");
-        this.client.handleGameRequest(opponents);
+    public int getBagSize() {
+        return this.bagSize;
     }
 
-    //    public void startLobby() {
-//        //TODO change if challenging has to be supported
-//        Numeric num = new Numeric("The amount of players has to be numeric.");
-//        InRange range = new InRange(0, 4, "Only games with up to 4 players are supported.");
-//
-//        String numOfPlayers = ui.getValidatedInput("Number of opponents? [0..4]", new Validator[] {num, range});
-//        this.communication.requestGame(numOfPlayers);
-//    }
-//
-//    /**
-//     * Start a new game.
-//     * @param opponents
-//     */
-//    public void startGame(String[] opponents) {
-//        List<Player> players = new ArrayList<>();
-//        for(String opponent : opponents) {
-//            Player p = new HumanPlayer(null);
-//            p.setUsername(opponent);
-//
-//            players.add(p);
-//        }
-//
-//        this.game = new Game(players);
-//
-//        //We need to make a first move.
-//         m = player.determineMove();
-//    }
-//
+    public void setBagSize(int bagSize) {
+        this.bagSize = bagSize;
+    }
+
+    public void enterWaitingRoom() {
+        this.opponents = view.readInt("How many opponents?");
+
+        this.bagSize = this.bagSize - (this.opponents * Game.MAX_HANDSIZE);
+
+        this.client.handleGameRequest(this.opponents);
+    }
+
     public void getMove() {
         Board board = this.game.getBoard();
 
-        ArrayList<Stone> move = player.determineMove(board);
-
-        this.client.handleMakeMove(move);
+        player.determineMove(board, this.client);
     }
-//
-    public void setPlayer(HumanPlayer player) {
+
+    //
+    public void setHumanPlayer(HumanPlayer player) {
         this.player = player;
     }
 
-    public HumanPlayer getPlayer() {
+    public void setComputerPlayer(ComputerPlayer player) {
+        this.player = player;
+    }
+
+    public ClientPlayer getPlayer() {
         return player;
     }
 }

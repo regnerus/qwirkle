@@ -37,7 +37,12 @@ public class Bag {
     }
 
     public int randomStone() {
-        return RANDOM.nextInt(bag.size());
+        if(bag.size() > 0) {
+            return RANDOM.nextInt(bag.size());
+        }
+        else {
+            return -1;
+        }
     }
 
     public Stone getStone() {
@@ -52,8 +57,9 @@ public class Bag {
         return stone;
     }
 
-    public Stone switchStone(Stone stone) {
+    public Stone addStone(Stone stone) {
         this.bag.add(stone);
-        return getStone();
+
+        return stone;
     }
 }

@@ -50,12 +50,7 @@ public class Hand {
     public void removeStone(Stone stone) {
         this.stones.remove(stone);
 
-
         System.out.println("Hand: " + this.stones.toString());
-
-//        if(this.bag.bagSize() > 0) {
-//            this.stones.add(bag.getStone());
-//        }
     }
 
     public void removeStone(List<Stone> stones) {
@@ -70,7 +65,7 @@ public class Hand {
     public void switchStone(Stone stone) {
         if(this.bag.bagSize() > 0) {
             this.stones.remove(stone);
-            this.stones.add(bag.switchStone(stone));
+            bag.addStone(stone);
         }
     }
 

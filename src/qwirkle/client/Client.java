@@ -2,8 +2,9 @@ package qwirkle.client;
 
 // shared
 
+import qwirkle.game.Players;
 import qwirkle.game.Stone;
-import qwirkle.player.HumanPlayer;
+import qwirkle.player.Player;
 import qwirkle.shared.Protocol;
 
 import java.io.*;
@@ -105,8 +106,6 @@ public class Client extends Thread {
 
             case Protocol.Server.HALLO:
                 runnable = () -> {
-                    HumanPlayer player = new HumanPlayer(ClientController.getInstance().getUsername());
-                    ClientController.getInstance().setPlayer(player);
                     ClientController.getInstance().enterWaitingRoom();
                 };
 
@@ -143,7 +142,11 @@ public class Client extends Thread {
                 break;
 
             case Protocol.Server.STONESINBAG:
+                runnable = () -> {
+                    ClientController.getInstance().setBagSize(Integer.getInteger(params[0]));
+                };
 
+                this.startNewThread(runnable);
                 break;
 
             case Protocol.Server.MOVE:
@@ -152,21 +155,26 @@ public class Client extends Thread {
                     String next = params[1];
 
                     List<Stone> move = new ArrayList<>();
+                    Players players = ClientController.getInstance().getGame().getPlayers();
 
                     String[] stones = Arrays.copyOfRange(params, 2, params.length);
                     for (int i = 0; i < stones.length; i++) {
                         move.add(Stone.fromMove(stones[i]));
                     }
 
-                    ClientController.getInstance().getGame().getBoard().placeStones(move);
+                    int bagSize =  ClientController.getInstance().getBagSize();
 
-                    //It is not our own move.
-                    if (!current.equals(ClientController.getInstance().getUsername())) {
+                    ClientController.getInstance().setBagSize(bagSize - stones.length);
 
+                    for(Player player : players.getPlayers()) {
+                        if (current.equals(player.getUsername())) {
+                            players.setCurrentPlayer(player);
+                            ClientController.getInstance().getGame().placeStones(player, move);
+                            break;
+                        }
                     }
-                    else {
-//                        int points = ClientController.getInstance().getGame().placeStones(ClientController.getInstance().getPlayer(), move);
-//                        System.out.println("Got points: " + points);
+
+                    if (current.equals(ClientController.getInstance().getUsername())) {
                         ClientController.getInstance().getPlayer().getHand().removeStone(move);
                     }
 
@@ -238,7 +246,11 @@ public class Client extends Thread {
                         //Invalid Move
                         System.out.println("The move you tried to make wasn't valid.");
 
-                        //TODO get a new move
+                        runnable = () -> {
+                            ClientController.getInstance().getMove();
+                        };
+
+                        startNewThread(runnable);
                         break;
                     case "8":
                         //General
@@ -258,6 +270,24 @@ public class Client extends Thread {
         emit(cmd);
     }
 
+    public void handleChangeStones(List<Stone> stones) {
+        String ms = "";
+
+        for(Stone stone : stones) {
+            ms += stone.toChars() + Protocol.Server.Settings.DELIMITER;
+        }
+
+        if(ms.length() > 1) {
+            ms = ms.substring(0, ms.length() - 1);
+        }
+
+        String cmd = Protocol.Client.CHANGESTONE + Protocol.Server.Settings.DELIMITER + ms;
+
+        emit(cmd);
+
+        this.handleMakeMove();
+    }
+
     public void handleMakeMove(List<Stone> moves) {
         String ms = "";
 
@@ -270,6 +300,12 @@ public class Client extends Thread {
         }
 
         String cmd = Protocol.Client.MAKEMOVE + Protocol.Server.Settings.DELIMITER + ms;
+
+        emit(cmd);
+    }
+
+    public void handleMakeMove() {
+        String cmd = Protocol.Client.MAKEMOVE;
 
         emit(cmd);
     }

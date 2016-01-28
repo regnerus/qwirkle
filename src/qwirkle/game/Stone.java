@@ -17,6 +17,7 @@ public class Stone {
     private Shape shape;
     private Color color;
     private boolean isPlaced;
+    private boolean temporary;
 
     public static final String ANSI_RESET = "\u001B[0m";
 
@@ -58,16 +59,27 @@ public class Stone {
 
     private static final Map<Color, String> COLOR_MAP = new HashMap<Color, String>() {
         {
+            put(RED, "\u001B[91m");
+            put(Color.ORANGE, "\u001B[96m"); //Changed to CYAN for better readability
+            put(Color.YELLOW, "\u001B[93m");
+            put(Color.GREEN, "\u001B[92m");
+            put(Color.BLUE, "\u001B[94m");
+            put(Color.PURPLE, "\u001B[95m");
+            put(Color.NULL, "\u001B[90m");
+        }
+    };
+
+    private static final Map<Color, String> COLOR_MAP_DIM = new HashMap<Color, String>() {
+        {
             put(RED, "\u001B[31m");
             put(Color.ORANGE, "\u001B[36m"); //Changed to CYAN for better readability
             put(Color.YELLOW, "\u001B[33m");
             put(Color.GREEN, "\u001B[32m");
             put(Color.BLUE, "\u001B[34m");
             put(Color.PURPLE, "\u001B[35m");
-            put(Color.NULL, "\u001B[90m");
+            put(Color.NULL, "\u001B[37m");
         }
     };
-
 
     public boolean isPlaced() {
         return this.isPlaced;
@@ -111,6 +123,14 @@ public class Stone {
 
     public String toMove() {
         return this.toChars() + Protocol.Server.Settings.DELIMITER2 + this.location.toString();
+    }
+
+    public void setTemporary(Boolean value) {
+        this.temporary = value;
+    }
+
+    public Boolean getTemporary() {
+        return this.temporary;
     }
 
     public static Stone fromMove(String move) {
@@ -268,7 +288,14 @@ public class Stone {
 
     @Override
     public String toString() {
-        return String.valueOf(COLOR_MAP.get(this.getColor()) +
-                SHAPE_MAP.get(this.getShape()) + ANSI_RESET);
+        if(this.temporary) {
+            return String.valueOf(COLOR_MAP_DIM.get(this.getColor()) +
+                    SHAPE_MAP.get(this.getShape()) + ANSI_RESET);
+        }
+        else {
+            return String.valueOf(COLOR_MAP.get(this.getColor()) +
+                    SHAPE_MAP.get(this.getShape()) + ANSI_RESET);
+        }
+
     }
 }
