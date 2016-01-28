@@ -276,7 +276,9 @@ public class ClientHandler extends Thread {
         String ms = "";
 
         for(int i = 0; i < amount; i++) {
-            ms += bag.getStone().toChars() + Protocol.Server.Settings.DELIMITER;
+            Stone stone = bag.getStone();
+            this.player.getHand().addStone(stone);
+            ms += stone.toChars() + Protocol.Server.Settings.DELIMITER;
         }
 
         ms = ms.substring(0, ms.length() - 1);
