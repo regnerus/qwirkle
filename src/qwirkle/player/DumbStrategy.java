@@ -2,6 +2,7 @@ package qwirkle.player;
 
 // game
 
+import javafx.geometry.Pos;
 import qwirkle.game.Board;
 import qwirkle.game.Hand;
 import qwirkle.game.Position;
@@ -25,15 +26,20 @@ public abstract class DumbStrategy implements Strategy {
      */
     public static ArrayList<Stone> calculateMove(Board board, Hand hand) {
         ArrayList<Stone> move = new ArrayList<>();
+        ArrayList<Position> positions = new ArrayList<>();
 
         for (Stone stone : hand.getStones()) {
             for (Position position : board.getPossibleMoves()) {
-                stone.setLocation(position);
+                if(!positions.contains(position)) {
+                    stone.setLocation(position);
 
-                if (board.validMove(stone)) {
-                    move.add(stone);
-                    break;
+                    if (board.validMove(stone)) {
+                        move.add(stone);
+                        positions.add(stone.getLocation());
+                        break;
+                    }
                 }
+
             }
         }
 

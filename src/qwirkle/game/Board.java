@@ -1,18 +1,15 @@
 package qwirkle.game;
 
-// apache
-
 import org.apache.commons.collections4.ListUtils;
 import qwirkle.shared.Cli;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-// java
-
-
 /**
- * Created by chris on 15/01/16.
+ * @author Bouke Regnerus
+ * @version 1.0
+ * @since 2016-01-29
  */
 public class Board {
 
@@ -26,6 +23,9 @@ public class Board {
         UP, DOWN, LEFT, RIGHT
     }
 
+    /**
+     * Initialize an empty board.
+     */
     public Board() {
         this.board = new HashMap<>();
         this.possibleMoves = new ArrayList();
@@ -42,6 +42,11 @@ public class Board {
     private Bounds boundsX = new Bounds();
     private Bounds boundsY = new Bounds();
 
+    /**
+     * Calculate and set the bounds of the board.
+     *
+     * @param position
+     */
     private void calculateBoardSize(Position position) {
         int x = position.getX();
         int y = position.getY();
@@ -59,14 +64,26 @@ public class Board {
         }
     }
 
+    /**
+     * @return X bounds of the board.
+     */
     public Bounds getBoundsX() {
         return boundsX;
     }
 
+    /**
+     * @return Y bounds of the board.
+     */
     public Bounds getBoundsY() {
         return boundsY;
     }
 
+    /**
+     * Place a stone on the board, check if it is valid to place this stone at the given position.
+     *
+     * @param stone Stone to place on the board.
+     * @return Return boolean true or false depending on if the stone was placed.
+     */
     public boolean placeStone(Stone stone) {
         if (!this.board.containsKey(stone.getLocation())) {
             if (this.validMove(stone)) {
@@ -83,31 +100,42 @@ public class Board {
         return false;
     }
 
+    /**
+     * @return Return true if the board is empty.
+     */
     public boolean isEmpty() {
-        return (board.size() < 1);
+        return board.size() < 1;
     }
 
     /**
      * Return possible moves on the board.
      *
-     * @return
+     * @return Return a list of possible moves.
      */
     public List<Position> getPossibleMoves() {
         return this.possibleMoves;
     }
 
-    public boolean placeStone(Stone stone, int x, int y) {
-        stone.setLocation(x, y);
-
-        return this.placeStone(stone);
-    }
-
+    /**
+     * Remove a stone from the board.
+     *
+     * @param stone Stone to remove.
+     */
     public void removeStone(Stone stone) {
         // TODO: update possible moves
         this.board.remove(stone.getLocation());
         stone.setPlaced(false);
     }
 
+    /**
+     * Place a list of stones on the board.
+     *
+     * Amount of points for the stones that have been placed on the board,
+     * or -1 if the list of stones could not be placed.
+     *
+     * @param stones List of stones to be placed.
+     * @return points or -1
+     */
     public int placeStones(List<Stone> stones) {
         List<List<Stone>> connectedColumns = new ArrayList<>();
         List<List<Stone>> connectedRows = new ArrayList<>();
@@ -163,6 +191,10 @@ public class Board {
         return points;
     }
 
+    /**
+     * @param location Location on the board.
+     * @return Return stone at the give location or an "empty" stone.
+     */
     public Stone getStone(Position location) {
         Stone stone = this.board.get(location);
 
@@ -173,6 +205,11 @@ public class Board {
         }
     }
 
+    /**
+     * @param location     Location on the board.
+     * @param possibleMove true if the stone returned should be a possible move or not.
+     * @return Return stone at the give location or an "empty" stone.
+     */
     public Stone getStone(Position location, boolean possibleMove) {
         Stone stone = this.board.get(location);
 
@@ -185,6 +222,13 @@ public class Board {
         }
     }
 
+    /**
+     * Check if a given stone is unique in the given list.
+     *
+     * @param list  List of stones to be checked against.
+     * @param stone Stone that should be checked.
+     * @return Return boolean statement if the check was true or false.
+     */
     public static boolean isUniqueShape(List<Stone> list, Stone stone) {
         for (Stone s : list) {
             if (s.getShape() == stone.getShape()) {
@@ -194,6 +238,13 @@ public class Board {
         return true;
     }
 
+    /**
+     * Check if a given stone is matching in the given list.
+     *
+     * @param list  List of stones to be checked against.
+     * @param stone Stone that should be checked.
+     * @return Return boolean statement if the check was true or false.
+     */
     public static boolean isMatchingShape(List<Stone> list, Stone stone) {
         for (Stone s : list) {
             if (s.getShape() != stone.getShape()) {
@@ -203,6 +254,13 @@ public class Board {
         return true;
     }
 
+    /**
+     * Check if a given stone is unique in the given list.
+     *
+     * @param list  List of stones to be checked against.
+     * @param stone Stone that should be checked.
+     * @return Return boolean statement if the check was true or false.
+     */
     public static boolean isUniqueColor(List<Stone> list, Stone stone) {
         for (Stone s : list) {
             if (s.getColor() == stone.getColor()) {
@@ -212,6 +270,13 @@ public class Board {
         return true;
     }
 
+    /**
+     * Check if a given stone is matching in the given list.
+     *
+     * @param list  List of stones to be checked against.
+     * @param stone Stone that should be checked.
+     * @return Return boolean statement if the check was true or false.
+     */
     public static boolean isMatchingColor(List<Stone> list, Stone stone) {
         for (Stone s : list) {
             if (s.getColor() != stone.getColor()) {
@@ -221,6 +286,11 @@ public class Board {
         return true;
     }
 
+    /**
+     * @param stone     Stone
+     * @param direction Enum direction UP, DOWN, LEFT or RIGHT
+     * @return Return a list of stones in that direction from the given stone.
+     */
     public List<Stone> getDirection(Stone stone, Direction direction) {
         Position location = stone.getLocation();
         List<Stone> list = new ArrayList<>();
@@ -256,6 +326,11 @@ public class Board {
         return list;
     }
 
+    /**
+     * @param stone       Stone
+     * @param includeSelf Should the given stone be included in the row or not.
+     * @return Return a list of stones that are in a connected row from the given stone.
+     */
     public List<Stone> getRow(Stone stone, boolean includeSelf) {
         List<Stone> left = this.getDirection(stone, Direction.LEFT);
         List<Stone> right = this.getDirection(stone, Direction.RIGHT);
@@ -267,6 +342,11 @@ public class Board {
         return ListUtils.union(left, right);
     }
 
+    /**
+     * @param stone       Stone
+     * @param includeSelf Should the given stone be included in the column or not.
+     * @return Return a list of stones that are in a connected column from the given stone.
+     */
     public List<Stone> getColumn(Stone stone, boolean includeSelf) {
         List<Stone> up = this.getDirection(stone, Direction.UP);
         List<Stone> down = this.getDirection(stone, Direction.DOWN);
@@ -286,6 +366,11 @@ public class Board {
         return this.getColumn(stone, true);
     }
 
+    /**
+     * @param list  Given list to be checked against.
+     * @param stone Stone that should be checked.
+     * @return Return boolean statement if the check was true or false.
+     */
     public static boolean validateList(List<Stone> list, Stone stone) {
         if (Board.isUniqueShape(list, stone) && Board.isMatchingColor(list, stone)) {
             return true;
@@ -296,6 +381,10 @@ public class Board {
         }
     }
 
+    /**
+     * @param stone Stone that could be added to the board.
+     * @return Return boolean statement if the move is valid or not.
+     */
     public boolean validMove(Stone stone) {
         List<Stone> row = this.getRow(stone, false);
         List<Stone> column = this.getColumn(stone, false);
@@ -315,12 +404,22 @@ public class Board {
         }
     }
 
+    /**
+     * Remove possible move from the list of possible moves.
+     *
+     * @param stone Position to be removed from the list.
+     */
     public void removePossibleMove(Stone stone) {
         if (possibleMoves.contains(stone.getLocation())) {
             possibleMoves.remove(stone.getLocation());
         }
     }
 
+    /**
+     * Add possible moves to the list of possible moves.
+     *
+     * @param stone Stone for which possible moves should be checked and added.
+     */
     public void addPossibleMoves(Stone stone) {
         if (!board.keySet().contains(stone.getLocation())) {
             Position location = stone.getLocation();
@@ -343,6 +442,11 @@ public class Board {
         }
     }
 
+    /**
+     * @param x X Coordinate (e.g. A3)
+     * @param y Y Coordinate (e.g. B1)
+     * @return Return the actual position on the board from the given coordinates.
+     */
     public Position coordinateToPosition(String x, String y) {
         char[] charsX = x.toCharArray();
         char[] charsY = y.toCharArray();
@@ -369,21 +473,16 @@ public class Board {
 
     }
 
-    public Stone coordinateToStone(String x, String y) {
-        return this.getStone(this.coordinateToPosition(x, y));
-    }
-
     /**
-     * Check if a stone is valid on this board.
+     * Create a ASCII representation of the board.
+     * <p>
+     * This method return an ASCII representation of the board,
+     * it uses the shapes and colours of the stones.
+     * <p>
+     * It adds empty fields around the placed stones where new stones could be placed.
      *
-     * @param stone stone to validate
-     * @return
+     * @return ASCII representation of the board.
      */
-    public boolean isPossibleMove(Stone stone) {
-        // TODO: add logic
-        return true;
-    }
-
     @Override
     public String toString() {
         String s = "";
@@ -430,7 +529,8 @@ public class Board {
             for (int x = this.getBoundsX().getMin() - SPACE_AROUND_BOARD;
                  x <= this.getBoundsX().getMax() + SPACE_AROUND_BOARD;
                  x++) {
-                s += this.getStone(new Position(x, y), possibleMoves.contains(new Position(x, y))).toString() + " ";
+                s += this.getStone(new Position(x, y),
+                        possibleMoves.contains(new Position(x, y))).toString() + " ";
             }
 
             s += "" + numberY % 10;

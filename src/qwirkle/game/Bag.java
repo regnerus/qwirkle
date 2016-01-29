@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by chris on 15/01/16.
+ * @author Bouke Regnerus
+ * @version 1.0
+ * @since 2016-01-29
  */
 public class Bag {
 
@@ -13,7 +15,9 @@ public class Bag {
 
     private static final Random RANDOM = new Random();
 
-    //Generating a total of 108 stones, three of each kind.
+    /**
+     * Generating a total of 108 stones, three of each kind.
+     */
     public Bag() {
         this.bag = new ArrayList<>();
 
@@ -26,14 +30,25 @@ public class Bag {
         }
     }
 
+    /**
+     * @return Return the amount of stones in the bag.
+     */
     public int bagSize() {
         return this.bag.size();
     }
 
+    /**
+     * Remove stone from bag.
+     *
+     * @param index
+     */
     private void removeStone(int index) {
         this.bag.remove(index);
     }
 
+    /**
+     * @return Return a random integer within the bounds of the bag size.
+     */
     public int randomStone() {
         if (bag.size() > 0) {
             return RANDOM.nextInt(bag.size());
@@ -42,6 +57,11 @@ public class Bag {
         }
     }
 
+    /**
+     * Return a random stone from the bag and remove this stone in the bag.
+     *
+     * @return Return a random stone from the bag.
+     */
     public Stone getStone() {
 //        if (this.bagSize() < 1) {
 //            //TODO: Add exception;
@@ -54,6 +74,12 @@ public class Bag {
         return stone;
     }
 
+    /**
+     * Add a stone to the bag.
+     *
+     * @param stone Stone object.
+     * @return Return the added stone.
+     */
     public Stone addStone(Stone stone) {
         this.bag.add(stone);
 

@@ -1,7 +1,5 @@
 package qwirkle.game;
 
-// java
-
 import qwirkle.player.Player;
 import qwirkle.player.ServerPlayer;
 import qwirkle.shared.Cli;
@@ -9,12 +7,10 @@ import qwirkle.shared.Protocol;
 
 import java.util.*;
 
-//import qwirkle.shared.Input;
-
-// game
-
 /**
- * Main game class.
+ * @author Bouke Regnerus
+ * @version 1.0
+ * @since 2016-01-29
  */
 public class Game extends Observable {
 
@@ -30,7 +26,7 @@ public class Game extends Observable {
     private boolean finished = false;
 
     /**
-     * Start a new game with players and a new bag.
+     * Start a new game with players and an empty bag.
      */
     public Game(Players players) {
         this.bag = new Bag();
@@ -43,39 +39,56 @@ public class Game extends Observable {
         players.getPlayers().forEach(this::addObserver);
     }
 
+    /**
+     * Start a new game with an empty list of players.
+     */
     public Game() {
         this(new Players());
     }
 
+    /**
+     * @return Return the bag from the current game.
+     */
     public Bag getBag() {
         return this.bag;
     }
 
+    /**
+     * @return Return the board of the current game.
+     */
     public Board getBoard() {
         return this.board;
     }
 
+    /**
+     * @return Return the players of the current game.
+     */
     public Players getPlayers() {
         return this.players;
     }
 
+    /**
+     * Add a first move to the list of first moves for a given player.
+     *
+     * @param player Player which first move it is.
+     * @param stones List of stones in the move.
+     */
     public void firstMove(Player player, List<Stone> stones) {
         List<Stone> row = new ArrayList<>();
 
-        for(int i = 0; i < stones.size(); i++) {
+        for (int i = 0; i < stones.size(); i++) {
             stones.get(i).setLocation(i, 0);
 
-            if(board.validateList(row, stones.get(i))) {
+            if (board.validateList(row, stones.get(i))) {
                 row.add(stones.get(i));
-            }
-            else {
+            } else {
                 this.firstMoves.put(player, new ArrayList<>());
             }
         }
 
         this.firstMoves.put(player, row);
 
-        if(this.firstMoves.size() == this.players.getSize()) {
+        if (this.firstMoves.size() == this.players.getSize()) {
             System.out.println(this.firstMoves);
             Player winnerFirstRow = this.longestRow();
 
@@ -89,6 +102,12 @@ public class Game extends Observable {
         }
     }
 
+    /**
+     * Handle a move from a player and emit this to all players connected to the game.
+     *
+     * @param player Player which move it is.
+     * @param stones List of stones in the move.
+     */
     public void move(Player player, List<Stone> stones) {
         this.placeStones(player, stones);
 
@@ -99,37 +118,57 @@ public class Game extends Observable {
         player.getHand().removeStone(stones);
     }
 
+    /**
+     * A command in the given format described by the protocol.
+     *
+     * @param currentPlayer
+     * @param nextPlayer
+     * @param moves
+     * @return Return command string.
+     */
     public String getMoveCommand(Player currentPlayer, Player nextPlayer, List<Stone> moves) {
         String ms = "";
 
-        for(Stone stone : moves) {
+        for (Stone stone : moves) {
             ms += stone.toMove() + Protocol.Server.Settings.DELIMITER;
         }
 
-        if(ms.length() > 1) {
+        if (ms.length() > 1) {
             ms = ms.substring(0, ms.length() - 1);
         }
 
-        String cmd = Protocol.Server.MOVE + Protocol.Server.Settings.DELIMITER + currentPlayer.getUsername() + Protocol.Server.Settings.DELIMITER + nextPlayer.getUsername() + Protocol.Server.Settings.DELIMITER + ms;
+        String cmd = Protocol.Server.MOVE + Protocol.Server.Settings.DELIMITER
+                + currentPlayer.getUsername() + Protocol.Server.Settings.DELIMITER
+                + nextPlayer.getUsername() + Protocol.Server.Settings.DELIMITER + ms;
 
         return cmd;
     }
 
 
+    /**
+     * An empty move command for skip or switch turns.
+     *
+     * @param currentPlayer
+     * @param nextPlayer
+     * @return Return command string.
+     */
     public String getMoveCommand(Player currentPlayer, Player nextPlayer) {
-        String ms = "";
-
-        String cmd = Protocol.Server.MOVE + Protocol.Server.Settings.DELIMITER + currentPlayer.getUsername() + Protocol.Server.Settings.DELIMITER + nextPlayer.getUsername();
+        String cmd = Protocol.Server.MOVE + Protocol.Server.Settings.DELIMITER
+                + currentPlayer.getUsername() + Protocol.Server.Settings.DELIMITER
+                + nextPlayer.getUsername();
 
         return cmd;
     }
 
+    /**
+     * @return Return the player which has the longest row in first moves.
+     */
     public Player longestRow() {
         Player player = null;
         List<Stone> row = new ArrayList<>();
 
         for (Map.Entry<Player, List<Stone>> entry : this.firstMoves.entrySet()) {
-            if(entry.getValue().size() > row.size()) {
+            if (entry.getValue().size() > row.size()) {
                 row = entry.getValue();
                 player = entry.getKey();
             }
@@ -140,10 +179,20 @@ public class Game extends Observable {
         return player;
     }
 
+    /**
+     * Place stones on the board for a given player.
+     * <p>
+     * Place stones on the board for a given player, removes stones from the players hand
+     * and also adds points for the  move to the given player.
+     *
+     * @param player
+     * @param stones List of stones to be placed.
+     * @return
+     */
     public int placeStones(Player player, List<Stone> stones) {
         int points = this.board.placeStones(stones);
         if (points > 0) {
-            for(Stone stone : stones) {
+            for (Stone stone : stones) {
                 player.getHand().removeStone(stone);
             }
             player.addPoints(points);
@@ -152,8 +201,15 @@ public class Game extends Observable {
         return points;
     }
 
+    /**
+     * Switch stones on the board for a given player.
+     *
+     * @param player
+     * @param stones List of stones to be switched.
+     * @return
+     */
     public void switchStones(Player player, List<Stone> stones) {
-        for(Stone stone : stones) {
+        for (Stone stone : stones) {
             player.getHand().switchStone(stone);
         }
 
@@ -162,13 +218,18 @@ public class Game extends Observable {
         player.getHand().removeStone(stones);
     }
 
+    /**
+     * Skip a turn for the given player.
+     *
+     * @param player
+     */
     public void skipTurn(Player player) {
         emitToAllPlayers(this.getMoveCommand(player, this.players.nextTurn()));
     }
 
 
     /**
-     * Emit chat message to all human players.
+     * Emit chat message to all players connected to the game.
      *
      * @param message
      */
@@ -178,17 +239,21 @@ public class Game extends Observable {
     }
 
     public void start() {
-        for(Player player : players.getPlayers()) {
-            if(player instanceof ServerPlayer) {
-                ((ServerPlayer) player).getClient().handleStartGame(players.getPlayers());
-            }
-        }
+        players.getPlayers().stream().filter(player -> player instanceof ServerPlayer).forEach(player -> {
+            ((ServerPlayer) player).getClient().handleStartGame(players.getPlayers());
+        });
     }
 
+    /**
+     * @return Return is the game finished.
+     */
     public boolean isFinished() {
         return finished;
     }
 
+    /**
+     * @return Return the game as ASCII output.
+     */
     @Override
     public String toString() {
         String s = "";

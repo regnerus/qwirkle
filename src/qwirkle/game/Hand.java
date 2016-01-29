@@ -6,17 +6,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Bouke on 24/01/16.
+ * @author Bouke Regnerus
+ * @version 1.0
+ * @since 2016-01-29
  */
 public class Hand {
 
     ArrayList<Stone> stones;
     Bag bag;
 
+    /**
+     * Initialize an empty hand.
+     */
     public Hand() {
         this.stones = new ArrayList<>();
     }
 
+    /**
+     * Init a new hand with six stones from the bag.
+     *
+     * @param bag
+     */
     public void init(Bag bag) {
         this.bag = bag;
 
@@ -25,34 +35,45 @@ public class Hand {
         }
     }
 
+    /**
+     * @return Return list of stones in the hand.
+     */
     public ArrayList<Stone> getStones() {
-        return stones;
+        return this.stones;
     }
 
     /**
      * Add a stone to this hand.
      *
-     * @param stone stone to add
+     * @param stone Stone to add.
      */
     public void addStone(Stone stone) {
         this.stones.add(stone);
     }
 
+    /**
+     * Add a list of stones to this hand.
+     *
+     * @param stones List of stones to add.
+     */
     public void addStone(List<Stone> stones) {
         stones.forEach(this::addStone);
     }
 
     /**
-     * Remove stone from this hand and add a new one from the bag.
+     * Remove stone from this hand.
      *
-     * @param stone stone to remove
+     * @param stone stone to remove.
      */
     public void removeStone(Stone stone) {
         this.stones.remove(stone);
-//
-//        System.out.println("Hand: " + this.stones.toString());
     }
 
+    /**
+     * Remove a list of stones from this hand.
+     *
+     * @param stones stone to remove.
+     */
     public void removeStone(List<Stone> stones) {
         stones.forEach(this::removeStone);
     }
@@ -69,10 +90,19 @@ public class Hand {
         }
     }
 
+    /**
+     * Convert the number of the stone to an actual stone.
+     *
+     * @param x
+     * @return Stone.
+     */
     public Stone coordinateToStone(String x) {
         return this.stones.get(Character.getNumericValue(x.charAt(0)));
     }
 
+    /**
+     * @return Return this hand converted to the format described by the protocol.
+     */
     public String toChars() {
         String s = "";
 
@@ -85,6 +115,9 @@ public class Hand {
         return s;
     }
 
+    /**
+     * @return Return an ASCII representation of the hand.
+     */
     @Override
     public String toString() {
         String s = "";

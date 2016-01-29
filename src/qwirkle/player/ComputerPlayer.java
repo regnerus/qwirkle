@@ -70,13 +70,14 @@ public class ComputerPlayer extends ClientPlayer {
         }
         else {
             ArrayList<Stone> hand = ClientController.getInstance().getPlayer().getHand().getStones();
+            ArrayList<Stone> stones = new ArrayList<>();
+            stones.add(hand.get(0));
 
-            for(Stone stone : hand) {
+            for(Stone stone : stones) {
                 ClientController.getInstance().getPlayer().getHand().removeStone(stone);
             }
 
-            client.handleChangeStones(hand);
-
+            client.handleChangeStones(stones);
         }
     }
 

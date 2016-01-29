@@ -10,7 +10,9 @@ import java.util.Map;
 import static qwirkle.game.Stone.Color.RED;
 
 /**
- * Created by chris on 15/01/16.
+ * @author Bouke Regnerus
+ * @version 1.0
+ * @since 2016-01-29
  */
 public class Stone {
     private Position location;
@@ -21,30 +23,44 @@ public class Stone {
 
     public static final String ANSI_RESET = "\u001B[0m";
 
+
+    /**
+     * Initialize a stone based on a color and shape.
+     *
+     * @param color
+     * @param shape
+     */
     public Stone(Color color, Shape shape) {
         this.color = color;
         this.shape = shape;
         this.isPlaced = false;
     }
 
-    /*
-        Note: Important that NULL is the last value,
-        otherwise it will be used to generate random stones.
+    /**
+     * Different shapes for the stone, and a NULL shape.
+     *
+     * Note: Important that NULL is the last value,
+     * otherwise it will be used to generate random stones.
      */
     public enum Shape {
         HEART, STAR, SQUARE, CIRCLE, CROSS, DIAMOND,
         NULL;
     }
 
-    /*
-        Note: Important that NULL is the last value,
-        otherwise it will be used to generate random stones.
+    /**
+     * Different colors for the stone, and a NULL shape.
+     *
+     * Note: Important that NULL is the last value,
+     * otherwise it will be used to generate random stones.
      */
     public enum Color {
         RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE,
         NULL;
     }
 
+    /**
+     * Convert shapes to their ASCII representatation.
+     */
     private static final Map<Shape, String> SHAPE_MAP = new HashMap<Shape, String>() {
         {
             put(Shape.HEART, "\u2665");
@@ -57,6 +73,9 @@ public class Stone {
         }
     };
 
+    /**
+     * Convert colors to their Bright ASCII representatation.
+     */
     private static final Map<Color, String> COLOR_MAP = new HashMap<Color, String>() {
         {
             put(RED, "\u001B[91m");
@@ -69,6 +88,9 @@ public class Stone {
         }
     };
 
+    /**
+     * Convert colors to their Dimmed ASCII representatation.
+     */
     private static final Map<Color, String> COLOR_MAP_DIM = new HashMap<Color, String>() {
         {
             put(RED, "\u001B[31m");
@@ -89,38 +111,75 @@ public class Stone {
         this.isPlaced = placed;
     }
 
+    /**
+     * Set the location for this stone based on a position
+     *
+     * @param position
+     */
     public void setLocation(Position position) {
         this.location = position;
     }
 
+    /**
+     * Set the location for this stone based on x and y values.
+     *
+     * @param x
+     * @param y
+     */
     public void setLocation(int x, int y) {
         this.location = new Position(x, y);
     }
 
+    /**
+     * @return Return the location of the stone.
+     */
     public Position getLocation() {
         return location;
     }
 
+    /**
+     * @return Return the shape of the stone.
+     */
     public Shape getShape() {
         return shape;
     }
 
+    /**
+     * @return Return the color of the stone.
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * @return Convert this stone to a move described by the protocol.
+     */
     public String toMove() {
         return this.toChars() + Protocol.Server.Settings.DELIMITER2 + this.location.toString();
     }
 
+    /**
+     * Set stone as a (dimmed) temporary stone on the board (e.g. for suggestions).
+     *
+     * @param value Boolean
+     */
     public void setTemporary(Boolean value) {
         this.temporary = value;
     }
 
+    /**
+     * @return Return if stone is temporary or not.
+     */
     public Boolean getTemporary() {
         return this.temporary;
     }
 
+    /**
+     * Convert a move as described in the protocol to a stone with a location.
+     *
+     * @param move
+     * @return Return the stone.
+     */
     public static Stone fromMove(String move) {
         String[] chars = move.split("\\" + Character.toString(Protocol.Server.Settings.DELIMITER2));
 
@@ -141,6 +200,12 @@ public class Stone {
         return stone;
     }
 
+    /**
+     * Convert stone characters as described in the protocol to a stone.
+     *
+     * @param chars
+     * @return Return the stone.
+     */
     public static Stone fromChars(String chars) {
         if (chars.length() != 2) {
             return null;
@@ -198,6 +263,9 @@ public class Stone {
         return new Stone(c, s);
     }
 
+    /**
+     * @return Return a stone as described in the protocol from this stone.
+     */
     public String toChars() {
         char c, s;
 
@@ -274,6 +342,9 @@ public class Stone {
                         isEquals();
     }
 
+    /**
+     * @return Return the ASCII representatation of this stone.
+     */
     @Override
     public String toString() {
         if(this.temporary) {
