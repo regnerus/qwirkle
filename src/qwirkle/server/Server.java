@@ -1,8 +1,5 @@
 package qwirkle.server;
 
-// server
-
-// shared
 import qwirkle.game.Game;
 import qwirkle.shared.*;
 
@@ -11,10 +8,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-// java
-
 /**
- * The Server.
+ * @author Bouke Regnerus
+ * @version 1.0
+ * @since 2016-01-29
  */
 public class Server extends Thread {
 
@@ -58,11 +55,8 @@ public class Server extends Thread {
     //@ ensures clients != null;
     @Override
     public void run() {
-//        clients = new ArrayList<ClientController>();
-
-        while(true) {
+        while (true) {
             ServerController controller = ServerController.getInstance();
-//            int max_connections = controller.maxConnections();
 
             try {
                 Socket s = server.accept();
@@ -70,23 +64,8 @@ public class Server extends Thread {
                 controller.handleClientConnection(client);
                 client.start();
             } catch (IOException e) {
-                //TODO error logs
-                System.out.println(e.getMessage());
+                //TODO handle error logs.
             }
-
-//            if(max_connections != -1 || max_connections < controller.getHandlers().size()) {
-//                try {
-//                    Socket socket = server.accept();
-//
-//                    ClientHandler client = new ClientHandler(socket);
-//                    handleClientConnection(client);
-////                    controller.addHandler(client);
-//                    client.start();
-//                } catch (IOException e) {
-//                    //TODO error logs
-//                    System.out.println(e.getMessage());
-//                }
-//            }
         }
     }
 }

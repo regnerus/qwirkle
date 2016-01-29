@@ -1,8 +1,5 @@
 package qwirkle.player;
 
-// game
-
-import javafx.geometry.Pos;
 import qwirkle.game.Board;
 import qwirkle.game.Hand;
 import qwirkle.game.Position;
@@ -10,27 +7,27 @@ import qwirkle.game.Stone;
 
 import java.util.ArrayList;
 
-// java
-
 /**
- * Created by chris on 24/01/16.
+ * @author Bouke Regnerus
+ * @version 1.0
+ * @since 2016-01-29
  */
-public abstract class DumbStrategy implements Strategy {
+public class DumbStrategy implements Strategy {
 
     /**
      * Calculates the next move in a really dumb way.
      *
-     * @param game
+     * @param board
      * @param hand
      * @return
      */
-    public static ArrayList<Stone> calculateMove(Board board, Hand hand) {
+    public ArrayList<Stone> calculateMove(Board board, Hand hand) {
         ArrayList<Stone> move = new ArrayList<>();
         ArrayList<Position> positions = new ArrayList<>();
 
         for (Stone stone : hand.getStones()) {
             for (Position position : board.getPossibleMoves()) {
-                if(!positions.contains(position)) {
+                if (!positions.contains(position)) {
                     stone.setLocation(position);
 
                     if (board.validMove(stone)) {

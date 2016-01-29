@@ -1,7 +1,5 @@
 package qwirkle.player;
 
-// game
-
 import qwirkle.client.Client;
 import qwirkle.client.ClientController;
 import qwirkle.game.Board;
@@ -12,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Bouke on 23/01/16.
+ * @author Bouke Regnerus
+ * @version 1.0
+ * @since 2016-01-29
  */
 public class HumanPlayer extends ClientPlayer {
     public HumanPlayer(ClientController clientController) {
@@ -23,6 +23,11 @@ public class HumanPlayer extends ClientPlayer {
         super(clientController, username);
     }
 
+    /**
+     * Ask the human player to submit a row of stones for the first move.
+     *
+     * @return Return the first move.
+     */
     @Override
     public ArrayList<Stone> determineFirstMove() {
         Cli view = ClientController.getInstance().getView();
@@ -31,7 +36,8 @@ public class HumanPlayer extends ClientPlayer {
 
         view.logSimple("Submit a first move!");
         while (true) {
-            String[] input = view.readArray("Select a stone from hand, format: \"1\" (return empty to submit turn)");
+            String[] input = view.readArray("Select a stone from hand, format: \"1\"" +
+                    " (return empty to submit turn)");
 
             if (input[0].length() < 1) {
                 break;
@@ -55,12 +61,17 @@ public class HumanPlayer extends ClientPlayer {
         return row;
     }
 
+    /**
+     * @param board
+     * @return Return a list of stones to be placed on the board.
+     */
     public ArrayList<Stone> determinePlaceStones(Board board) {
         Cli view = ClientController.getInstance().getView();
         ArrayList<Stone> addStones = new ArrayList<>();
 
         while (true) {
-            String[] input = view.readArray("Place, format: \"A0 A0 1\" (return empty to submit turn)");
+            String[] input = view.readArray("Place, format: \"A0 A0 1\" " +
+                    "(return empty to submit turn)");
 
             if (input[0].length() < 1) {
                 break;
@@ -70,13 +81,12 @@ public class HumanPlayer extends ClientPlayer {
             stone.setLocation(board.coordinateToPosition(input[0], input[1]));
             stone.setTemporary(true);
 
-            if(board.validMove(stone)) {
+            if (board.validMove(stone)) {
                 board.placeStone(stone);
                 addStones.add(stone);
 
                 view.logSimple(board.toString());
-            }
-            else {
+            } else {
                 view.logSimple("You can not place that stone there!");
             }
         }
@@ -84,6 +94,10 @@ public class HumanPlayer extends ClientPlayer {
         return addStones;
     }
 
+    /**
+     * @param board
+     * @return Return a list of stones to be switched with the bag.
+     */
     public ArrayList<Stone> determineSwitchStones(Board board) {
         Cli view = ClientController.getInstance().getView();
         ArrayList<Stone> addStones = new ArrayList<>();
@@ -106,6 +120,16 @@ public class HumanPlayer extends ClientPlayer {
         return addStones;
     }
 
+    /**
+     * Ask the human player to make a move.
+     * <p>
+     * This move can either be place stones on the board, switch stones with the bag
+     * or skip a turn.
+     *
+     * @param board
+     * @param client
+     * @return
+     */
     @Override
     public void determineMove(Board board, Client client) {
         Cli view = ClientController.getInstance().getView();
@@ -116,7 +140,7 @@ public class HumanPlayer extends ClientPlayer {
             client.handleMakeMove(this.determinePlaceStones(board));
         } else if (moveChoice == 2) {
             List<Stone> stones = this.determineSwitchStones(board);
-            for(Stone stone : stones) {
+            for (Stone stone : stones) {
                 ClientController.getInstance().getPlayer().getHand().removeStone(stone);
             }
 

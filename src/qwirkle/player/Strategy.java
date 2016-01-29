@@ -1,19 +1,24 @@
 package qwirkle.player;
 
-// game
-
-import qwirkle.game.Game;
+import qwirkle.game.Board;
 import qwirkle.game.Hand;
 import qwirkle.game.Stone;
 
 import java.util.ArrayList;
 
-// java
-
 /**
- * Created by chris on 24/01/16.
+ * @author Bouke Regnerus
+ * @version 1.0
+ * @since 2016-01-29
  */
-public interface Strategy {
 
-    public ArrayList<Stone> calculateMove(Game game, Hand hand);
+public interface Strategy {
+    /**
+     * Calculates the next move.
+     *
+     * @param board
+     * @param hand
+     * @return
+     */
+    ArrayList<Stone> calculateMove(Board board, Hand hand);
 }
