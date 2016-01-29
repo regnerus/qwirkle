@@ -258,7 +258,6 @@ public class Game extends Observable {
     public String toString() {
         String s = "";
         s += "Players: " + players.toString() + Cli.RETURN;
-        s += "Score: " + Cli.RETURN;
         s += Cli.RETURN;
         s += board.toString();
         s += Cli.RETURN;

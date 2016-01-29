@@ -4,6 +4,7 @@ import qwirkle.game.Game;
 import qwirkle.game.Players;
 import qwirkle.player.Player;
 import qwirkle.player.ServerPlayer;
+import qwirkle.shared.Cli;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class ServerController {
 
     List<Players> waitingRooms = new ArrayList<>(maxPlayers);
 
+    private Cli view;
     private Server server;
     private String serverName;
 
@@ -28,7 +30,7 @@ public class ServerController {
      * Initialize a new server controller.
      */
     public ServerController() {
-        //TODO: Add view
+        this.view = new Cli();
         this.clients = new ArrayList<>();
         this.serverName = "Server";
 
@@ -46,7 +48,14 @@ public class ServerController {
     }
 
     public void run() {
-        this.server = new Server();
+        int port = view.readInt("At which port do you want to run the server? (0: For default port)");
+
+        if (port > 0) {
+            this.server = new Server(port);
+        } else {
+            this.server = new Server();
+        }
+
         this.server.start();
     }
 

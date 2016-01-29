@@ -326,6 +326,8 @@ public class ClientHandler extends Thread {
             out.newLine();
             out.flush();
         } catch (IOException e) {
+            System.out.println(e.getMessage());
+
             stopClientConnection();
         }
     }
@@ -339,7 +341,7 @@ public class ClientHandler extends Thread {
             out.close();
             socket.close();
         } catch (IOException e) {
-            //TODO handle errors
+            System.out.println(e.getMessage());
         }
     }
 }

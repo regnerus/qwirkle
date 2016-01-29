@@ -1,7 +1,5 @@
 package qwirkle.client;
 
-// shared
-
 import qwirkle.game.Players;
 import qwirkle.game.Stone;
 import qwirkle.player.Player;
@@ -15,10 +13,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-// java
-
 /**
- * Created by chris on 26/01/16.
+ * @author Bouke Regnerus
+ * @version 1.0
+ * @since 2016-01-29
  */
 public class Client extends Thread {
 
@@ -27,12 +25,15 @@ public class Client extends Thread {
 
     private BufferedReader in;
     private BufferedWriter out;
-    private BufferedReader clientInput;
     private Socket socket;
 
+    /**
+     * Start new game client based on host and port.
+     *
+     * @param host
+     * @param port
+     */
     public Client(InetAddress host, int port) {
-//        running = true;
-
         try {
             socket = new Socket(host, port);
 
@@ -43,25 +44,40 @@ public class Client extends Thread {
 
             System.out.println("Client started on: " + port);
         } catch (IOException e) {
-            //TODO error logs
-            System.out.println(e.getMessage());
-//            shutdown();
+            //TODO Handle Errors
         }
     }
 
-    public Client() {
-        this(getLocalHost(), Protocol.Server.Settings.DEFAULT_PORT);
-    }
-
+    /**
+     * Start new game client on default port.
+     */
     public Client(InetAddress host) {
         this(host, Protocol.Server.Settings.DEFAULT_PORT);
     }
 
+    /**
+     * Start new game client on default host.
+     */
+    public Client(int port) {
+        this(getLocalHost(), port);
+    }
+
+    /**
+     * Start new game client on default port.
+     */
+    public Client() {
+        this(getLocalHost(), Protocol.Server.Settings.DEFAULT_PORT);
+    }
+
+    /**
+     * @return Return the localhost of the client.
+     */
     private static final InetAddress getLocalHost() {
         InetAddress host = null;
         try {
             host = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
+            //TODO: Add error handling.
             System.out.println(e.getMessage());
         }
 
@@ -85,16 +101,21 @@ public class Client extends Thread {
                     break;
                 }
             } catch (IOException e) {
-                //TODO error logs
-                System.out.println(e.getMessage());
+                //TODO: Add error handling.
                 this.stopClient();
                 break;
             }
         }
     }
 
+    /**
+     * Listen to all incoming messages from server and parse them.
+     *
+     * @param message Incoming message.
+     */
     public void handleMessages(String message) {
-        System.out.println("Message:" + message);
+        //DEBUG: Print out the incoming message
+        //System.out.println("Message:" + message);
 
         String[] messageArray = message.split(String.valueOf(Protocol.Server.Settings.DELIMITER));
         String command = messageArray[0];
@@ -113,16 +134,16 @@ public class Client extends Thread {
                 break;
 
             case Protocol.Server.INVITE:
-
+                //TODO: Handle Invite
                 break;
 
             case Protocol.Server.DECLINEINVITE:
-
+                //TODO: Handle Decline Invite
                 break;
 
             case Protocol.Server.OKWAITFOR:
-                System.out.println("Waiting for " + params[0] + " players!");
-//                ClientController.getInstance().getUI().message("Waiting for " + params[0] + " players...");
+                ClientController.getInstance().getView().logSimple("Waiting for " +
+                        params[0] + " players!");
                 break;
 
             case Protocol.Server.STARTGAME:
@@ -162,11 +183,11 @@ public class Client extends Thread {
                         move.add(Stone.fromMove(stones[i]));
                     }
 
-                    int bagSize =  ClientController.getInstance().getBagSize();
+                    int bagSize = ClientController.getInstance().getBagSize();
 
                     ClientController.getInstance().setBagSize(bagSize - stones.length);
 
-                    for(Player player : players.getPlayers()) {
+                    for (Player player : players.getPlayers()) {
                         if (current.equals(player.getUsername())) {
                             players.setCurrentPlayer(player);
                             ClientController.getInstance().getGame().placeStones(player, move);
@@ -180,8 +201,8 @@ public class Client extends Thread {
 
                     ClientController.getInstance().logGame();
 
-                    if (next.equals(ClientController.getInstance().getUsername())) { //It is our turn now
-                        System.out.println("Our Turn!");
+                    if (next.equals(ClientController.getInstance().getUsername())) {
+                        ClientController.getInstance().getView().logSimple("Our Turn!");
                         ClientController.getInstance().getMove();
                     }
                 };
@@ -193,58 +214,57 @@ public class Client extends Thread {
                 for (String stone : params) {
                     ClientController.getInstance().getPlayer().addToHand(Stone.fromChars(stone));
 
-                    System.out.println(ClientController.getInstance().getPlayer().getHand().toString()); //TODO debug
+                    System.out.println(ClientController.getInstance().getPlayer()
+                            .getHand().toString()); //TODO debug
                 }
                 break;
 
             case Protocol.Client.CHAT:
-//                assertNotNull(incomingData.get(1));
-//                handleChat((String) incomingData.get(1));
+//              //TODO: Handle Chat
                 break;
 
             case Protocol.Client.REQUESTGAME:
-//                handleRequestGame(ServerController.getInstance().joinLobby(params[0], this));
+//              //TODO: Handle Request Game
                 break;
 
             case Protocol.Server.LEADERBOARD:
-
+                //TODO: Handle Leaderboard
                 break;
 
             case Protocol.Server.GAME_END:
-                // client is failing hard
+                //TODO: Handle Game End
                 break;
 
             case Protocol.Server.ERROR:
-                //TODO implement different error handlers.
+                //TODO Handle all error messages.
                 switch (params[0]) {
                     case "1":
-                        //Not your turn
-                        System.out.println("It wasn't your turn.");
+                        //Not our turn
+                        ClientController.getInstance().getView().logSimple("It wasn't our turn!");
                         break;
                     case "2":
-                        //Not Your Stone
+                        //Not our Stone
+                        ClientController.getInstance().getView().logSimple("It wasn't our stone!");
                         break;
                     case "3":
-                        //Not enough stones for trading
+                        //Not enough stones
+                        ClientController.getInstance().getView().logSimple("Not enough stones!");
                         break;
                     case "4":
-                        //Name is taken
-                        runnable = (Runnable) () -> {
-//                                ClientController.getInstance().getUI().error("The username was already taken.");
-//                                ClientController.getInstance().getUsername();
-                        };
-
-                        startNewThread(runnable);
+                        //Username already taken
+                        ClientController.getInstance().getView()
+                                .logSimple("Username already taken!");
                         break;
                     case "5":
-                        //Not Challengable
+                        //Not Challenge
                         break;
                     case "6":
                         //Challenge Refused
                         break;
                     case "7":
                         //Invalid Move
-                        System.out.println("The move you tried to make wasn't valid.");
+                        ClientController.getInstance().getView().
+                                logSimple("The move we tried to make was invalid!");
 
                         runnable = () -> {
                             ClientController.getInstance().getMove();
@@ -253,31 +273,47 @@ public class Client extends Thread {
                         startNewThread(runnable);
                         break;
                     case "8":
-                        //General
+                        ClientController.getInstance().getView()
+                                .logSimple("An unknown error occurd!");
                         break;
                 }
                 break;
         }
     }
 
+    /**
+     * Handle handshake.
+     *
+     * @param username
+     */
     public void handleHandshake(String username) {
         String cmd = Protocol.Client.HALLO + Protocol.Server.Settings.DELIMITER + username;
         emit(cmd);
     }
 
+    /**
+     * Handle request game.
+     *
+     * @param opponents
+     */
     public void handleGameRequest(int opponents) {
         String cmd = Protocol.Client.REQUESTGAME + Protocol.Server.Settings.DELIMITER + opponents;
         emit(cmd);
     }
 
+    /**
+     * Handle change stones.
+     *
+     * @param stones
+     */
     public void handleChangeStones(List<Stone> stones) {
         String ms = "";
 
-        for(Stone stone : stones) {
+        for (Stone stone : stones) {
             ms += stone.toChars() + Protocol.Server.Settings.DELIMITER;
         }
 
-        if(ms.length() > 1) {
+        if (ms.length() > 1) {
             ms = ms.substring(0, ms.length() - 1);
         }
 
@@ -288,14 +324,19 @@ public class Client extends Thread {
         this.handleMakeMove();
     }
 
+    /**
+     * Handle make move.
+     *
+     * @param moves
+     */
     public void handleMakeMove(List<Stone> moves) {
         String ms = "";
 
-        for(Stone stone : moves) {
+        for (Stone stone : moves) {
             ms += stone.toMove() + Protocol.Server.Settings.DELIMITER;
         }
 
-        if(ms.length() > 1) {
+        if (ms.length() > 1) {
             ms = ms.substring(0, ms.length() - 1);
         }
 
@@ -304,12 +345,20 @@ public class Client extends Thread {
         emit(cmd);
     }
 
+    /**
+     * Handle skip turn (empty make move).
+     */
     public void handleMakeMove() {
         String cmd = Protocol.Client.MAKEMOVE;
 
         emit(cmd);
     }
 
+    /**
+     * Send message to server.
+     *
+     * @param message message to emit to server.
+     */
     public void emit(String message) {
         try {
             out.write(message);
@@ -322,6 +371,9 @@ public class Client extends Thread {
         }
     }
 
+    /**
+     * Stop the server connection.
+     */
     public void stopClient() {
         try {
             in.close();
